@@ -50,7 +50,7 @@ User types/selects/uploads → editable preview → warning only when confidence
 
 Indonesian interface; lang=id. Inputs have labels, controls have visible focus ring, dismiss buttons named, modal title associated, skip-to-content link provided. Tables retain semantic headers including the visually hidden mobile header. Native confirmations are used for trash. Reduced-motion preference disables animations/transitions. Monthly/report date logic uses Asia/Jakarta independent of host clock timezone. Target WCAG2.2 AA; full contrast and screen-reader audit remain sprint hardening work, no conformance claim.
 
-Reference screenshots: [desktop](screenshots/desktop.png), [mobile](screenshots/mobile.png), [login desktop](screenshots/auth-desktop.png), [signup mobile](screenshots/auth-mobile.png). Tokens and the polish layer are implemented in src/styles.css; styles and components can evolve without changing ledger interfaces. Browser tests run on isolated demo port5175, separate from the user's Development app port5173.
+Local reference screenshots are kept in docs/screenshots and intentionally excluded from the public repository.
 
 ## Ikon SVG
 

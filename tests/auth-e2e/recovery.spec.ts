@@ -1,4 +1,19 @@
 import { test, expect } from '@playwright/test';
+test('same-document recovery hash navigation opens invalid-link panel instead of silently remaining at login', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(
+    page.getByRole('textbox', { name: 'Username atau email', exact: true }),
+  ).toBeVisible();
+  await page.evaluate(() => {
+    location.hash = 'pemulihan-password';
+  });
+  await expect(
+    page.getByRole('heading', { name: 'Tautan pemulihan belum valid', exact: true }),
+  ).toBeVisible();
+  await expect(page.getByLabel('Password baru', { exact: true })).toHaveCount(0);
+});
 
 test('forgot password requests email privately and returns a generic success message', async ({
   page,

@@ -23,6 +23,20 @@ if (-not (Test-Path -LiteralPath $identityFile)) {
 }
 $recipient = (& $keygenPath -y $identityFile).Trim()
 if ($LASTEXITCODE -ne 0 -or $recipient -notmatch '^age1[a-z0-9]+$') { throw 'Invalid age recipient.' }
+$ageExecutable = Join-Path (Split-Path -Parent $keygenPath) 'age.exe'
+if (-not (Test-Path -LiteralPath $ageExecutable)) { throw 'age encryption executable unavailable.' }
+$machineRecovery = Join-Path $taskRoot 'work\production-secrets\edge.recovery.dpapi.txt'
+if (Test-Path -LiteralPath $machineRecovery) {
+  $portableRecovery = Join-Path $privateDirectory ('server-recovery-' + [DateTime]::UtcNow.ToString('yyyyMMddTHHmmssZ') + '.env.age')
+  $protectedRecovery = (Get-Content -LiteralPath $machineRecovery -Raw).Trim() | ConvertTo-SecureString
+  try {
+    $recoveredEnvironment = [Net.NetworkCredential]::new('', $protectedRecovery).Password
+    $recoveredEnvironment | & $ageExecutable --recipient $recipient --output $portableRecovery
+    if ($LASTEXITCODE -ne 0) { throw 'Portable server-secret encryption failed.' }
+  } finally { $recoveredEnvironment = $null; $protectedRecovery.Dispose() }
+  Write-Host "Encrypted portable server recovery: $portableRecovery"
+  Write-Host 'Keep this encrypted file with a separate recovery copy. Its decryption identity remains private.'
+}
 Write-Host 'Open Supabase Production > Connect > Session pooler (port5432). Do not use transaction pooler6543.'
 $backupHost = (Read-Host 'Session pooler hostname (without password/URL)').Trim()
 $backupUser = (Read-Host 'Database username, usually postgres.PROJECT_REF').Trim()

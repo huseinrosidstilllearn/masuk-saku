@@ -26,7 +26,7 @@ Legend: **Implemented** local starter code; **Foundation** contracts/schema/serv
 | AC20 | CSV formula-safe + schema_version1 JSON export; validate/dry-run restore                            | Export implemented; full backup JSON/restore engine planned                                                                                    |
 | AC21 | Weekly encrypted backup includes auth/household/wallet/ledger/categories/tags/budget/goals/settings | Foundation; scripts/workflow; scheduler/secrets and restore drill external                                                                     |
 | AC22 | Configurable session lock default15m requires reauthentication                                      | Foundation; real-mode inactivity signout/UI; hosted validation pending                                                                         |
-| AC23 | Public/self-host-friendly source, env examples, MIT, CI, explicit setup                             | Implemented; docs and workflows; no remote publication performed                                                                               |
+| AC23 | Public/self-host-friendly source, env examples, MIT, CI, explicit setup                             | Implemented; public GitHub huseinrosidstilllearn/masuk-saku, source guard/Gitleaks and CI verified                                             |
 
 | AC24 | Creator/Owner edit with atomic fees/splits, immutable creator, exact retry/version conflict/history | Implemented local + migration deployed Development;52 unit/SQL and13 browser tests; hosted authenticated pilot pending |
 
@@ -87,3 +87,5 @@ AC22 fresh-login regression: a new authenticated session starts a fresh activity
 | AC43 | Bottom5items Dashboard/Dompet/Tambah/Transaksi/Anggaran; secondary destinations below Dashboard overview; center3choices; camera permission only on Foto, valid photo/cleanup/denial/retry, automatic AI draft with explicit final confirmation | Implemented; local/Development verification in VERIFICATION; device/provider pilot pending |
 
 Production promotion27September2026: AC22/AC42/AC43 and component motion now shipped to Productione2da5fd5 as well as Development78e8c110. Release tests78unit/SQL+41demo browser+5configured-mode and public hosted checks passed; real-device/AI/financial gates remain pending as recorded in VERIFICATION.
+
+Current release work: password recovery request/PKCE callback/hash navigation/update/cancel tested with configured fixtures; BYOK own-status/replace/revoke tested with SQL/fixtures and migration9 on Development. Custom-period reports, typed transaction filters and25row UI pagination now local;260row traversal verified, backend10000row snapshot ceiling remains. Weekly backup has public workflow/operator setup helper; Secrets/first backup/isolated restore still pending. See PASSWORD-RECOVERY, BYOK-LIFECYCLE, REPORTS and AGENT-HANDOFF. Full V1 gates are not closed.

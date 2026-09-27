@@ -36,7 +36,7 @@ Legacy control color/border/focus feedback now reads the shared 150ms duration a
 
 ## Verification
 
-Meaningful checks live in [motion.spec.ts](../tests/e2e/motion.spec.ts): modal exit/inert/reopen/focus with unchanged balance, confirmed notice exit/focus, rapid navigation/search focus, immediate money masking without duplicate pages, reduced-motion timing and keyboard FAQ collapse. The existing finance, receipt, planning, household, responsive layout and navigation checks remain required. Actual latest results and deployment are recorded in [VERIFICATION](VERIFICATION.md) and [NOTES](../NOTES.md).
+Meaningful checks live in [motion.spec.ts](../tests/e2e/motion.spec.ts): modal exit/inert/reopen/focus with unchanged balance, confirmed notice exit/focus, rapid navigation/search focus, immediate money masking without duplicate pages, reduced-motion timing and keyboard FAQ collapse. The existing finance, receipt, planning, household, responsive layout and navigation checks remain required. Actual latest results and deployment are recorded in [VERIFICATION](VERIFICATION.md) and [handoff](AGENT-HANDOFF.md).
 
 Development artifact preflight rejects missing recipe/reduced-motion selectors before uploading. It was verified against the built artifact and an empty-CSS negative fixture after a stylesheet cleanup failure. Recipe comments use ASCII arrows to satisfy the project's source icon audit; CSS behavior is unchanged.
 

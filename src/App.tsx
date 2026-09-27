@@ -14,6 +14,9 @@ import { CashflowChart } from './components/CashflowChart';
 import { BudgetPulse } from './components/BudgetPulse';
 import { MotionPage, MotionNotice, MotionLoadingText } from './components/Motion';
 import { BudgetPage, GoalsPage } from './components/Planning';
+import { Reports } from './components/Reports';
+import { TransactionFilters } from './components/TransactionFilters';
+import { filterTransactions, type TransactionFilters as Filters } from './domain/reports';
 import {
   balances,
   budgetSpent,
@@ -39,7 +42,8 @@ import {
   updateSettings,
 } from './lib/repository';
 import { download } from './lib/export';
-type Page = 'dashboard' | 'transactions' | 'wallets' | 'budgets' | 'goals' | 'trash' | 'settings';
+type Page =
+  'dashboard' | 'transactions' | 'wallets' | 'budgets' | 'goals' | 'trash' | 'settings' | 'reports';
 const pages: { id: Page; label: string; icon: IconName }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
   { id: 'transactions', label: 'Transaksi', icon: 'transfer' },
@@ -48,6 +52,7 @@ const pages: { id: Page; label: string; icon: IconName }[] = [
   { id: 'goals', label: 'Target tabungan', icon: 'goal' },
   { id: 'trash', label: 'Sampah', icon: 'trash' },
   { id: 'settings', label: 'Pengaturan', icon: 'settings' },
+  { id: 'reports', label: 'Laporan', icon: 'budget' },
 ];
 export default function App() {
   const [recovering, setRecovering] = useState(
@@ -55,6 +60,8 @@ export default function App() {
       new URLSearchParams(location.hash.slice(1)).get('type') === 'recovery',
   );
   const currentUser = useRef<string | null>(configured ? null : demoUser);
+  const [filters, setFilters] = useState<Filters>({});
+  const [listPage, setListPage] = useState(1);
   const [user, setUser] = useState<string | null>(configured ? null : demoUser),
     [authLoading, setAuthLoading] = useState(configured),
     [data, setData] = useState<Snapshot | null>(null),
@@ -79,6 +86,18 @@ export default function App() {
       draftId?: string;
       confidence?: Record<string, number | null>;
     } | null>(null);
+  useEffect(() => setListPage(1), [search, owner, page, filters]);
+  useEffect(() => {
+    const route = () => {
+      if (
+        location.hash === RECOVERY_HASH ||
+        new URLSearchParams(location.hash.slice(1)).get('type') === 'recovery'
+      )
+        setRecovering(true);
+    };
+    window.addEventListener('hashchange', route);
+    return () => window.removeEventListener('hashchange', route);
+  }, []);
   const refresh = useCallback(async () => {
     if (!user) return false;
     try {
@@ -254,31 +273,20 @@ export default function App() {
       budgetSpent(b, data.transactions, data.splits, selectedIds),
     0,
   );
-  const visible = data.transactions
-    .filter(
-      (t) =>
-        !t.parent_transaction_id &&
-        (page === 'trash' ? Boolean(t.deleted_at) : !t.deleted_at) &&
-        (owner === 'family' ||
-          summary.wallets.some((w) => w.id === t.wallet_id || w.id === t.destination_wallet_id)) &&
-        [
-          t.merchant,
-          t.notes,
-          ...data.transactionTags
-            .filter((link) => link.transaction_id === t.id)
-            .map((link) => data.tags.find((tag) => tag.id === link.tag_id)?.name),
-          data.wallets.find((w) => w.id === t.wallet_id)?.name,
-          data.categories.find((c) => c.id === t.category_id)?.name,
-          data.members.find((m) => m.user_id === t.transaction_actor)?.display_name,
-          t.transaction_scope,
-          t.status,
-          t.occurred_at,
-        ]
-          .join(' ')
-          .toLowerCase()
-          .includes(search.toLowerCase()),
-    )
-    .sort((a, b) => b.occurred_at.localeCompare(a.occurred_at));
+  const visible = filterTransactions(
+    data,
+    { ...(page === 'dashboard' ? {} : filters), search },
+    new Set(
+      data.wallets.filter((w) => owner === 'family' || w.wallet_owner === owner).map((w) => w.id),
+    ),
+    page === 'trash',
+  );
+  const totalPages = Math.max(1, Math.ceil(visible.length / 25)),
+    currentListPage = Math.min(listPage, totalPages);
+  const displayed =
+    page === 'dashboard'
+      ? visible.slice(0, 5)
+      : visible.slice((currentListPage - 1) * 25, currentListPage * 25);
   const fmt = (n: number) => money(n, hide);
   const open = (initial: Partial<TransactionInput> = {}) => {
     setPreview({ initial, key: crypto.randomUUID() });
@@ -307,7 +315,7 @@ export default function App() {
           </tr>
         </thead>
         <tbody>
-          {visible.slice(0, page === 'dashboard' ? 5 : 200).map((t) => (
+          {displayed.map((t) => (
             <tr key={t.id}>
               <td>
                 <strong>
@@ -566,7 +574,7 @@ export default function App() {
                 key={p.id}
                 className={[
                   page === p.id ? 'active' : '',
-                  ['goals', 'trash', 'settings'].includes(p.id) ? 'secondary-nav' : '',
+                  ['goals', 'trash', 'settings', 'reports'].includes(p.id) ? 'secondary-nav' : '',
                 ].join(' ')}
                 aria-current={page === p.id ? 'page' : undefined}
                 aria-label={p.label}
@@ -1004,9 +1012,28 @@ export default function App() {
                     <button onClick={() => download(data, 'json')}>Ekspor JSON</button>
                   </div>
                 </div>
+                <TransactionFilters data={data} hide={hide} onApply={setFilters} />
                 {transactions}
+                <nav className="row list-pagination" aria-label="Halaman transaksi">
+                  <button
+                    disabled={currentListPage === 1}
+                    onClick={() => setListPage(currentListPage - 1)}
+                  >
+                    Sebelumnya
+                  </button>
+                  <span>
+                    {currentListPage} / {totalPages} · {visible.length} transaksi
+                  </span>
+                  <button
+                    disabled={currentListPage === totalPages}
+                    onClick={() => setListPage(currentListPage + 1)}
+                  >
+                    Berikutnya
+                  </button>
+                </nav>
               </section>
             )}
+            {page === 'reports' && <Reports data={data} owner={owner} hide={hide} />}
             {page === 'wallets' && (
               <>
                 {wallets}

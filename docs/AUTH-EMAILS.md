@@ -47,7 +47,7 @@ Sumber kontrak yang diperiksa: [Supabase email templates](https://supabase.com/d
 
 ## Verifikasi
 
-13 template diperiksa terhadap variabel/tautan yang tersedia, reauthentication code-only, notifikasi tanpa confirmation link, tanpa script/gambar/webfont/form. Render browser terisolasi pada320px dan800px (26 layout), termasuk URL/email panjang dan OTP8karakter, tidak overflow. Preview pemilih13jenis dan source untuk copy juga diuji. Screenshot confirmation mobile/desktop dan galeri diperiksa. Ini bukan uji kompatibilitas semua versi Outlook atau uji email nyata. Tidak ada akun, email, perubahan ledger atau panggilan provider yang dibuat pada sesi template ini. Bukti final dan batas deployment dicatat pada [VERIFICATION](VERIFICATION.md) dan [NOTES](../NOTES.md).
+13 template diperiksa terhadap variabel/tautan yang tersedia, reauthentication code-only, notifikasi tanpa confirmation link, tanpa script/gambar/webfont/form. Render browser terisolasi pada320px dan800px (26 layout), termasuk URL/email panjang dan OTP8karakter, tidak overflow. Preview pemilih13jenis dan source untuk copy juga diuji. Screenshot confirmation mobile/desktop dan galeri diperiksa. Ini bukan uji kompatibilitas semua versi Outlook atau uji email nyata. Tidak ada akun, email, perubahan ledger atau panggilan provider yang dibuat pada sesi template ini. Bukti final dan batas deployment dicatat pada [VERIFICATION](VERIFICATION.md) dan [handoff](AGENT-HANDOFF.md).
 
 ## User-reported Production Auth pilot —27September2026
 

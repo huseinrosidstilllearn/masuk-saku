@@ -8,7 +8,7 @@ Browser data, receipt contents and AI output are untrusted. Provider cannot call
 
 Frontend variables only public Supabase URL/key. Auth session is sessionStorage for OAuth PKCE, never an AI key; sign-out locks after configurable inactivity default 15 minutes. Keys entered in UI are transient input state, immediately cleared after submission. AES-256-GCM ciphertext lives private schema, with random nonce and tenant/user-associated data. AI_ENCRYPTION_KEY lives Edge secret storage, not database. MAINTENANCE_SECRET is separate minimum 32-char bearer secret. Database connection credentials exist only backup runner environment. Do not log request bodies, provider keys, connection URLs or receipt data.
 
-Back up the server encryption key separately in a secret manager. Rotation changes key version and requires decrypt/re-encrypt in privileged migration; current implementation version1 does not silently support multiple keys. BYOK is per-member per-household; Owner cannot read/use spouse's key. Credential revoke/delete UX and provider-key validation endpoint are roadmap work.
+Back up the server encryption key separately in a secret manager. Rotation changes key version and requires decrypt/re-encrypt in privileged migration; current implementation version1 does not silently support multiple keys. BYOK is per-member per-household; Owner cannot read/use spouse's key. Current-user credential status/replace/revoke UX and migration9 are implemented; status never returns ciphertext/IV/key. Provider-token validation/rotation remain roadmap work; revocation in the app does not revoke the provider token. See BYOK-LIFECYCLE.md.
 
 ## Authorization
 

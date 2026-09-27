@@ -19,7 +19,7 @@ Production domain: **masuksaku.my.id**. Paket deployment terpisah dan panduan Re
 Butuh Node.js >=22.12 (Node 24 LTS direkomendasikan), npm dan browser modern.
 
 ```powershell
-Set-Location -LiteralPath 'D:\00 HUSEIN AI PROJECT\Masuk Saku (Manajemen Keuangan)'
+Set-Location -LiteralPath 'C:\Projects\masuk-saku'
 npm ci
 npm run dev
 ```

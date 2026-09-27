@@ -1,6 +1,7 @@
 // Check Git's actual staged tree locally; on CI check the committed tree.
 // Diagnostics report file paths and categories only, never matching values.
 import { execFileSync } from 'node:child_process';
+import path from 'node:path';
 const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
   .split('\0')
   .filter(Boolean);
@@ -16,11 +17,21 @@ const patterns = [
   ['database password URL', /postgres(?:ql)?:\/\/[^\s/:]+:[^\s@]{8,}@/],
 ];
 const failures = [];
+const tracked = new Set(files);
 for (const file of files) {
   if (forbidden.test(file) && !allowed.has(file)) failures.push(`${file}: private/generated file`);
   const value = execFileSync('git', ['show', ':' + file], { maxBuffer: 16 * 1024 * 1024 });
   if (value.includes(0)) continue;
   const text = value.toString('utf8');
+  if (file.endsWith('.md')) {
+    for (const match of text.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
+      const target = match[1].split('#')[0];
+      if (!target || /^(?:https?:|mailto:|codex:|\/)/.test(target)) continue;
+      const relative = path.posix.normalize(path.posix.join(path.posix.dirname(file), target));
+      if (!tracked.has(relative))
+        failures.push(`${file}: link outside public source (${relative})`);
+    }
+  }
   for (const [label, pattern] of patterns)
     if (pattern.test(text)) failures.push(`${file}: ${label}`);
 }

@@ -143,7 +143,23 @@ test('permission resolving after cancel cannot leave a camera running', async ({
   await page.getByRole('button', { name: 'Tambah transaksi', exact: true }).click();
   await page.getByRole('button', { name: /^Foto struk/ }).click();
   await expect(page.getByRole('status')).toContainText('Menunggu izin');
+  await page.evaluate(() => {
+    const dialog = document.querySelector('dialog[open]')!;
+    (window as any).dialogDiagnostics = [];
+    for (const name of ['keydown', 'cancel', 'close'])
+      dialog.addEventListener(name, (event) =>
+        (window as any).dialogDiagnostics.push({ event: name, key: (event as KeyboardEvent).key }),
+      );
+  });
   await page.keyboard.press('Escape');
+  console.log(
+    'permission-dialog events',
+    await page.evaluate(() => ({
+      events: (window as any).dialogDiagnostics,
+      active: document.activeElement?.tagName,
+      browser: navigator.userAgent,
+    })),
+  );
   await expect(page.getByRole('dialog')).toBeHidden();
   await page.evaluate(() =>
     (window as any).releaseCameras.forEach((release: () => void) => release()),

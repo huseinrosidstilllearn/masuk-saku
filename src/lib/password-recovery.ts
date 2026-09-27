@@ -1,6 +1,10 @@
 import { supabase } from './supabase';
 
 export const RECOVERY_HASH = '#pemulihan-password';
+export async function cancelPasswordRecovery() {
+  const result = await supabase?.auth.signOut({ scope: 'local' });
+  if (result?.error) throw new Error('Sesi belum bisa ditutup. Coba lagi.');
+}
 export async function requestPasswordReset(email: string) {
   if (!supabase) throw new Error('Pemulihan akun memerlukan koneksi Supabase.');
   const result = await supabase.auth.resetPasswordForEmail(email.trim(), {

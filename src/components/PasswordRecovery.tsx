@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { requestPasswordReset, replaceRecoveredPassword } from '../lib/password-recovery';
+import {
+  requestPasswordReset,
+  replaceRecoveredPassword,
+  cancelPasswordRecovery,
+} from '../lib/password-recovery';
 import { MotionLoadingText } from './Motion';
 import { Icon } from './Icon';
 
@@ -160,6 +164,27 @@ export function PasswordRecovery({
         )}
         <button className="primary" disabled={busy}>
           {busy ? <MotionLoadingText text="Menyimpan password…" /> : 'Simpan password baru'}
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={async () => {
+            if (busy) return;
+            setBusy(true);
+            setError('');
+            try {
+              await cancelPasswordRecovery();
+              setPassword('');
+              setRepeat('');
+              onDone();
+            } catch {
+              setError('Sesi belum bisa ditutup. Coba lagi.');
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          Batalkan pemulihan
         </button>
       </form>
     </main>

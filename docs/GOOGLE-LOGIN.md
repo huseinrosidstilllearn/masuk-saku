@@ -41,3 +41,7 @@ Auth Site URL dan redirect allowlist harus tetap sesuai environment: Production 
 Public settings=true bukan bukti pilot login berhasil. Jangan mencatat token, OAuth code atau Client Secret dalam notes/output.
 
 Sumber: [Supabase — Sign in with Google](https://supabase.com/docs/guides/auth/social-login/auth-google).
+
+## Status terverifikasi —28September2026
+
+Pengelola melaporkan setup selesai. Public Auth settings menunjukkan Google aktif di Development dan Production. Permintaan authorize di kedua project mengarah ke accounts.google.com dengan callback project yang benar. Pemeriksaan ini tidak memilih akun atau mengambil token; pilot kembali/login/refresh/logout dengan akun pengguna tetap perlu dikonfirmasi.

@@ -12,78 +12,43 @@
 [![Platform](https://img.shields.io/badge/platform-Web_App-7762d4?style=flat)](https://masuksaku.my.id)
 [![AI](https://img.shields.io/badge/AI-BYOK_%C2%B7_Human_Confirmed-164c3e?style=flat)](docs/PRD.md)
 
+[Buka aplikasi](https://masuksaku.my.id) · [Coba Development](https://masuk-saku-development.pages.dev) · [Panduan teknis](docs/DEPLOYMENT.md) · [Roadmap](docs/ROADMAP.md)
+
 </div>
 
-Web app open source untuk mengelola keuangan pribadi dan keluarga: dompet, pemasukan, pengeluaran, anggaran, dan target tabungan. AI membantu membaca struk dan menyiapkan draft; kamu tetap memeriksa dan mengonfirmasi sebelum transaksi disimpan.
+Uang keluarga sering tersebar di rekening bank, dompet digital, dan uang tunai. Masuk Saku membantu menyatukan catatannya, supaya kamu bisa melihat saldo, pengeluaran, anggaran, dan target tabungan tanpa berpindah-pindah spreadsheet.
 
-[Buka aplikasi](https://masuksaku.my.id) · [Development](https://masuk-saku-development.pages.dev) · [PRD](docs/PRD.md) · [Roadmap](docs/ROADMAP.md) · [Kontribusi](CONTRIBUTING.md)
+Masuk Saku adalah **web app open source**. Gunakan langsung di browser atau jalankan dengan backend milikmu sendiri.
 
-## Status proyek
+## Kenali Masuk Saku
 
-Versi paket **0.1.0**, menuju rilis V1. Aplikasi tersedia online, tetapi seluruh acceptance criteria V1 belum selesai. Status aktual ada di [ACCEPTANCE](docs/ACCEPTANCE.md), [Production](docs/PRODUCTION.md), dan [handoff](docs/AGENT-HANDOFF.md).
+### Catatan sehari-hari yang lebih teratur
 
-Fokus platform adalah **web app di browser**, responsif untuk desktop, tablet dan ponsel. Aplikasi native, installable PWA dan sinkronisasi ledger offline tidak termasuk cakupan saat ini.
+Catat pemasukan, pengeluaran, dan transfer antar-dompet. Lengkapi dengan kategori, tag, biaya admin, atau pembagian transaksi. Pencarian, filter, dan riwayat perubahan membantu kamu menemukan kembali catatan yang dibutuhkan.
 
-## Fitur yang tersedia
+### Satu rumah, tetap punya ruang pribadi
 
-| Area        | Kemampuan                                                                                                  |
-| ----------- | ---------------------------------------------------------------------------------------------------------- |
-| Dashboard   | Ringkasan keluarga/personal, saldo, arus kas, performa anggaran, target tabungan                           |
-| Dompet      | Bank, tunai, e-wallet; dompet personal/shared keluarga dan saldo awal                                      |
-| Transaksi   | Income, expense, transfer, biaya admin, status, split, kategori/tag, revisi, filter, pencarian, pagination |
-| Pencatatan  | Manual, Quick Add, upload/foto struk dan preview AI yang dapat dikoreksi                                   |
-| Perencanaan | Pengelolaan anggaran, target tabungan dan kontribusi virtual                                               |
-| Laporan     | Perbandingan periode, arus kas, pengeluaran kategori, ekspor                                               |
-| Akun        | Username/email dan password, verifikasi email, pemulihan password, inactivity lock                         |
-| Keluarga    | Owner/Member, undangan terikat email, penonaktifan akses dengan riwayat dipertahankan                      |
-| Profil      | Foto JPEG/PNG/WebP maksimal 2 MiB, nama lengkap/panggilan, username, telepon, tanggal lahir, kota, bio     |
-| AI BYOK     | OpenRouter free-only, penggantian/pencabutan kunci per akun, encrypted server storage                      |
-| Operasional | RLS, private Storage, maintenance, backup database terenkripsi ke Google Drive/GitHub artifact             |
+Dashboard keluarga memberi gambaran bersama; dashboard personal mengikuti kepemilikan dompet. Kamu bisa menggunakan dompet pribadi dan dompet bersama, mengundang anggota keluarga, serta mengatur anggaran dan target tabungan.
 
-Google login direncanakan, tetapi provider pada deployment saat ini belum aktif. Lifecycle dompet, recurring runner, penutupan rollover otomatis, import/restore lengkap dan sebagian pilot hosted masih dilacak di roadmap. Backup database sudah berhasil dijalankan; simulasi restore serta backup isi file Storage tetap diperlukan.
+Profil juga bisa disesuaikan dengan foto, nama panggilan, dan informasi pribadi. Hanya nama panggilan yang terlihat oleh keluarga; foto dan detail pribadi tetap untuk pemilik akun.
 
-## Prinsip produk
+### AI membantu, kamu yang memutuskan
 
-- **AI-assisted, human-confirmed:** AI membuat draft; pengguna mengonfirmasi sebelum saldo berubah.
-- **IDR V1:** integer rupiah, waktu WIB dan format 24 jam.
-- **Identitas terpisah:** wallet_owner, transaction_actor, transaction_scope dan immutable created_by tidak disamakan.
-- **Profil privat:** hanya nama panggilan dibagikan ke keluarga; foto dan informasi pribadi hanya untuk pemilik akun.
-- **Sampah transaksi 30 hari:** Creator/Owner dapat trash; pemulihan dibatasi Owner.
-- **Retensi struk:** default 24 jam setelah konfirmasi, dapat diatur immediate/7 hari/keep.
-- **BYOK:** kunci AI dienkripsi di server, tidak disimpan di localStorage. Endpoint OpenRouter otomatis; custom endpoint belum tersedia.
+Upload atau foto struk untuk membuat draft transaksi. Periksa nominal, tanggal, dompet, dan kategorinya, lalu konfirmasi ketika sudah benar. **AI tidak menyimpan transaksi tanpa persetujuanmu.**
 
-## Teknologi dan arsitektur
+AI memakai OpenRouter dengan API key milikmu sendiri dan hanya model gratis. Pencatatan manual tetap tersedia tanpa AI.
 
-```mermaid
-flowchart LR
-  User[Pengguna] --> Web[Web app · Cloudflare Pages]
-  Web --> Auth[Supabase Auth]
-  Web --> DB[PostgreSQL · RLS / RPC]
-  Web --> Storage[Private Storage]
-  Web --> Edge[Edge Functions]
-  Edge --> AI[OpenRouter · BYOK]
-  AI --> Draft[Draft yang bisa dikoreksi]
-  Draft --> Review[Konfirmasi pengguna]
-  Review --> DB
-```
+## Mulai menggunakan
 
-| Lapisan       | Teknologi                                          |
-| ------------- | -------------------------------------------------- |
-| Frontend      | React, TypeScript, Vite, CSS, Lucide SVG, DM Sans  |
-| Hosting       | Cloudflare Pages                                   |
-| Auth/database | Supabase Auth, PostgreSQL, RLS, authorized RPC     |
-| API           | Supabase Edge Functions, Deno                      |
-| File          | Supabase private Storage; struk/avatar terpisah    |
-| AI            | OpenRouter BYOK free-only, tanpa fallback berbayar |
-| Email         | Supabase Auth melalui Resend SMTP                  |
-| Backup        | GitHub Actions, pg_dump, age, rclone/Google Drive  |
-| Verifikasi    | Vitest, PGlite, Playwright, Deno tests             |
+Buka [masuksaku.my.id](https://masuksaku.my.id), lalu daftar atau masuk dengan email/username dan password. Provider Google juga sudah diaktifkan di Production dan Development.
 
-Browser memakai publishable key dan sesi pengguna. Financial writes melalui RPC yang memeriksa izin dan keanggotaan. Edge memvalidasi sesi, mengakses server credentials dan memanggil AI provider. Service-role key dan encryption key tidak dikirim ke frontend. Baca [arsitektur](docs/ARCHITECTURE.md) dan [technical specification](docs/TECHNICAL-SPEC.md).
+Setelah masuk, buat keluarga dan dompet, kemudian mulai mencatat transaksi. Untuk AI, buka **Profil → Pengaturan AI & API key**. Endpoint OpenRouter sudah diatur otomatis; cukup masukkan API key milikmu.
 
-## Jalankan lokal
+Aplikasi berjalan di browser dan menyesuaikan layar desktop, tablet, maupun ponsel. Saat ini belum ada aplikasi native atau pencatatan offline.
 
-Butuh Node.js **>=22.12**, npm dan browser modern. Docker hanya diperlukan untuk stack Supabase lokal.
+## Coba di komputer sendiri
+
+Siapkan Node.js **22.12 atau lebih baru**, npm, dan browser modern.
 
 ```sh
 git clone https://github.com/huseinrosidstilllearn/masuk-saku.git
@@ -92,76 +57,93 @@ npm ci
 npm run dev:demo
 ```
 
-Buka `http://127.0.0.1:5173`. Demo memakai contoh generik dalam memori; refresh mengembalikan data awal. Demo tidak menulis ke akun/database.
+Buka `http://127.0.0.1:5173`. Mode demo memakai contoh generik dalam memori. Kamu bebas mencoba; refresh mengembalikan data awal dan perubahan tidak masuk ke database.
 
-Untuk backend sendiri, salin `.env.example` ke `.env.development.local`:
+### Hubungkan backend milikmu
+
+Salin `.env.example` menjadi `.env.development.local`, lalu isi URL dan publishable key project Supabase milikmu:
 
 ```dotenv
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR_PUBLIC_PUBLISHABLE_KEY
 ```
 
-Isi nilai project sendiri, lalu `npm run dev`. Jangan menaruh service-role key, API key AI, password database atau encryption key di variabel `VITE_*`.
+Jalankan `npm run dev` untuk membuka aplikasi yang terhubung ke backend tersebut. Schema dan fungsi server perlu dipasang terlebih dahulu; langkah lengkapnya ada di [panduan deployment](docs/DEPLOYMENT.md).
 
-## Build dan self-host
+Untuk Production, gunakan project dan `.env.production.local` yang terpisah. Jangan menaruh service-role key, password database, atau API key AI di variabel `VITE_*`. Script dengan project ref resmi repository perlu disesuaikan sebelum dipakai untuk deployment sendiri.
 
-| Perintah                  | Hasil                     |
-| ------------------------- | ------------------------- |
-| npm run dev               | Development frontend      |
-| npm run dev:demo          | Demo tanpa backend        |
-| npm run build             | Production build ke dist/ |
-| npm run build:development | Development build         |
-| npm run build:demo        | Demo build                |
-| npm run preview           | Preview build lokal       |
+## Cara kerjanya
 
-Gunakan `.env.production.local` untuk Production terpisah. Konfigurasi browser tidak otomatis memasang backend.
+Frontend dibuat dengan **React, TypeScript, dan Vite**, lalu disajikan melalui **Cloudflare Pages**. **Supabase** menangani autentikasi, database PostgreSQL, file privat, dan fungsi server. AI terhubung melalui **OpenRouter**.
 
-1. Buat Supabase project sendiri, pasang migrasi berurutan, deploy Edge Functions.
-2. Atur Auth Site URL/redirect, SMTP dan Edge allowed origins sesuai domain sendiri.
-3. Pasang server secrets dari `supabase/functions/.env.example`, simpan recovery keys secara aman.
-4. Deploy `dist/` ke Cloudflare Pages; pertahankan security headers dan SPA fallback.
-5. Konfigurasikan maintenance/backup, lalu uji akun, izin dan restore di environment terpisah.
-
-Panduan: [deployment](docs/DEPLOYMENT.md), [production](docs/PRODUCTION.md), [operasional](docs/OPERATIONS.md), [Drive backup](docs/GOOGLE-DRIVE-BACKUP.md), [email](docs/AUTH-EMAILS.md). Script yang memuat project ref resmi harus disesuaikan untuk deployment sendiri; jangan menjalankannya terhadap layanan resmi proyek.
-
-## Struktur repository
-
-```text
-src/                   Frontend, komponen, domain keuangan, client API
-public/                Favicon, security headers, SVG, lisensi aset
-supabase/migrations/   Schema, RLS, RPC, migrasi berurutan
-supabase/functions/    Edge Functions dan shared server code
-tests/                 SQL/domain, browser demo/configured-mode
-scripts/               Deployment, backup, source guard
-.github/workflows/     CI dan backup mingguan
-docs/                  PRD, desain, arsitektur, panduan operasional
+```mermaid
+flowchart LR
+  Web[Web app · Cloudflare Pages] --> Auth[Supabase Auth]
+  Web --> Data[PostgreSQL · RLS / RPC]
+  Web --> Files[Private Storage]
+  Web --> Edge[Edge Functions]
+  Edge --> AI[OpenRouter · BYOK]
 ```
 
-work/, environment lokal, NOTES.md, struk, backup dan konfigurasi privat tidak dipublikasikan. Environment examples hanya berisi template.
+Fungsi AI menghasilkan draft untuk ditinjau di aplikasi. Transaksi baru ditulis melalui RPC setelah konfirmasi pengguna. Pemilik dompet, pelaku transaksi, cakupan personal/keluarga, dan pembuat catatan memiliki identitas yang terpisah.
 
-## Pengujian
+Nominal V1 menggunakan **IDR dalam integer rupiah**. Waktu transaksi memakai **WIB dan format 24 jam**. Kunci AI dienkripsi di server; file struk dan foto profil berada di Storage privat.
+
+Baca [arsitektur](docs/ARCHITECTURE.md) dan [spesifikasi teknis](docs/TECHNICAL-SPEC.md) untuk detail implementasi.
+
+## Pengembangan dan pemeriksaan
+
+| Perintah                    | Kegunaan                          |
+| --------------------------- | --------------------------------- |
+| `npm run dev:demo`          | Mencoba aplikasi tanpa backend    |
+| `npm run dev`               | Menggunakan backend Development   |
+| `npm run build`             | Membuat Production build di dist/ |
+| `npm run build:development` | Membuat Development build         |
+| `npm run build:demo`        | Membuat build demo                |
+| `npm run preview`           | Melihat hasil build secara lokal  |
+
+Sebelum mengirim perubahan, jalankan pemeriksaan berikut:
 
 ```sh
 npm run check
 npm run test:e2e -- --workers=2
 npm run test:auth -- --workers=2
 npm run format:check
-node --test tests/backup-drive.test.mjs
-deno test --allow-env supabase/functions/_shared/
 ```
 
-Playwright membutuhkan browser; jalankan `npx playwright install chromium` bila diperlukan. Configured-mode memakai backend fixture, bukan akun Production. SQL tests memakai PGlite dengan scaffolding Auth/Storage. Tes otomatis tidak menggantikan pilot multiakun, kamera fisik, AI provider nyata, retensi Storage dan restore backup.
+Tes browser memerlukan Chromium; pasang dengan `npx playwright install chromium` bila diperlukan. Tes SQL menggunakan PGlite, sedangkan tes autentikasi memakai backend fixture. Keduanya tidak membutuhkan akun Production.
 
-## Dokumentasi
+Untuk perubahan fungsi server dan backup, jalankan pula:
 
-- [Identitas proyek](docs/PROJECT-IDENTITY.md): positioning, deskripsi dan suara produk.
-- [PRD](docs/PRD.md), [acceptance](docs/ACCEPTANCE.md), [roadmap](docs/ROADMAP.md).
-- [Design system](docs/DESIGN-SYSTEM.md), [referensi UI](docs/UI-REFERENCES.md), [motion](docs/MOTION.md).
-- [Profil](docs/PROFILE.md), [username](docs/USERNAME-AUTH.md), [sesi](docs/SESSION-AUTH.md).
-- [Keamanan](SECURITY.md), [kontribusi](CONTRIBUTING.md), [handoff agent](docs/AGENT-HANDOFF.md).
+```sh
+deno test --allow-env supabase/functions/_shared/
+node --test tests/backup-drive.test.mjs
+```
 
-## Kontribusi dan lisensi
+## Perjalanan menuju V1
 
-Laporkan bug/usulan melalui [GitHub Issues](https://github.com/huseinrosidstilllearn/masuk-saku/issues), dengan langkah reproduksi dan contoh generik. Jangan sertakan token atau data keuangan. Laporan kerentanan mengikuti [SECURITY.md](SECURITY.md).
+Versi saat ini adalah **0.1.0**. Aplikasi sudah online dan fitur utama dapat digunakan, tetapi pengembangan V1 masih berjalan.
 
-Kode menggunakan [MIT License](LICENSE). Lisensi/atribusi aset dan recipe pihak ketiga ada di public/licenses/ dan dokumentasi desain/motion. Repository publik tidak memuat data keuangan pengguna.
+Pekerjaan berikutnya mencakup lifecycle dompet, transaksi berulang, rollover otomatis, import/restore, dan penyempurnaan laporan. Pengujian dengan akun nyata, kamera fisik, provider AI, serta beberapa anggota keluarga juga masih diperlukan. Lihat [roadmap](docs/ROADMAP.md) dan [acceptance criteria](docs/ACCEPTANCE.md) untuk status lengkap.
+
+Backup database terenkripsi sudah berhasil dijalankan ke Google Drive. Simulasi restore, pemulihan kunci, dan backup isi file Storage tetap menjadi pekerjaan operasional tersendiri. Tes otomatis dan keberhasilan backup belum membuktikan seluruh alur pemulihan selesai.
+
+## Jelajahi dokumentasi
+
+| Jika ingin…                         | Mulai dari                                                                                         |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Memahami produk dan rencana         | [PRD](docs/PRD.md), [roadmap](docs/ROADMAP.md)                                                     |
+| Menjalankan atau deploy sendiri     | [Deployment](docs/DEPLOYMENT.md), [Production](docs/PRODUCTION.md)                                 |
+| Memahami data dan keamanan          | [Arsitektur](docs/ARCHITECTURE.md), [security notes](docs/SECURITY.md)                             |
+| Mengatur akun                       | [Profil](docs/PROFILE.md), [login Google](docs/GOOGLE-LOGIN.md), [username](docs/USERNAME-AUTH.md) |
+| Mengurus backup                     | [Operasional](docs/OPERATIONS.md), [Google Drive](docs/GOOGLE-DRIVE-BACKUP.md)                     |
+| Mengikuti tampilan dan identitas    | [Design system](docs/DESIGN-SYSTEM.md), [identitas proyek](docs/PROJECT-IDENTITY.md)               |
+| Melanjutkan pekerjaan sebagai agent | [Handoff](docs/AGENT-HANDOFF.md), [AGENTS.md](AGENTS.md)                                           |
+
+Kode frontend ada di src/, migrasi dan fungsi server di supabase/, tes di tests/, dan alat operasional di scripts/. File environment, struk, backup, serta notes privat tidak ikut dipublikasikan.
+
+## Ikut berkontribusi
+
+Bug dan usulan fitur bisa dibuka melalui [GitHub Issues](https://github.com/huseinrosidstilllearn/masuk-saku/issues). Sertakan langkah reproduksi dan contoh generik; jangan unggah token, struk asli, atau data keuangan. Baca [panduan kontribusi](CONTRIBUTING.md) sebelum membuat perubahan. Untuk laporan kerentanan, gunakan [SECURITY.md](SECURITY.md).
+
+Masuk Saku menggunakan [MIT License](LICENSE). Atribusi aset dan recipe pihak ketiga tersedia di public/licenses/ serta dokumentasi desain dan motion.

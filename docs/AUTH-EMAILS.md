@@ -1,6 +1,8 @@
 # Template email Masuk Saku
 
-13 template berbahasa Indonesia untuk daftar Authentication dan Security pada Supabase. Desain mengikuti Dashboard V2: latar abu-abu, kartu putih, judul tebal, tombol charcoal, aksen lime dan coral. Email memakai Arial/Helvetica sebagai fallback yang tersedia di email client; tidak bergantung pada webfont, gambar eksternal, JavaScript, animasi atau emoji.
+13 template berbahasa Indonesia untuk daftar Authentication dan Security pada Supabase. Desain memakai latar abu-abu, kartu putih, judul tebal, tombol charcoal, serta logo Masuk Saku di header. Email memakai Arial/Helvetica; nama brand tetap berupa teks ketika gambar diblokir. Tidak membutuhkan webfont, JavaScript, animasi atau emoji.
+
+Logo PNG di isi email menggunakan domain aplikasi melalui SiteURL. Ini terpisah dari avatar pengirim di Gmail; baca [email branding](EMAIL-BRANDING.md) untuk persyaratan BIMI.
 
 [Buka preview dan salin subject/HTML](../supabase/templates/preview.html). Preview adalah file lokal dengan data contoh, bukan email terkirim. Source ada pada [generator](../scripts/build-auth-emails.mjs), [manifest](../supabase/templates/manifest.json) dan file HTML berikut.
 

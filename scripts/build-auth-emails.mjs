@@ -157,7 +157,12 @@ function markup(t, security) {
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f2f3f5;">
     <tr><td class="outer" align="center" style="padding:40px 16px;">
       <table role="presentation" width="560" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:560px;">
-        <tr><td style="padding:0 4px 22px;font-size:24px;font-weight:800;letter-spacing:-1px;color:#202126;">Masuk Saku<span style="color:#ed7556;">.</span></td></tr>
+        <tr><td style="padding:0 4px 24px;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
+            <td style="padding-right:14px;vertical-align:middle;"><img src="{{ .SiteURL }}/favicon-96x96.png" width="48" height="48" alt="Logo Masuk Saku" style="display:block;border:0;width:48px;height:48px;" /></td>
+            <td style="vertical-align:middle;font-size:24px;font-weight:800;letter-spacing:-1px;color:#164c3e;">Masuk Saku</td>
+          </tr></table>
+        </td></tr>
         <tr><td style="padding:0;background-color:#ffffff;border:1px solid #e4e6e9;border-radius:24px;">
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr><td class="inner" style="padding:36px;">
@@ -213,7 +218,7 @@ const preview = `<!doctype html><html lang="id"><head><meta charset="utf-8" /><m
 const templates=JSON.parse(document.getElementById('email-data').textContent);
 const samples={SiteURL:'https://example.invalid',ConfirmationURL:'https://example.invalid/verify?token=DEMO_ONLY&type=signup',Token:'12345678',NewEmail:'email.baru@example.invalid',OldEmail:'email.lama@example.invalid',Email:'email.baru@example.invalid',OldPhone:'+62 812 0000 0000',Phone:'+62 813 0000 0000',Provider:'Google',FactorType:'TOTP'};
 const select=document.getElementById('template');for(const t of templates){const option=document.createElement('option');option.value=t.key;option.textContent=t.label;select.append(option)}
-function show(){const t=templates.find(t=>t.key===select.value);document.getElementById('subject').value=t.subject;document.getElementById('content').value=t.html;document.getElementById('preview').srcdoc=t.html.replace(/{{\\s*\\.(\\w+)\\s*}}/g,(_,key)=>samples[key]||'DATA CONTOH');document.getElementById('status').textContent=''}
+function show(){const t=templates.find(t=>t.key===select.value);document.getElementById('subject').value=t.subject;document.getElementById('content').value=t.html;document.getElementById('preview').srcdoc=t.html.replace(/{{\\s*\\.(\\w+)\\s*}}/g,(_,key)=>samples[key]||'DATA CONTOH').replace('https://example.invalid/favicon-96x96.png',new URL('../../public/favicon-96x96.png',location.href).href);document.getElementById('status').textContent=''}
 async function copy(id){const field=document.getElementById(id);try{await navigator.clipboard.writeText(field.value);document.getElementById('status').textContent='Berhasil disalin.'}catch{field.focus();field.select();document.getElementById('status').textContent='Tekan Ctrl+C untuk menyalin teks yang dipilih.'}}
 select.addEventListener('change',show);document.getElementById('copy-subject').addEventListener('click',()=>copy('subject'));document.getElementById('copy-content').addEventListener('click',()=>copy('content'));show();
 </script></body></html>`;

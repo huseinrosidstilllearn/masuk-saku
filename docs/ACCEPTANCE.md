@@ -98,6 +98,7 @@ Current release work: password recovery request/PKCE callback/hash navigation/up
 - Demo memakai data keluarga fiktif dalam memori browser, terpisah dari backend dan akun pengguna.
 - Pengunjung dapat memilih lingkup keluarga/anggota, menyembunyikan saldo, menjelajah dompet/transaksi/anggaran, dan mencatat transaksi contoh melalui preview serta konfirmasi.
 - Saldo dan daftar transaksi hanya berubah setelah konfirmasi; batal tidak menulis. Reset, reload, atau keluar mengembalikan contoh semula.
+- Setelah 15 menit tanpa aktivitas demo, data contoh, lingkup, dan draft otomatis kembali ke awal; pengunjung mendapat pemberitahuan. Tab yang kembali dari latar belakang juga mengecek batas waktu.
 - Demo tidak menjanjikan AI, kamera, sinkronisasi bank, atau penyimpanan permanen. CTA daftar membuka `/daftar` tanpa memindahkan data contoh.
 - Browser configured-mode test memantau agar tidak ada write request ke Supabase selama simulasi.
 

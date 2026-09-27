@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { loadDemo, demoUser } from '../lib/demo';
 import { balances, budgetSpent, dashboard, money, monthInJakarta } from '../domain/finance';
 import type { Snapshot, Transaction, TransactionInput } from '../domain/types';
@@ -7,6 +7,7 @@ import { TransactionForm } from './TransactionForm';
 import { Icon } from './Icon';
 
 type Tab = 'dashboard' | 'wallets' | 'transactions' | 'budgets';
+const DEMO_IDLE_MS = 15 * 60 * 1000;
 function withExampleTransaction(current: Snapshot, input: TransactionInput): Snapshot {
   const { fee_amount, splits = [], tag_ids = [], ...fields } = input;
   const id = crypto.randomUUID();
@@ -56,6 +57,48 @@ export function DemoExperience({
   const [tab, setTab] = useState<Tab>('dashboard');
   const [draft, setDraft] = useState<Partial<TransactionInput> | null>(null);
   const [notice, setNotice] = useState('');
+  const lastActivity = useRef(Date.now());
+  useEffect(() => {
+    let timeout: number | undefined;
+    const schedule = () => {
+      window.clearTimeout(timeout);
+      timeout = window.setTimeout(
+        checkIdle,
+        Math.max(0, DEMO_IDLE_MS - (Date.now() - lastActivity.current)),
+      );
+    };
+    const checkIdle = () => {
+      if (Date.now() - lastActivity.current < DEMO_IDLE_MS) return schedule();
+      window.clearTimeout(timeout);
+      timeout = undefined;
+      lastActivity.current = Date.now();
+      setData(loadDemo());
+      setOwner('family');
+      setHide(false);
+      setTab('dashboard');
+      setDraft(null);
+      setNotice('Demo otomatis kembali ke data awal setelah 15 menit tanpa aktivitas.');
+    };
+    const markActive = () => {
+      lastActivity.current = Date.now();
+      schedule();
+    };
+    const onVisible = () => {
+      if (!document.hidden) checkIdle();
+    };
+    document.addEventListener('pointerdown', markActive, true);
+    document.addEventListener('keydown', markActive, true);
+    document.addEventListener('input', markActive, true);
+    document.addEventListener('visibilitychange', onVisible);
+    schedule();
+    return () => {
+      window.clearTimeout(timeout);
+      document.removeEventListener('pointerdown', markActive, true);
+      document.removeEventListener('keydown', markActive, true);
+      document.removeEventListener('input', markActive, true);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, []);
   const month = monthInJakarta(new Date().toISOString());
   const summary = dashboard(data.wallets, data.transactions, owner, month);
   const walletBalances = balances(data.wallets, data.transactions);
@@ -130,8 +173,9 @@ export function DemoExperience({
             <Icon name="lock" />
             <p>
               Simulasi lokal dengan data fiktif. Tidak memakai akun atau database Masuk Saku.
-              Perubahan hilang saat kamu meninggalkan demo atau memuat ulang halaman. Foto struk dan
-              AI tersedia setelah masuk dengan API key milikmu.
+              Perubahan hilang saat kamu meninggalkan demo atau memuat ulang halaman. Demo juga
+              otomatis kembali ke awal setelah 15 menit tanpa aktivitas. Foto struk dan AI tersedia
+              setelah masuk dengan API key milikmu.
             </p>
           </div>
           <div className="demo-toolbar">

@@ -1,5 +1,9 @@
 # Agent handoff — current release
 
+## Centered landing hero and demo CTA — 28 September 2026
+
+Signed-out hero content is centered at phone, tablet and desktop widths. The primary signup button and smaller demo button now form a vertical action stack. The demo CTA has a purple fill and rotating conic-gradient border glow; `prefers-reduced-motion` stops the loop, and focus remains visibly outlined. This is a public landing presentation change only: account routing, demo isolation, financial behavior and production remain unchanged. Development deployment `56d2a3e4` at `https://masuk-saku-development.pages.dev/`. Verification: 84 unit/SQL, 45 demo-mode browser, 20 configured auth tests, typecheck/build/format passed. Local and hosted 320/390/768/1440 checks confirmed center alignment, action order, smaller demo CTA, no overflow or page errors; demo route and reduced-motion checks passed. Production remains at the previous deployment.
+
 ## Public interactive demo — 28 September 2026
 
 Latest demo retention: purely in-memory as before, plus an automatic reset after 15 minutes without pointer/keyboard/input activity. Returning to a backgrounded tab checks elapsed idle time immediately. Reset closes any draft, restores initial data and family scope, unmasks only example data, returns to Dashboard and shows a notice. Reload/leaving still resets; no browser persistence or backend writes.

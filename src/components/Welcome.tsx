@@ -71,15 +71,18 @@ export function Welcome({
           <strong>Masuk Saku menyatukan keuangan keluargamu:</strong> dompet, transaksi, anggaran,
           dan target tabungan. Lebih mudah mencatat, lebih jelas merencanakan.
         </p>
-        <button className="welcome-cta t-learn" onClick={() => onAccess(true)}>
-          Mulai catat sekarang{' '}
-          <span className="t-learn-chevron">
-            <Icon name="chevronRight" />
-          </span>
-        </button>
-        <button className="welcome-demo-link" onClick={onDemo}>
-          <Icon name="dashboard" /> Jelajahi demo interaktif
-        </button>
+        <div className="welcome-hero-actions">
+          <button className="welcome-cta t-learn" onClick={() => onAccess(true)}>
+            Mulai catat sekarang{' '}
+            <span className="t-learn-chevron">
+              <Icon name="chevronRight" />
+            </span>
+          </button>
+          <button className="welcome-demo-link" onClick={onDemo}>
+            <Icon name="dashboard" />
+            <span>Jelajahi demo interaktif</span>
+          </button>
+        </div>
         <small>Catat manual atau dengan AI. Kamu yang mengonfirmasi.</small>
       </section>
       <section className="welcome-product" id="ringkasan" aria-label="Contoh ringkasan keuangan">

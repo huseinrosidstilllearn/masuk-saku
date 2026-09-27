@@ -1,5 +1,11 @@
 # Agent handoff — current release
 
+## Public interactive demo — 28 September 2026
+
+Signed-out landing has hero and preview CTAs into `/demo`. This is an isolated in-memory snapshot of generic demo data, even when the hosted frontend is configured for Supabase. Visitors can switch family/member ownership scope, mask balances, inspect wallet/transaction/budget tabs, and use the real TransactionForm for a local example income/expense/transfer that updates balances/chart/rows only after confirmation. Reset/reload/leaving restores the initial snapshot; none of these actions call financial RPCs, read a user account, persist data or configure AI. The page clearly distinguishes example data from real accounts and notes that AI/camera require signup. No backend/migration/provider changes. Production remains unchanged until separately promoted.
+
+Development deployment 4560589c. Production remains 64f9f8a6, DB11 migrations/6 Edge unchanged. Fresh checks: 84 unit/SQL, 45 demo browser, 19 configured auth, typecheck/build/format passed. Dedicated configured test covers preview confirmation, member scope, local money change, no Supabase writes, reset on reload and immediate masking. Local public demo screenshots and navigation at 320/768/1440 inspected/no overflow. Hosted anonymous smoke checks remain separate from actual account/finance/AI pilot.
+
 ## Expanded public introduction — 28 September 2026
 
 Signed-out landing page now includes six feature explanations, three onboarding steps, clear no-bank-sync and AI-human-confirmation copy, expanded FAQ, a self-host comparison and final signup CTA. Self-host content links the public GitHub repository and deployment guide. It explicitly warns that cloning source alone does not separate data; operators must set up their own Supabase project, schema/Edge functions, Storage/Auth and frontend/deployment configuration. This does not claim an automatic one-click self-host path. Existing demo preview remains generic. No auth/financial/backend behavior changed.

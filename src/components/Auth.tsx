@@ -4,6 +4,7 @@ import { acceptInvitation } from '../lib/invitations';
 import { createHousehold } from '../lib/repository';
 import { Icon } from './Icon';
 import { Welcome } from './Welcome';
+import { DemoExperience } from './DemoExperience';
 import { MotionLoadingText } from './Motion';
 import { PasswordResetRequest } from './PasswordRecovery';
 import {
@@ -15,7 +16,8 @@ import {
 export function Auth() {
   const [path, setPath] = useState(location.pathname);
   const signup = path === '/daftar';
-  const landing = path !== '/masuk' && path !== '/daftar';
+  const demo = path === '/demo';
+  const landing = path !== '/masuk' && path !== '/daftar' && !demo;
   const [reset, setReset] = useState(false);
   const [email, setEmail] = useState(''),
     [username, setUsername] = useState(''),
@@ -37,14 +39,16 @@ export function Auth() {
     setShowPassword(false);
     setMessage('');
     setFailed(false);
-    document.title = landing
-      ? 'Masuk Saku — Satu saku, semua catatan keuangan.'
-      : signup
-        ? 'Daftar — Masuk Saku'
-        : 'Masuk — Masuk Saku';
-    if (!landing)
+    document.title = demo
+      ? 'Demo interaktif — Masuk Saku'
+      : landing
+        ? 'Masuk Saku — Satu saku, semua catatan keuangan.'
+        : signup
+          ? 'Daftar — Masuk Saku'
+          : 'Masuk — Masuk Saku';
+    if (!landing && !demo)
       document.querySelector<HTMLInputElement>('.auth-card input')?.focus({ preventScroll: true });
-  }, [path, landing, signup]);
+  }, [path, landing, signup, demo]);
   function navigate(next: string) {
     window.history.pushState(null, '', next);
     setPath(next);
@@ -73,10 +77,15 @@ export function Auth() {
     }
   }
   if (reset) return <PasswordResetRequest onBack={() => setReset(false)} />;
+  if (demo)
+    return <DemoExperience onLeave={() => navigate('/')} onSignup={() => navigate('/daftar')} />;
   if (landing)
     return (
       <main className="billow-page">
-        <Welcome onAccess={(nextSignup) => navigate(nextSignup ? '/daftar' : '/masuk')} />
+        <Welcome
+          onAccess={(nextSignup) => navigate(nextSignup ? '/daftar' : '/masuk')}
+          onDemo={() => navigate('/demo')}
+        />
       </main>
     );
   return (

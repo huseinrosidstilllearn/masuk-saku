@@ -92,6 +92,15 @@ Current release work: password recovery request/PKCE callback/hash navigation/up
 
 # Personal profile addition
 
+## Demo publik interaktif
+
+- Beranda membuka `/demo` tanpa login; URL juga bisa dibuka langsung dan direfresh.
+- Demo memakai data keluarga fiktif dalam memori browser, terpisah dari backend dan akun pengguna.
+- Pengunjung dapat memilih lingkup keluarga/anggota, menyembunyikan saldo, menjelajah dompet/transaksi/anggaran, dan mencatat transaksi contoh melalui preview serta konfirmasi.
+- Saldo dan daftar transaksi hanya berubah setelah konfirmasi; batal tidak menulis. Reset, reload, atau keluar mengembalikan contoh semula.
+- Demo tidak menjanjikan AI, kamera, sinkronisasi bank, atau penyimpanan permanen. CTA daftar membuka `/daftar` tanpa memindahkan data contoh.
+- Browser configured-mode test memantau agar tidak ada write request ke Supabase selama simulasi.
+
 ## Pengenalan publik dan self-host
 
 - Beranda tanpa sesi menjelaskan manfaat keluarga, alur mulai mencatat, pilihan input tanpa AI, batas sinkronisasi bank, dan cara mencoba versi web.

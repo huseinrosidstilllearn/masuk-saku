@@ -5,7 +5,13 @@ import { CashflowChart } from './CashflowChart';
 import { Icon } from './Icon';
 import { MotionDisclosure } from './Motion';
 
-export function Welcome({ onAccess }: { onAccess: (signup: boolean) => void }) {
+export function Welcome({
+  onAccess,
+  onDemo,
+}: {
+  onAccess: (signup: boolean) => void;
+  onDemo: () => void;
+}) {
   const hero = useRef<HTMLElement>(null);
   useLayoutEffect(() => {
     const block = hero.current!;
@@ -70,6 +76,9 @@ export function Welcome({ onAccess }: { onAccess: (signup: boolean) => void }) {
           <span className="t-learn-chevron">
             <Icon name="chevronRight" />
           </span>
+        </button>
+        <button className="welcome-demo-link" onClick={onDemo}>
+          <Icon name="dashboard" /> Jelajahi demo interaktif
         </button>
         <small>Catat manual atau dengan AI. Kamu yang mengonfirmasi.</small>
       </section>
@@ -143,6 +152,15 @@ export function Welcome({ onAccess }: { onAccess: (signup: boolean) => void }) {
               ))}
             </div>
           </div>
+        </div>
+        <div className="welcome-demo-cta">
+          <p>
+            Ingin mencoba sebelum membuat akun? Buka contoh interaktif dengan data keluarga fiktif.
+          </p>
+          <button onClick={onDemo}>
+            Coba dashboard demo
+            <Icon name="arrowRight" />
+          </button>
         </div>
       </section>
       <section className="welcome-features" id="fitur">

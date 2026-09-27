@@ -21,9 +21,9 @@
   padding: 9px 16px;
   border: 0;
   border-radius: 13px;
-  background: #7251bb;
+  background: #bd405b;
   color: #fff;
-  box-shadow: 0 8px 22px #7758c544;
+  box-shadow: 0 8px 22px #e9506944;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -39,9 +39,9 @@
   background: conic-gradient(
     from 0deg,
     transparent 0deg,
-    #f5a8df 65deg,
-    #fff3bc 90deg,
-    #cdb2ff 115deg,
+    #ff9c78 65deg,
+    #fff1b3 90deg,
+    #ffb971 115deg,
     transparent 170deg
   );
   animation: welcome-demo-glow 4s linear infinite;
@@ -52,14 +52,14 @@
   z-index: -1;
   inset: 2px;
   border-radius: 11px;
-  background: linear-gradient(115deg, #6746ae, #8b64cf);
+  background: linear-gradient(115deg, #b53354, #d95151);
 }
 .welcome-demo-link:hover {
-  box-shadow: 0 10px 25px #7758c566;
+  box-shadow: 0 10px 25px #e9506966;
   transform: translateY(-1px);
 }
 .welcome-demo-link:focus-visible {
-  outline: 3px solid #392b68;
+  outline: 3px solid #69222e;
   outline-offset: 3px;
 }
 @keyframes welcome-demo-glow {

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Kode verifikasi keamanan — Masuk Saku</title>
+    <style>
+      @media only screen and (max-width: 600px) {
+        .outer {
+          padding: 20px 12px !important;
+        }
+        .inner {
+          padding: 28px 22px !important;
+        }
+        .heading {
+          font-size: 28px !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f2f3f5;
+      color: #202126;
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    "
+  >
+    <div style="display: none; max-height: 0; overflow: hidden; opacity: 0; mso-hide: all">
+      Gunakan kode ini untuk mengonfirmasi tindakan sensitif pada akunmu.
+    </div>
+    <table
+      role="presentation"
+      width="100%"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      style="background-color: #f2f3f5"
+    >
+      <tr>
+        <td class="outer" align="center" style="padding: 40px 16px">
+          <table
+            role="presentation"
+            width="560"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            style="width: 100%; max-width: 560px"
+          >
+            <tr>
+              <td
+                style="
+                  padding: 0 4px 22px;
+                  font-size: 24px;
+                  font-weight: 800;
+                  letter-spacing: -1px;
+                  color: #202126;
+                "
+              >
+                Masuk Saku<span style="color: #ed7556">.</span>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 0;
+                  background-color: #ffffff;
+                  border: 1px solid #e4e6e9;
+                  border-radius: 24px;
+                "
+              >
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td class="inner" style="padding: 36px">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                          <td
+                            style="
+                              padding: 8px 12px;
+                              background-color: #e7f3bb;
+                              border-radius: 8px;
+                              font-size: 11px;
+                              font-weight: 700;
+                              letter-spacing: 1px;
+                              color: #303426;
+                            "
+                          >
+                            AKUN MASUK SAKU
+                          </td>
+                        </tr>
+                      </table>
+                      <h1
+                        class="heading"
+                        style="
+                          margin: 22px 0 16px;
+                          font-size: 32px;
+                          line-height: 1.2;
+                          font-weight: 800;
+                          letter-spacing: -1px;
+                          color: #202126;
+                        "
+                      >
+                        Pastikan ini benar-benar kamu.
+                      </h1>
+                      <p
+                        style="margin: 0 0 22px; font-size: 16px; line-height: 1.7; color: #555b65"
+                      >
+                        Masukkan kode di bawah pada layar verifikasi Masuk Saku untuk melanjutkan
+                        tindakan yang kamu minta.
+                      </p>
+
+                      <p style="margin: 0 0 8px; font-size: 12px; font-weight: 700; color: #626974">
+                        KODE VERIFIKASI
+                      </p>
+                      <p
+                        style="
+                          margin: 0 0 24px;
+                          padding: 18px 12px;
+                          background-color: #f5f6f8;
+                          border-radius: 12px;
+                          font-family:
+                            Courier New,
+                            Courier,
+                            monospace;
+                          font-size: 28px;
+                          font-weight: 700;
+                          letter-spacing: 4px;
+                          text-align: center;
+                          color: #202126;
+                        "
+                      >
+                        {{ .Token }}
+                      </p>
+
+                      <table
+                        role="presentation"
+                        width="100%"
+                        cellspacing="0"
+                        cellpadding="0"
+                        border="0"
+                      >
+                        <tr>
+                          <td style="padding-top: 28px">
+                            <p
+                              style="
+                                margin: 0;
+                                padding-top: 22px;
+                                border-top: 1px solid #e9ebef;
+                                font-size: 13px;
+                                line-height: 1.7;
+                                color: #6a717c;
+                              "
+                            >
+                              Jangan membagikan kode ini kepada siapa pun. Jika kamu tidak meminta
+                              verifikasi, jangan gunakan kode dan periksa keamanan akunmu.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 24px 8px 0;
+                  font-size: 12px;
+                  line-height: 1.8;
+                  color: #777d87;
+                  text-align: center;
+                "
+              >
+                Satu saku, semua catatan keuangan.<br />Email otomatis dari Masuk Saku. Tidak perlu
+                membalas email ini.<br /><a
+                  href="{{ .SiteURL }}"
+                  style="color: #5f6671; text-decoration: underline"
+                  >Buka Masuk Saku</a
+                >
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

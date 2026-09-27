@@ -1,0 +1,3 @@
+-- No real users or private financial data in seed files.
+-- create_household() seeds the agreed categories for each authenticated Owner.
+-- UI demo fixtures live in src/lib/demo.ts and are never inserted into production.

@@ -1,0 +1,1011 @@
+/* Billow composition with Masuk Saku's clean sans-serif typography and green identity. */
+:root {
+  --green: #146744;
+  --muted: #61746a;
+  --line: #e6ece8;
+  color: #163b29;
+  background: #fbfdfc;
+}
+body {
+  background: #fbfdfc;
+}
+button {
+  border-radius: 8px;
+}
+button.primary {
+  background: #146744;
+  border-color: #146744;
+}
+button.primary:hover {
+  background: #0d5436;
+}
+.billow-page {
+  max-width: none;
+  width: 100%;
+  padding: 0;
+  background: #fbfdfc;
+  color: #113d2b;
+}
+.billow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  max-width: 1240px;
+  height: 84px;
+  padding: 20px 28px;
+  margin: auto;
+  background: transparent;
+  border: 0;
+}
+.billow-header .brand {
+  margin: 0;
+  text-decoration: none;
+  font-size: 27px;
+}
+.billow-header .brand-mark {
+  background: #113d2b;
+  color: #fff;
+  width: 33px;
+  height: 33px;
+  border-radius: 11px;
+}
+.billow-header nav {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  margin: 0;
+}
+.billow-header nav a {
+  color: #365f4d;
+  font-size: 14px;
+  text-decoration: none;
+}
+.billow-header nav a:hover {
+  text-decoration: underline;
+}
+.welcome-account {
+  display: flex;
+  gap: 8px;
+}
+.welcome-account button {
+  border-radius: 50px;
+  padding: 7px 14px;
+  min-height: 34px;
+  font-size: 13px;
+}
+.welcome-account button.primary {
+  background: #113d2b;
+  border-color: #113d2b;
+}
+.billow-hero {
+  max-width: 1000px;
+  margin: 96px auto 0;
+  padding: 0 24px 84px;
+  text-align: center;
+}
+.welcome-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #dbe9e2;
+  color: #4c7564;
+  background: #f5faf7;
+  padding: 5px 12px;
+  font-size: 12px;
+  line-height: 1.3;
+  border-radius: 50px;
+  text-decoration: none;
+}
+.welcome-pill svg {
+  width: 14px;
+  height: 14px;
+}
+.billow-hero h1 {
+  font-family: inherit;
+  font-size: clamp(52px, 5.8vw, 76px);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+  color: #113d2b;
+  margin: 36px auto 25px;
+}
+.billow-hero > p {
+  max-width: 630px;
+  margin: 0 auto 32px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #4a705f;
+  letter-spacing: -0.4px;
+}
+.billow-hero p strong {
+  background: #e5f1e9;
+  font-weight: 600;
+  box-decoration-break: clone;
+}
+.welcome-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 50px;
+  padding: 15px 25px;
+  min-height: 50px;
+  color: #fff;
+  background: linear-gradient(180deg, #1da464, #0b7850);
+  border: 1px solid #258c5b;
+  box-shadow:
+    0 7px 18px #15845025,
+    inset 0 1px 0 #ffffff40;
+  font-size: 15px;
+  font-weight: 600;
+}
+.welcome-cta:hover {
+  background: #0b7850;
+}
+.welcome-cta svg {
+  width: 18px;
+  height: 18px;
+}
+.billow-hero > small {
+  display: block;
+  margin-top: 16px;
+  font-size: 11px;
+  color: #617d6f;
+}
+.welcome-product {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 22px 56px 100px;
+  position: relative;
+  isolation: isolate;
+}
+.welcome-product::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 20px -40px 10px;
+  background:
+    radial-gradient(ellipse at 25% 40%, #81df9bd9, transparent 60%),
+    radial-gradient(ellipse at 72% 35%, #059d6899, transparent 62%),
+    radial-gradient(ellipse at 50% 65%, #aff4b3, transparent 63%);
+  filter: blur(32px);
+}
+.welcome-product > .welcome-pill {
+  margin-bottom: 16px;
+  background: #f5fff9;
+}
+.welcome-cockpit {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  padding: 8px;
+  border: 1px solid #d5e4da;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 4px #ffffff88,
+    0 10px 40px #13623b18;
+}
+.welcome-cockpit > aside {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #f8faf9;
+  border-radius: 8px 0 0 8px;
+}
+.welcome-cockpit > aside > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #61746a;
+  padding: 7px;
+}
+.welcome-cockpit aside svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.welcome-cockpit aside .preview-household {
+  border: 1px solid #e5ebe7;
+  border-radius: 6px;
+  color: #193e2c;
+  margin-bottom: 16px;
+}
+.welcome-cockpit aside .preview-selected {
+  background: #fff;
+  border: 1px solid #e5ebe7;
+  border-radius: 6px;
+  color: #193e2c;
+}
+.welcome-cockpit aside > small {
+  font-size: 9px;
+  color: #819087;
+  padding: 10px 7px 0;
+}
+.welcome-cockpit aside .preview-demo-label {
+  margin-top: auto;
+  font-size: 9px;
+}
+.preview-workspace {
+  padding: 0 14px 14px;
+  min-width: 0;
+}
+.preview-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #edf1ef;
+  font-size: 11px;
+  color: #63796c;
+}
+.preview-topbar > span {
+  font-size: 10px;
+}
+.preview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  gap: 12px;
+}
+.preview-chart {
+  min-width: 0;
+  border: 1px solid #e8ede9;
+  border-radius: 8px;
+  background: #fbfcfb;
+  padding: 18px;
+}
+.preview-chart > span {
+  font-size: 10px;
+  color: #758277;
+}
+.preview-chart h2 {
+  font-size: 27px;
+  margin: 10px 0 18px;
+  letter-spacing: -0.8px;
+}
+.preview-chart .flow-totals {
+  gap: 22px;
+  margin-bottom: 18px;
+}
+.preview-chart .flow-totals strong {
+  font-size: 15px;
+}
+.preview-chart .flow-totals span {
+  font-size: 9px;
+}
+.preview-chart .chart-caption {
+  font-size: 8px;
+}
+.preview-chart .flow-net {
+  font-size: 9px;
+}
+.preview-chart .flow-net strong {
+  font-size: 10px;
+}
+.preview-numbers {
+  display: grid;
+  gap: 10px;
+}
+.preview-numbers article {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #e8ede9;
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 0;
+  background: #fbfcfb;
+}
+.preview-numbers span {
+  font-size: 9px;
+  color: #758277;
+}
+.preview-numbers strong {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  overflow-wrap: anywhere;
+}
+.preview-workspace h3 {
+  font-size: 13px;
+  margin-top: 22px;
+}
+.preview-wallets {
+  border: 1px solid #e8ede9;
+  border-radius: 8px;
+}
+.preview-wallets > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #edf1ef;
+  padding: 10px 12px;
+  font-size: 10px;
+}
+.preview-wallets > span:last-child {
+  border: 0;
+}
+.preview-wallets svg {
+  width: 13px;
+  height: 13px;
+}
+.preview-wallets small {
+  margin-left: auto;
+  background: #e9f7e5;
+  border-radius: 10px;
+  padding: 3px 7px;
+  font-size: 9px;
+}
+.welcome-features {
+  max-width: 1160px;
+  padding: 88px 28px 70px;
+  margin: auto;
+  text-align: center;
+}
+.welcome-features > h2,
+.welcome-faq h2 {
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 44px;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  color: #113d2b;
+  margin: 25px 0 20px;
+}
+.welcome-features > p {
+  color: #617d6f;
+  font-size: 16px;
+}
+.welcome-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+  text-align: left;
+}
+.welcome-feature-grid article {
+  padding: 30px;
+  border: 1px solid #e5eee8;
+  border-radius: 12px;
+  background: #f8fbf9;
+}
+.welcome-feature-grid article > svg {
+  width: 28px;
+  height: 28px;
+  color: #198050;
+  margin-bottom: 26px;
+}
+.welcome-feature-grid h3 {
+  font-size: 20px;
+  letter-spacing: -0.6px;
+  line-height: 1.3;
+  margin: 0 0 14px;
+}
+.welcome-feature-grid p {
+  color: #617d6f;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.welcome-faq {
+  max-width: 790px;
+  margin: 60px auto;
+  padding: 20px 28px;
+  text-align: center;
+}
+.welcome-faq details {
+  text-align: left;
+  padding: 20px 0;
+  border-bottom: 1px solid #e6eee9;
+}
+.welcome-faq summary {
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+}
+.welcome-faq details p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #617d6f;
+}
+.billow-page .auth-form-area {
+  width: 100%;
+  margin: 70px auto 0;
+  padding: 64px 24px;
+  background: linear-gradient(180deg, #fbfdfc, #edf9f2);
+  scroll-margin-top: 30px;
+}
+.billow-page .auth-card {
+  width: min(100%, 440px);
+  border-radius: 16px;
+  padding: 32px;
+  border: 1px solid #deebe3;
+  background: #fff;
+}
+.billow-page .auth-card h2 {
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #113d2b;
+}
+.billow-page .auth-card button.primary {
+  border-radius: 50px;
+}
+.billow-page .auth-footnote {
+  font-size: 10px;
+}
+/* Actual workspace follows the cockpit reference, not the marketing hero size. */
+.app > aside {
+  width: 200px;
+  background: #f8faf9;
+  padding: 20px 12px;
+  border-color: #e6ece8;
+}
+.app > aside .brand {
+  margin: 4px 6px 24px;
+}
+.app > aside .brand > span:last-child {
+  font-size: 22px;
+}
+.app > aside .household-card {
+  background: transparent;
+  border: 1px solid #e4ebe6;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 18px;
+}
+.app > aside nav button {
+  min-height: 40px;
+  padding: 10px 12px;
+  font-size: 12px;
+  border-radius: 7px;
+}
+.app > aside nav button.active {
+  background: #fff;
+  border: 1px solid #e4ebe6;
+  color: #163b29;
+  box-shadow: none;
+}
+.main {
+  margin-left: 200px;
+  width: calc(100% - 200px);
+  background: #fff;
+}
+.main > header {
+  height: 58px;
+  background: #fff;
+  border-bottom: 1px solid #edf1ee;
+  padding-inline: 24px;
+}
+.main > main {
+  padding: 24px;
+  background: #fff;
+}
+.workspace-title {
+  margin-bottom: 20px;
+}
+.page-heading h1 {
+  font-size: 24px;
+  letter-spacing: -0.6px;
+}
+.page-heading p {
+  font-size: 12px;
+}
+.page-heading .eyebrow {
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.toolbar select {
+  border-radius: 7px;
+  min-height: 36px;
+}
+.overview {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.overview .balance-card {
+  background: #fbfcfb;
+  color: #163b29;
+  border: 1px solid #e6ece8;
+  border-radius: 10px;
+  padding: 22px 22px 0;
+}
+.balance-topline .balance-label {
+  color: #687c6e;
+  font-size: 12px;
+}
+.balance-currency {
+  border-color: #dfe8e2;
+  color: #687c6e;
+}
+.balance-card h2 {
+  color: #173d29;
+  font-size: 34px;
+  margin-top: 14px;
+  letter-spacing: -1px;
+  font-weight: 600;
+}
+.balance-card > small {
+  color: #687c6e;
+}
+.overview .balance-card .flow-chart {
+  margin-top: 24px;
+}
+.balance-card .flow-totals {
+  gap: 28px;
+  padding: 0;
+}
+.balance-card .balance-flow > div + div {
+  border: 0;
+  padding: 0;
+}
+.balance-card .balance-flow span {
+  color: #687c6e;
+  font-size: 11px;
+}
+.balance-card .balance-flow strong {
+  color: #173d29;
+  font-size: 21px;
+}
+.balance-card .chart-label {
+  fill: #829085;
+}
+.balance-card .flow-net {
+  margin-bottom: 18px;
+}
+.balance-shortcuts {
+  margin-inline: -22px;
+  border-top-color: #e6ece8;
+  background: #fff;
+  border-radius: 0 0 10px 10px;
+}
+.balance-shortcuts button {
+  color: #36624a;
+  min-height: 46px;
+  padding: 12px 6px;
+  font-size: 11px;
+}
+.balance-shortcuts button + button {
+  border-left-color: #e6ece8;
+}
+.balance-shortcuts button:hover {
+  background: #f1f7f3;
+}
+.planning-summary {
+  grid-template-rows: repeat(2, 1fr);
+  gap: 14px;
+}
+.plan-summary-card {
+  display: block;
+  border: 1px solid #e6ece8 !important;
+  background: #fbfcfb;
+  border-radius: 10px;
+  padding: 20px;
+}
+.plan-summary-icon {
+  display: none;
+}
+.plan-summary-card h2 {
+  font-size: 25px;
+  margin-top: 14px;
+}
+.plan-summary-card small {
+  font-size: 10px;
+  line-height: 1.5;
+}
+.plan-summary-link {
+  margin: 20px 0 0;
+  padding: 5px 0;
+}
+.panel {
+  border-radius: 10px;
+  border-color: #e6ece8;
+  padding: 22px;
+}
+.fintech-overview {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.quick.panel {
+  border-radius: 9px;
+  background: #f6faf7;
+  border-color: #dfe9e2;
+  padding: 13px 18px;
+}
+.section-heading h2 {
+  font-size: 15px;
+}
+.table-wrap th {
+  background: #fafcfb;
+  border-bottom: 1px solid #e8eeea;
+  font-weight: 500;
+}
+.table-wrap td {
+  border-color: #edf1ef;
+  font-size: 11px;
+}
+.badge {
+  border-radius: 50px;
+  background: #e7f9e1;
+  color: #33623b;
+  font-size: 9px;
+}
+.wallet-card,
+.goal-card {
+  border-radius: 10px;
+}
+.wallet-card h3 {
+  font-size: 12px;
+}
+.wallet-symbol,
+.goal-symbol {
+  background: #f1f7f3;
+  border-radius: 7px;
+}
+.chart-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.chart-line.chart-income {
+  stroke: #185d3c;
+}
+.chart-line.chart-expense {
+  stroke: #9d9260;
+}
+.chart-income {
+  fill: #185d3c;
+}
+.chart-expense {
+  fill: #9d9260;
+}
+.income-dot {
+  background: #185d3c;
+}
+.expense-dot {
+  background: #9d9260;
+}
+.chart-private {
+  min-height: 230px;
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .overview {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+  .plan-summary-card h2 {
+    font-size: 22px;
+  }
+}
+@media (max-width: 800px) {
+  .app > aside nav button {
+    min-height: 54px;
+    padding: 6px 2px;
+    font-size: 10px;
+  }
+  .app > aside {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    padding: 16px 20px;
+    border: 0;
+  }
+  .app > aside .brand {
+    margin: 0;
+  }
+  .app > aside nav button.active {
+    background: #f0f7f3;
+    border: 0;
+    color: #146744;
+  }
+  .main {
+    margin: 0;
+    width: 100%;
+  }
+  .main > header {
+    height: 44px;
+    padding-inline: 20px;
+  }
+  .main > main {
+    padding: 20px 20px calc(160px + env(safe-area-inset-bottom));
+  }
+  .page-heading h1 {
+    font-size: 25px;
+  }
+  .overview {
+    grid-template-columns: 1fr;
+  }
+  .overview .balance-card {
+    padding: 20px 20px 0;
+    border-radius: 10px;
+  }
+  .balance-card h2 {
+    font-size: 32px;
+  }
+  .balance-card .flow-totals {
+    gap: 16px;
+  }
+  .balance-card .balance-flow strong {
+    font-size: 20px;
+  }
+  .balance-shortcuts {
+    margin-inline: -20px;
+    border-radius: 0 0 10px 10px;
+  }
+  .balance-shortcuts button {
+    min-height: 55px;
+  }
+  .planning-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+  }
+  .plan-summary-card {
+    padding: 16px;
+  }
+  .plan-summary-card h2 {
+    font-size: 21px;
+  }
+  .fintech-overview {
+    grid-template-columns: 1fr;
+  }
+  .page-actions {
+    background: #fbfdfc;
+  }
+  .billow-header {
+    height: 78px;
+    padding: 18px 24px;
+    gap: 12px;
+  }
+  .billow-header nav {
+    display: none;
+  }
+  .billow-header .brand {
+    gap: 7px;
+  }
+  .billow-header .brand > span:last-child {
+    font-size: 23px;
+  }
+  .welcome-account button {
+    font-size: 11px;
+    padding: 7px 12px;
+  }
+  .welcome-account .primary {
+    display: none;
+  }
+  .billow-hero {
+    margin-top: 44px;
+    padding: 0 24px 54px;
+    text-align: left;
+  }
+  .welcome-pill {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
+  .billow-hero h1 {
+    font-size: clamp(34px, 8.8vw, 52px);
+    line-height: 1.13;
+    letter-spacing: -0.04em;
+    margin: 26px 0 20px;
+  }
+  .billow-hero > p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 27px;
+    letter-spacing: -0.25px;
+  }
+  .welcome-cta {
+    width: 100%;
+    font-size: 14px;
+  }
+  .billow-hero > small {
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .welcome-product {
+    padding: 16px 20px 60px;
+    overflow: hidden;
+  }
+  .welcome-product::before {
+    inset: 10px -50px 0;
+    filter: blur(24px);
+  }
+  .welcome-cockpit {
+    grid-template-columns: 1fr;
+    padding: 5px;
+    border-radius: 12px;
+  }
+  .welcome-cockpit > aside {
+    display: none;
+  }
+  .preview-workspace {
+    padding: 0 8px 10px;
+  }
+  .preview-grid {
+    grid-template-columns: 1fr;
+  }
+  .preview-chart {
+    padding: 16px;
+  }
+  .preview-chart h2 {
+    font-size: 25px;
+  }
+  .preview-numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .preview-numbers article {
+    padding: 12px;
+  }
+  .preview-numbers strong {
+    font-size: 17px;
+  }
+  .preview-topbar > span {
+    font-size: 8px;
+  }
+  .welcome-features {
+    padding: 50px 24px;
+    text-align: left;
+  }
+  .welcome-features > h2,
+  .welcome-faq h2 {
+    font-size: 32px;
+    letter-spacing: -0.03em;
+  }
+  .welcome-feature-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 30px;
+  }
+  .welcome-feature-grid article {
+    padding: 26px;
+  }
+  .welcome-faq {
+    margin: 10px auto;
+    padding: 30px 24px;
+    text-align: left;
+  }
+  .billow-page .auth-form-area {
+    padding: 48px 20px;
+    margin-top: 30px;
+  }
+  .billow-page .auth-card {
+    padding: 24px;
+  }
+  .billow-page .auth-card h2 {
+    font-size: 36px;
+  }
+}
+@media (max-width: 360px) {
+  .main > main,
+  .main > header {
+    padding-inline: 16px;
+  }
+  .billow-header {
+    padding-inline: 20px;
+  }
+  .billow-hero {
+    padding-inline: 20px;
+  }
+  .balance-card .balance-flow strong {
+    font-size: 18px;
+  }
+  .plan-summary-card h2 {
+    font-size: 19px;
+  }
+  .billow-hero h1 {
+    font-size: 32px;
+  }
+}
+
+.chart-line.chart-income,
+.chart-line.chart-expense {
+  fill: none;
+}
+.balance-card figure > svg {
+  max-height: 260px;
+}
+.planning-summary {
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+}
+.plan-summary-card {
+  padding: 18px 20px;
+}
+.plan-summary-link {
+  margin-top: 12px;
+}
+.cockpit-count > span {
+  font-size: 11px;
+  color: #687c6e;
+}
+.cockpit-count > strong {
+  display: block;
+  margin: 12px 0 8px;
+  font-size: 25px;
+  letter-spacing: -0.6px;
+  font-weight: 600;
+}
+.cockpit-count > small {
+  display: block;
+}
+@media (max-width: 800px) {
+  .planning-summary {
+    grid-template-rows: none;
+  }
+  .plan-summary-card {
+    padding: 16px;
+  }
+  .balance-card figure > svg {
+    max-height: none;
+  }
+}
+
+.overview .balance-card {
+  display: flex;
+  flex-direction: column;
+}
+.balance-card .flow-chart {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.balance-card .flow-chart figure {
+  margin-block: auto;
+}
+.balance-card .flow-net {
+  margin-top: 20px;
+}
+.plan-summary-link {
+  display: none;
+}
+.plan-summary-card h2 {
+  margin: 8px 0;
+  font-size: 23px;
+}
+@media (max-width: 800px) {
+  .plan-summary-card h2 {
+    font-size: 21px;
+  }
+}
+@media (max-width: 360px) {
+  .plan-summary-card h2 {
+    font-size: 19px;
+  }
+}
+
+/* User typography preference: stronger hierarchy with real, self-hosted bold weights. */
+.billow-hero h1 {
+  font-weight: 800;
+}
+.brand,
+.page-heading h1,
+.welcome-features > h2,
+.welcome-faq h2,
+.billow-page .auth-card h2,
+.welcome-feature-grid h3,
+.panel h2,
+.wallet-card h3,
+.balance-card h2,
+.plan-summary-card h2,
+.balance-card .balance-flow strong,
+.wallet-card strong,
+.preview-chart h2,
+.preview-numbers strong,
+.welcome-cta,
+button.primary {
+  font-weight: 700;
+}
+.app > aside nav button,
+.billow-header nav a,
+.navigation-options button,
+.balance-shortcuts button,
+.page-actions button,
+.welcome-faq .t-acc-head,
+label {
+  font-weight: 600;
+}

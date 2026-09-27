@@ -1,0 +1,52 @@
+# Email content only; security notification toggles are intentionally undeclared.
+[auth.email.template.confirmation]
+subject = "Konfirmasi email kamu — Masuk Saku"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.invite]
+subject = "Undangan membuat akun — Masuk Saku"
+content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.magic_link]
+subject = "Tautan masuk kamu — Masuk Saku"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.email.template.email_change]
+subject = "Konfirmasi perubahan email — Masuk Saku"
+content_path = "./supabase/templates/email_change.html"
+
+[auth.email.template.recovery]
+subject = "Atur ulang kata sandi — Masuk Saku"
+content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.reauthentication]
+subject = "Kode verifikasi keamanan — Masuk Saku"
+content_path = "./supabase/templates/reauthentication.html"
+
+[auth.email.notification.password_changed]
+subject = "Kata sandi akunmu berubah — Masuk Saku"
+content_path = "./supabase/templates/password_changed.html"
+
+[auth.email.notification.email_changed]
+subject = "Alamat email akunmu berubah — Masuk Saku"
+content_path = "./supabase/templates/email_changed.html"
+
+[auth.email.notification.phone_changed]
+subject = "Nomor telepon akunmu berubah — Masuk Saku"
+content_path = "./supabase/templates/phone_changed.html"
+
+[auth.email.notification.identity_linked]
+subject = "Metode masuk ditambahkan — Masuk Saku"
+content_path = "./supabase/templates/identity_linked.html"
+
+[auth.email.notification.identity_unlinked]
+subject = "Metode masuk dihapus — Masuk Saku"
+content_path = "./supabase/templates/identity_unlinked.html"
+
+[auth.email.notification.mfa_factor_enrolled]
+subject = "Verifikasi tambahan diaktifkan — Masuk Saku"
+content_path = "./supabase/templates/mfa_factor_enrolled.html"
+
+[auth.email.notification.mfa_factor_unenrolled]
+subject = "Verifikasi tambahan dihapus — Masuk Saku"
+content_path = "./supabase/templates/mfa_factor_unenrolled.html"

@@ -1,0 +1,782 @@
+.category-breakdown .row {
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+.category-breakdown .row i {
+  background: #9edaa3;
+}
+.budget-list article {
+  padding: 19px 0;
+}
+.budget-list article:first-child {
+  padding-top: 0;
+}
+.budget-list .row strong {
+  font-size: 13px;
+}
+.budget-list .row > span {
+  background: #eaf4e7;
+  color: #416d42;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+.budget-list .row > span.negative {
+  color: var(--red);
+  background: #fcf0eb;
+}
+.budget-list small {
+  font-size: 11px;
+  margin-top: 10px;
+}
+.progress {
+  height: 7px;
+  background: #edf3ec;
+  border-radius: 4px;
+}
+.progress span {
+  background: #84bc7e;
+}
+.progress span.caution {
+  background: #b48b42;
+}
+th {
+  background: #f6f8f6;
+  color: #7a8b7f;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  border: 0;
+}
+td {
+  padding: 17px 13px;
+  font-size: 12px;
+  border-color: #edf1ed;
+}
+td strong {
+  font-size: 12px;
+}
+td small {
+  font-size: 10px;
+  color: #7c8d80;
+  line-height: 1.6;
+  margin-top: 4px;
+}
+.badge {
+  background: #eff4ed;
+  color: #61805a;
+  padding: 5px 7px;
+  font-size: 10px;
+}
+.wallet-grid {
+  gap: 14px;
+}
+.wallet-card,
+.goal-card {
+  background: #fff;
+  box-shadow: none;
+  border-color: var(--line);
+  padding: 20px;
+  border-radius: 14px;
+}
+.wallet-symbol,
+.goal-symbol {
+  background: #eef5e9;
+  color: #627d53;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+}
+.wallet-symbol svg,
+.goal-symbol svg {
+  width: 18px;
+  height: 18px;
+}
+.wallet-card h3 {
+  margin-top: 18px;
+  font-size: 12px;
+}
+.wallet-card p {
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+  margin: 10px 0;
+}
+.wallet-card small,
+.goal-card small {
+  font-size: 10px;
+  color: #7a8d7d;
+}
+.goal-card h3 {
+  font-size: 14px;
+}
+.goal-card p {
+  font-size: 16px;
+}
+.page-footer {
+  border-color: var(--line);
+  color: #8b9a8c;
+  font-size: 10px;
+}
+dialog {
+  box-shadow: 0 25px 100px #142b3540;
+  border-color: #e2e9e5;
+}
+dialog::backdrop {
+  background: #0d211fa3;
+  backdrop-filter: blur(5px);
+}
+.review-note {
+  background: #edf6e7;
+  color: #4d6e3f;
+}
+.auth-story {
+  background: #102e24;
+}
+.auth-card {
+  box-shadow: 0 14px 60px #183b2b0a;
+}
+.cashflow-panel {
+  grid-row: span 2;
+  display: flex;
+  flex-direction: column;
+}
+.cashflow-panel .flow-chart {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.cashflow-panel figure,
+.cashflow-panel .chart-private {
+  margin-block: auto;
+}
+.cashflow-panel .flow-net {
+  margin-top: 16px;
+}
+.category-panel .section-heading > svg {
+  color: #6b8c70;
+}
+.stat small,
+td small,
+.wallet-card small,
+.goal-card small {
+  font-size: 11px;
+}
+.section-heading p,
+.section-heading .text-button {
+  font-size: 12px;
+}
+.chart-label {
+  font-size: 12px;
+  fill: #677e6d;
+}
+.chart-caption {
+  font-size: 11px;
+  color: #63796a;
+}
+.illustration-pocket {
+  transform: none;
+  background: #c8f39c;
+  border-color: #c8f39c;
+  border-radius: 16px;
+  box-shadow: 18px 18px 0 #ffffff08;
+}
+.illustration-bars i {
+  background: #8bc175;
+}
+.illustration-bars i:nth-child(5) {
+  background: #264f36;
+}
+.auth-story .brand-mark {
+  background: #c8f39c;
+  color: #173529;
+}
+.auth-story h1 {
+  letter-spacing: -1.7px;
+}
+@media (min-width: 1600px) {
+  .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .app > aside {
+    width: 205px;
+    padding-inline: 14px;
+  }
+  .main {
+    margin-left: 205px;
+    width: calc(100% - 205px);
+  }
+  .main > main,
+  .main > header {
+    padding-inline: 22px;
+  }
+  .stat {
+    padding: 16px;
+  }
+  .stat.featured {
+    padding: 22px;
+  }
+  .stat.featured h2 {
+    font-size: 30px;
+  }
+  .stat h2 {
+    font-size: 21px;
+  }
+  .fintech-overview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 800px) {
+  .cashflow-panel {
+    grid-row: auto;
+  }
+  .app > aside {
+    position: sticky;
+    width: 100%;
+    padding: 14px 16px 9px;
+    background: #fff;
+    border-bottom: 0;
+  }
+  .app > aside .brand {
+    margin-bottom: 0;
+  }
+  .app > aside .brand > span:last-child {
+    font-size: 22px;
+  }
+  .app > aside nav {
+    margin-top: 12px;
+    gap: 4px;
+  }
+  .app > aside nav button {
+    padding: 6px 2px;
+    min-height: 54px;
+    font-size: 10px;
+    gap: 6px;
+    border-radius: 9px;
+  }
+  .main {
+    margin-left: 0;
+    width: 100%;
+  }
+  .main > header {
+    height: 52px;
+    padding-inline: 16px;
+  }
+  .main > main {
+    padding: 22px 16px 12px;
+  }
+  .demo-banner {
+    margin-bottom: 20px;
+    font-size: 10px;
+  }
+  .page-heading {
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .page-heading h1 {
+    font-size: 28px;
+    letter-spacing: -1px;
+  }
+  .page-heading p {
+    font-size: 12px;
+  }
+  .page-heading button.primary {
+    align-self: flex-start;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  .toolbar {
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .toolbar .muted {
+    font-size: 10px;
+  }
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat.featured {
+    grid-row: auto;
+    grid-column: 1 / -1;
+    min-height: 210px;
+    padding: 23px;
+  }
+  .stat.featured h2 {
+    font-size: clamp(32px, 9vw, 42px);
+    margin-top: 21px;
+  }
+  .balance-caption {
+    padding-top: 18px;
+  }
+  .stat {
+    min-height: 114px;
+    padding: 15px;
+    border-radius: 13px;
+  }
+  .stat h2 {
+    font-size: 20px;
+    margin-top: 15px;
+    letter-spacing: -0.7px;
+  }
+  .stat .row > span:first-child {
+    font-size: 10px;
+  }
+  .stat .stat-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+  }
+  .stat .stat-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+  .stat small {
+    font-size: 9px;
+  }
+  .quick.panel {
+    padding: 16px;
+    gap: 11px;
+    margin-bottom: 16px;
+  }
+  .quick form {
+    width: 100%;
+  }
+  .quick strong {
+    font-size: 12px;
+  }
+  .quick small {
+    font-size: 10px;
+  }
+  .panel {
+    padding: 18px;
+    border-radius: 14px;
+  }
+  .fintech-overview {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .section-heading h2 {
+    font-size: 15px;
+  }
+  .flow-totals {
+    gap: 20px;
+  }
+  .flow-totals strong {
+    font-size: 18px;
+  }
+  .chart-caption {
+    font-size: 9px;
+  }
+  .flow-net {
+    font-size: 10px;
+  }
+  .category-breakdown .row {
+    font-size: 12px;
+  }
+  .wallet-grid {
+    gap: 10px;
+  }
+  .wallet-card,
+  .goal-card {
+    padding: 17px;
+  }
+  .wallet-card p {
+    font-size: 21px;
+  }
+  .navigation-options button[aria-current='page'] {
+    background: #173e35;
+  }
+}
+@media (max-width: 600px) {
+  .table-wrap td {
+    padding: 0;
+  }
+  .table-wrap td small {
+    font-size: 11px;
+  }
+  .auth-story {
+    border-radius: 0;
+    padding: 24px;
+  }
+  .auth-story .brand {
+    margin-bottom: 24px;
+  }
+  .auth-story h1 {
+    font-size: 32px;
+  }
+}
+@media (max-width: 360px) {
+  .main > main {
+    padding-inline: 12px;
+  }
+  .stat {
+    padding: 13px;
+  }
+  .stat h2 {
+    font-size: 18px;
+  }
+  .stat .row {
+    gap: 4px;
+  }
+  .flow-totals {
+    gap: 14px;
+  }
+  .flow-totals strong {
+    font-size: 15px;
+  }
+  .section-heading {
+    gap: 8px;
+  }
+  .section-heading .text-button {
+    font-size: 10px;
+  }
+}
+.category-breakdown .row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  margin-bottom: 15px;
+}
+.category-breakdown .row > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.category-meter {
+  grid-column: 1 / -1;
+  height: 5px;
+  border-radius: 4px;
+  background: #eef4ee;
+  overflow: hidden;
+}
+.category-meter span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: #8ec38e;
+}
+.category-empty {
+  font-size: 12px;
+  line-height: 1.6;
+}
+/* Planning pages use the same fintech visual system. */
+.planning-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0 20px;
+}
+.planning-toolbar h2 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+.planning-toolbar p {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 0;
+}
+.planning-filter {
+  max-width: 230px;
+  margin-bottom: 22px;
+  font-size: 12px;
+}
+.planning-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.planning-card h3 {
+  font-size: 18px;
+  letter-spacing: -0.5px;
+  overflow-wrap: anywhere;
+}
+.planning-description {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.planning-amount {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.8px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  margin: 20px 0;
+}
+.planning-amount small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-top: 7px;
+}
+.planning-meta {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.planning-meta strong {
+  font-weight: 500;
+  color: var(--green);
+}
+.planning-meta strong.negative {
+  color: var(--red);
+}
+.planning-warning {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff5df;
+  color: #835f25;
+  font-size: 12px;
+  margin: 14px 0 0;
+}
+.planning-date {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 18px 0 0;
+}
+.planning-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 20px;
+}
+.planning-recommendation {
+  background: #edf6e7;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #45643b;
+  font-size: 12px;
+  margin: 12px 0;
+}
+.planning-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+  padding-top: 16px;
+}
+.planning-actions button {
+  font-size: 11px;
+  padding: 9px 11px;
+  min-height: 40px;
+}
+.planning-actions button svg {
+  width: 16px;
+  height: 16px;
+}
+.planning-dialog .field-help {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.planning-dialog .planning-note {
+  padding: 12px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+}
+.contribution-history {
+  margin-top: 22px;
+}
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+.history-row small {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.history-row button {
+  color: var(--red);
+  font-size: 11px;
+}
+@media (max-width: 800px) {
+  .planning-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .planning-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .planning-toolbar button {
+    font-size: 12px;
+  }
+  .planning-amount {
+    font-size: 25px;
+  }
+}
+
+.revision-item {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+.revision-item dl > div {
+  margin: 12px 0;
+}
+.revision-item dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.revision-item dd {
+  margin: 4px 0;
+  overflow-wrap: anywhere;
+}
+
+.receipt-picker {
+  padding: 18px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  background: var(--cream);
+}
+.receipt-picker input {
+  max-width: 100%;
+}
+.receipt-preview {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  margin: 16px 0;
+  overflow-wrap: anywhere;
+}
+.receipt-preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+  margin: auto;
+}
+.receipt-actions {
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  .page-actions {
+    width: 100%;
+  }
+  .page-actions button {
+    flex: 1;
+  }
+  .receipt-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .table-wrap td:nth-child(5) {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .table-wrap td:nth-child(5) .text-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .table-wrap td:nth-child(5) svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.catalog-panel {
+  margin-top: 24px;
+  padding: 24px;
+}
+.catalog-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.catalog-row > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.catalog-row > div {
+  display: flex;
+  gap: 8px;
+}
+.catalog-panel section {
+  margin-top: 24px;
+}
+
+.catalog-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.catalog-heading button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.catalog-row > span > svg {
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.household-panel {
+  margin-top: 24px;
+  padding: 24px;
+}
+.household-panel h3 {
+  margin-top: 24px;
+}
+.invitation-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.invitation-row > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.invitation-row small {
+  display: block;
+  margin-top: 6px;
+}
+.invitation-row button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.invite-code-card {
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow-wrap: anywhere;
+}
+.household-panel .catalog-row > strong {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}

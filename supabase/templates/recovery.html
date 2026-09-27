@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Atur ulang kata sandi — Masuk Saku</title>
+    <style>
+      @media only screen and (max-width: 600px) {
+        .outer {
+          padding: 20px 12px !important;
+        }
+        .inner {
+          padding: 28px 22px !important;
+        }
+        .heading {
+          font-size: 28px !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f2f3f5;
+      color: #202126;
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    "
+  >
+    <div style="display: none; max-height: 0; overflow: hidden; opacity: 0; mso-hide: all">
+      Lanjutkan permintaan pemulihan akun Masuk Saku.
+    </div>
+    <table
+      role="presentation"
+      width="100%"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      style="background-color: #f2f3f5"
+    >
+      <tr>
+        <td class="outer" align="center" style="padding: 40px 16px">
+          <table
+            role="presentation"
+            width="560"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            style="width: 100%; max-width: 560px"
+          >
+            <tr>
+              <td
+                style="
+                  padding: 0 4px 22px;
+                  font-size: 24px;
+                  font-weight: 800;
+                  letter-spacing: -1px;
+                  color: #202126;
+                "
+              >
+                Masuk Saku<span style="color: #ed7556">.</span>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 0;
+                  background-color: #ffffff;
+                  border: 1px solid #e4e6e9;
+                  border-radius: 24px;
+                "
+              >
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td class="inner" style="padding: 36px">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                          <td
+                            style="
+                              padding: 8px 12px;
+                              background-color: #e7f3bb;
+                              border-radius: 8px;
+                              font-size: 11px;
+                              font-weight: 700;
+                              letter-spacing: 1px;
+                              color: #303426;
+                            "
+                          >
+                            AKUN MASUK SAKU
+                          </td>
+                        </tr>
+                      </table>
+                      <h1
+                        class="heading"
+                        style="
+                          margin: 22px 0 16px;
+                          font-size: 32px;
+                          line-height: 1.2;
+                          font-weight: 800;
+                          letter-spacing: -1px;
+                          color: #202126;
+                        "
+                      >
+                        Buat kata sandi baru.
+                      </h1>
+                      <p
+                        style="margin: 0 0 22px; font-size: 16px; line-height: 1.7; color: #555b65"
+                      >
+                        Kami menerima permintaan untuk mengatur ulang kata sandi akunmu. Gunakan
+                        tombol di bawah untuk melanjutkan proses pemulihan.
+                      </p>
+
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                          <td
+                            bgcolor="#202126"
+                            style="
+                              background-color: #202126;
+                              border-radius: 12px;
+                              text-align: center;
+                            "
+                          >
+                            <a
+                              href="{{ .ConfirmationURL }}"
+                              style="
+                                display: inline-block;
+                                padding: 16px 24px;
+                                border: 1px solid #202126;
+                                border-radius: 12px;
+                                color: #ffffff;
+                                font-size: 15px;
+                                line-height: 1.3;
+                                font-weight: 700;
+                                text-decoration: none;
+                                mso-padding-alt: 0;
+                                text-underline-color: #202126;
+                              "
+                              ><!--[if mso
+                                ]><i
+                                  style="
+                                    letter-spacing: 24px;
+                                    mso-font-width: -100%;
+                                    mso-text-raise: 24pt;
+                                  "
+                                  >&nbsp;</i
+                                ><!
+                              [endif]--><span style="mso-text-raise: 12pt"
+                                >Atur ulang kata sandi</span
+                              ><!--[if mso
+                                ]><i style="letter-spacing: 24px; mso-font-width: -100%"
+                                  >&nbsp;</i
+                                ><!
+                              [endif]--></a
+                            >
+                          </td>
+                        </tr>
+                      </table>
+                      <p
+                        style="margin: 22px 0 0; font-size: 12px; line-height: 1.7; color: #727985"
+                      >
+                        Tombol tidak terbuka? Salin tautan berikut ke browser:
+                      </p>
+                      <p
+                        style="
+                          margin: 6px 0 0;
+                          font-size: 12px;
+                          line-height: 1.7;
+                          overflow-wrap: anywhere;
+                          word-break: break-all;
+                        "
+                      >
+                        <a
+                          href="{{ .ConfirmationURL }}"
+                          style="color: #485349; text-decoration: underline"
+                          >{{ .ConfirmationURL }}</a
+                        >
+                      </p>
+                      <table
+                        role="presentation"
+                        width="100%"
+                        cellspacing="0"
+                        cellpadding="0"
+                        border="0"
+                      >
+                        <tr>
+                          <td style="padding-top: 28px">
+                            <p
+                              style="
+                                margin: 0;
+                                padding-top: 22px;
+                                border-top: 1px solid #e9ebef;
+                                font-size: 13px;
+                                line-height: 1.7;
+                                color: #6a717c;
+                              "
+                            >
+                              Jika kamu tidak meminta pemulihan, abaikan email ini. Permintaan ini
+                              sendiri belum mengubah kata sandimu.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 24px 8px 0;
+                  font-size: 12px;
+                  line-height: 1.8;
+                  color: #777d87;
+                  text-align: center;
+                "
+              >
+                Satu saku, semua catatan keuangan.<br />Email otomatis dari Masuk Saku. Tidak perlu
+                membalas email ini.<br /><a
+                  href="{{ .SiteURL }}"
+                  style="color: #5f6671; text-decoration: underline"
+                  >Buka Masuk Saku</a
+                >
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+/* Shared dropdown presentation for every native select in the app.
+   Progressive enhancement based on MDN / Chrome customizable-select documentation.
+   Retains native labels, required validation, typeahead, keyboard and top-layer collision handling.
+   Static SVGs are rendered from the installed Lucide React package (ISC/MIT; shipped notice). */
+select:not([multiple]):not([size]) {
+  appearance: none;
+  min-height: 42px;
+  padding: 10px 38px 10px 13px;
+  border: 1px solid #e1ddeb;
+  border-radius: 13px;
+  background-color: #fff;
+  background-image: url('/icons/dropdown-chevron.svg');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+}
+select:not([multiple]):not([size]):hover:not(:disabled) {
+  border-color: #bcb0d5;
+  background-color: #fcfaff;
+}
+select:not([multiple]):not([size]):focus-visible {
+  outline: 3px solid #9476d43d;
+  outline-offset: 2px;
+  border-color: #9274ca;
+}
+select:disabled {
+  cursor: not-allowed;
+  color: #737080;
+  background-color: #f2f0f6;
+}
+.time-input-row select:not([multiple]):not([size]) {
+  min-height: 36px;
+  padding: 7px 26px 7px 9px;
+  font-size: 17px;
+  background-position: right 7px center;
+  background-size: 13px;
+}
+.date-month-select select:not([multiple]):not([size]) {
+  min-height: 36px;
+  padding-block: 7px;
+  font-size: 12px;
+}
+@supports (appearance: base-select) {
+  select:not([multiple]):not([size]),
+  select:not([multiple]):not([size])::picker(select) {
+    appearance: base-select;
+  }
+  select:not([multiple]):not([size]) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-right: 13px;
+    background-image: none;
+  }
+  select:not([multiple]):not([size]):open {
+    border-color: #9274ca;
+    background-color: #f8f4ff;
+    box-shadow: 0 0 0 3px #9476d41a;
+  }
+  select:not([multiple]):not([size])::picker-icon {
+    content: '';
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background: #696174;
+    mask: url('/icons/dropdown-chevron.svg') center / contain no-repeat;
+  }
+  select:not([multiple]):not([size]):open::picker-icon {
+    transform: rotate(180deg);
+  }
+  select:not([multiple]):not([size])::picker(select) {
+    padding: 6px;
+    margin-block: 7px;
+    border: 1px solid #e6dfef;
+    border-radius: 16px;
+    background: #fff;
+    color: var(--ink);
+    box-shadow:
+      0 6px 16px #3022420d,
+      0 18px 50px #3022421a;
+    min-inline-size: anchor-size(width);
+    max-inline-size: calc(100vw - 24px);
+    max-block-size: min(320px, 50dvh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #c9bfdc transparent;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 1;
+  }
+  select:not([multiple]):not([size]) option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 38px;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ink);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.45;
+    cursor: pointer;
+  }
+  select:not([multiple]):not([size]) option:hover,
+  select:not([multiple]):not([size]) option:focus-visible {
+    background: #f3effa;
+    outline: 0;
+  }
+  select:not([multiple]):not([size]) option:checked {
+    background: #eee6fa;
+    color: #503774;
+    font-weight: 700;
+  }
+  select:not([multiple]):not([size]) option:disabled {
+    color: #827c8b;
+    background: transparent;
+    cursor: not-allowed;
+  }
+  select:not([multiple]):not([size]) option::checkmark {
+    content: '';
+    order: 1;
+    margin-left: auto;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background: #6f509d;
+    mask: url('/icons/dropdown-check.svg') center / contain no-repeat;
+  }
+  select:not([multiple]):not([size]) optgroup {
+    padding: 5px;
+    color: #6f627e;
+    font-weight: 700;
+  }
+  .time-input-row select:not([multiple]):not([size])::picker(select) {
+    min-inline-size: 130px;
+    font-variant-numeric: tabular-nums;
+  }
+  .date-month-select select:not([multiple]):not([size])::picker(select) {
+    min-inline-size: 180px;
+  }
+}
+@media (prefers-contrast: more) {
+  select:not([multiple]):not([size]) {
+    border-color: currentColor;
+  }
+}

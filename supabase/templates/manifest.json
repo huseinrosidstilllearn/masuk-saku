@@ -1,0 +1,93 @@
+[
+  {
+    "key": "confirmation",
+    "kind": "template",
+    "label": "Confirm signup",
+    "subject": "Konfirmasi email kamu — Masuk Saku",
+    "filename": "confirmation.html"
+  },
+  {
+    "key": "invite",
+    "kind": "template",
+    "label": "Invite user",
+    "subject": "Undangan membuat akun — Masuk Saku",
+    "filename": "invite.html"
+  },
+  {
+    "key": "magic_link",
+    "kind": "template",
+    "label": "Magic link or OTP",
+    "subject": "Tautan masuk kamu — Masuk Saku",
+    "filename": "magic_link.html"
+  },
+  {
+    "key": "email_change",
+    "kind": "template",
+    "label": "Change email address",
+    "subject": "Konfirmasi perubahan email — Masuk Saku",
+    "filename": "email_change.html"
+  },
+  {
+    "key": "recovery",
+    "kind": "template",
+    "label": "Reset password",
+    "subject": "Atur ulang kata sandi — Masuk Saku",
+    "filename": "recovery.html"
+  },
+  {
+    "key": "reauthentication",
+    "kind": "template",
+    "label": "Reauthentication",
+    "subject": "Kode verifikasi keamanan — Masuk Saku",
+    "filename": "reauthentication.html"
+  },
+  {
+    "key": "password_changed",
+    "kind": "notification",
+    "label": "Password changed",
+    "subject": "Kata sandi akunmu berubah — Masuk Saku",
+    "filename": "password_changed.html"
+  },
+  {
+    "key": "email_changed",
+    "kind": "notification",
+    "label": "Email address changed",
+    "subject": "Alamat email akunmu berubah — Masuk Saku",
+    "filename": "email_changed.html"
+  },
+  {
+    "key": "phone_changed",
+    "kind": "notification",
+    "label": "Phone number changed",
+    "subject": "Nomor telepon akunmu berubah — Masuk Saku",
+    "filename": "phone_changed.html"
+  },
+  {
+    "key": "identity_linked",
+    "kind": "notification",
+    "label": "Sign-in method linked",
+    "subject": "Metode masuk ditambahkan — Masuk Saku",
+    "filename": "identity_linked.html"
+  },
+  {
+    "key": "identity_unlinked",
+    "kind": "notification",
+    "label": "Sign-in method removed",
+    "subject": "Metode masuk dihapus — Masuk Saku",
+    "filename": "identity_unlinked.html"
+  },
+  {
+    "key": "mfa_factor_enrolled",
+    "kind": "notification",
+    "label": "MFA method added",
+    "subject": "Verifikasi tambahan diaktifkan — Masuk Saku",
+    "filename": "mfa_factor_enrolled.html"
+  },
+  {
+    "key": "mfa_factor_unenrolled",
+    "kind": "notification",
+    "label": "MFA method removed",
+    "subject": "Verifikasi tambahan dihapus — Masuk Saku",
+    "filename": "mfa_factor_unenrolled.html"
+  }
+]

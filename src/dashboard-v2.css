@@ -1,0 +1,1424 @@
+/* Observed code.xr Dashboard V2 reel, adapted to real household cash management. */
+:root {
+  --ink: #17191f;
+  --muted: #6c6f7d;
+  --line: #e9eaf0;
+  --green: #24262e;
+  --cream: #f1f2f7;
+  --coral: #f24b68;
+  --orange: #ff8b40;
+  --lime: #d9f674;
+  --peach: #ffe9df;
+  --lavender: #e9e3ff;
+  color: var(--ink);
+  background: #f1f2f7;
+}
+body,
+.app,
+.main {
+  background: #f1f2f7;
+  color: var(--ink);
+}
+button {
+  color: var(--ink);
+  border-radius: 12px;
+}
+button:hover {
+  background: #f2f2f6;
+}
+button.primary,
+button.primary:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+:focus-visible {
+  outline-color: #8b75de;
+}
+.app > aside {
+  width: 72px;
+  left: 16px;
+  top: 16px;
+  bottom: 16px;
+  height: calc(100dvh - 32px);
+  padding: 16px 10px;
+  border: 0;
+  background: white;
+  border-radius: 22px;
+}
+.app > aside .brand {
+  margin: 0 auto 36px;
+  justify-content: center;
+}
+.app > aside .brand > span:last-child,
+.app > aside .household-card,
+.app > aside .member > div {
+  display: none;
+}
+.app > aside .brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  background: var(--ink);
+}
+.app > aside nav {
+  gap: 10px;
+  align-items: center;
+}
+.app > aside nav button {
+  position: relative;
+  width: 44px;
+  min-height: 44px;
+  padding: 10px;
+  justify-content: center;
+  border-radius: 14px;
+  color: #9093a0;
+  border: 0;
+  transition:
+    background-color var(--page-fade-dur) var(--page-fade-ease),
+    color var(--page-fade-dur) var(--page-fade-ease);
+}
+.app > aside nav button.active {
+  background: var(--ink);
+  color: white;
+  border: 0;
+}
+.app > aside nav button:hover:not(.active) {
+  background: #f1eefb;
+  color: #635494;
+}
+.app > aside nav .nav-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.app > aside .member {
+  flex-direction: column;
+  border: 0;
+  gap: 8px;
+  padding-top: 8px;
+}
+.avatar {
+  background: #e9e3ff;
+  color: #554275;
+}
+.sidebar-bottom {
+  margin-top: auto;
+}
+.main {
+  width: calc(100% - 104px);
+  margin-left: 104px;
+}
+.main > header {
+  height: 70px;
+  background: transparent;
+  border: 0;
+  padding: 0 30px;
+}
+.breadcrumb {
+  color: #9093a0;
+  font-size: 12px;
+}
+.breadcrumb strong {
+  color: var(--ink);
+}
+.header-search,
+.balance-toggle {
+  background: white;
+  color: #767a87;
+  border: 0;
+  border-radius: 50px;
+}
+.main > main {
+  background: transparent;
+  padding: 16px 30px 30px;
+  max-width: 1500px;
+}
+.demo-banner {
+  color: #79716a;
+  background: #fff4e8;
+  border: 0;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+.page-heading h1 {
+  color: var(--ink);
+  font-size: 28px;
+  letter-spacing: -1px;
+}
+.page-heading p,
+.page-heading .eyebrow,
+.muted {
+  color: var(--muted);
+}
+.workspace-title {
+  margin-bottom: 24px;
+}
+.toolbar select {
+  border: 0;
+  border-radius: 50px;
+  padding-inline: 16px;
+}
+.connection {
+  color: #7c7989;
+}
+.connection i {
+  background: #9a89c7;
+}
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.planning-summary {
+  order: -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: auto;
+  gap: 14px;
+}
+.overview .plan-summary-card {
+  position: relative;
+  border: 0 !important;
+  border-radius: 20px;
+  padding: 20px;
+  min-height: 134px;
+  background: white;
+  box-shadow: none;
+}
+.planning-summary .plan-summary-card:nth-child(1) {
+  background: var(--lime);
+}
+.planning-summary .plan-summary-card:nth-child(2) {
+  background: linear-gradient(110deg, #ffdce5, #ffe9d8);
+}
+.planning-summary .plan-summary-card:nth-child(4) {
+  background: linear-gradient(120deg, #f24b68, #ff8b40);
+  color: #241c22;
+}
+.plan-summary-card > div > span,
+.plan-summary-card > span {
+  font-size: 12px;
+  font-weight: 500;
+  color: inherit;
+}
+.plan-summary-card h2 {
+  color: var(--ink);
+  font-size: 26px;
+  margin: 16px 0 4px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+.plan-summary-card small {
+  color: #555965;
+  font-size: 10px;
+}
+.planning-summary .plan-summary-card:nth-child(4) small {
+  color: #241c22;
+}
+.plan-summary-card .plan-summary-link {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  margin: 0;
+  min-height: 28px;
+  width: 28px;
+  padding: 4px;
+  border: 0;
+  color: inherit;
+  background: #ffffff60;
+  border-radius: 50%;
+}
+.overview .cockpit-count {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+}
+.cockpit-count strong {
+  margin: 16px 0 4px;
+  font-size: 26px;
+  color: inherit;
+  line-height: 1.2;
+}
+.overview .balance-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  align-items: stretch;
+}
+.balance-pocket {
+  order: 2;
+  min-width: 0;
+  padding: 26px;
+  background: #17191f;
+  color: white;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.balance-pocket::before {
+  content: '';
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  right: -34px;
+  top: -50px;
+  border: 1px solid #ffffff18;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 24px #ffffff05,
+    0 0 0 48px #ffffff03;
+  pointer-events: none;
+}
+.balance-pocket .balance-label,
+.balance-pocket .balance-currency {
+  color: #c4c6d0;
+}
+.balance-pocket h2 {
+  color: white;
+  font-size: clamp(25px, 2.3vw, 38px);
+  margin: 30px 0 7px;
+  letter-spacing: -1.2px;
+}
+.balance-pocket > small {
+  color: #a2a5b2;
+  font-size: 11px;
+}
+.balance-pocket .balance-currency {
+  border-color: #ffffff26;
+}
+.balance-shortcuts {
+  margin: 28px 0 0;
+  padding-top: 18px;
+  border: 0;
+  background: transparent;
+  gap: 7px;
+  border-radius: 0;
+}
+.balance-shortcuts button {
+  padding: 0;
+  min-width: 0;
+  background: transparent;
+  color: #c6c8d3;
+  border: 0;
+  font-size: 10px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 74px;
+}
+.balance-shortcuts button + button {
+  border: 0;
+}
+.balance-shortcuts button svg {
+  background: #2d2f38;
+  color: white;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  padding: 10px;
+}
+.balance-shortcuts button:first-child svg {
+  background: #ffc5d8;
+  color: #533442;
+}
+.balance-shortcuts button:nth-child(2) svg {
+  background: var(--lime);
+  color: #384420;
+}
+.balance-shortcuts button:nth-child(3) svg {
+  background: var(--lavender);
+  color: #56447b;
+}
+.balance-shortcuts button:hover {
+  background: transparent;
+  color: white;
+}
+.cashflow-panel {
+  grid-row: auto;
+  order: 1;
+  min-width: 0;
+  background: white;
+  border-radius: 22px;
+  padding: 24px;
+}
+.balance-card .cashflow-panel h3 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+.cashflow-panel .section-heading {
+  margin-bottom: 18px;
+}
+.cashflow-panel .section-heading p {
+  margin: 5px 0 0;
+  font-size: 11px;
+}
+.overview .balance-card .flow-chart {
+  margin: 0;
+  display: block;
+  flex: initial;
+}
+.balance-card .cashflow-panel .flow-chart figure {
+  margin: 12px 0;
+}
+.balance-card .cashflow-panel .flow-net {
+  margin: 12px 0 0;
+  padding-top: 12px;
+}
+.cashflow-panel .flow-totals {
+  gap: 30px;
+  margin-bottom: 10px;
+}
+.balance-card .cashflow-panel figure > svg {
+  max-height: 230px;
+}
+.balance-card .cashflow-panel .balance-flow strong {
+  color: var(--ink);
+  font-size: 22px;
+}
+.balance-card .cashflow-panel .balance-flow span {
+  color: #7b7e8c;
+}
+.flow-net {
+  color: #555968;
+}
+.chart-line.chart-income {
+  stroke: #928354;
+}
+.chart-line.chart-expense {
+  stroke: var(--coral);
+}
+circle.chart-income {
+  fill: #928354;
+}
+circle.chart-expense {
+  fill: var(--coral);
+}
+.income-dot {
+  background: #b6c963;
+}
+.expense-dot {
+  background: var(--coral);
+}
+.balance-card .chart-label {
+  fill: #9b9da7;
+}
+.chart-grid {
+  stroke: #f0f0f5;
+}
+.quick.panel {
+  background: white;
+  border: 0;
+  border-radius: 18px;
+  padding: 14px 20px;
+}
+.quick-icon {
+  background: #fff0e4;
+  color: #b16735;
+}
+.quick strong {
+  color: var(--ink);
+}
+.quick form button {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+  border-radius: 50px;
+}
+.panel {
+  border: 0;
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+}
+.section-heading h2 {
+  color: var(--ink);
+  font-size: 16px;
+}
+.section-heading p {
+  color: var(--muted);
+}
+.text-button {
+  color: #6e637e;
+}
+.wallet-card,
+.goal-card {
+  border: 0;
+  border-radius: 20px;
+  background: white;
+}
+.wallet-card:nth-child(3n + 1) {
+  background: #e9e3ff;
+}
+.wallet-card:nth-child(3n + 2) {
+  background: #fff0dc;
+}
+.wallet-card:nth-child(3n + 3) {
+  background: #e9edfb;
+}
+.wallet-symbol,
+.goal-symbol {
+  background: #ffffff80;
+  color: #555268;
+}
+.wallet-card h3,
+.wallet-card strong,
+.wallet-card h2,
+.goal-card h3,
+.goal-card p {
+  color: var(--ink);
+}
+.wallet-card .pill,
+.wallet-ownership {
+  background: #ffffff80;
+  color: #655e74;
+}
+.budget-panel .progress,
+.goal-card .progress {
+  background: #ecebf1;
+}
+.budget-panel .progress span {
+  background: #c5d867;
+}
+.goal-card .progress span {
+  background: #b6a4ed;
+}
+.category-panel .category-meter span {
+  background: #f4a8b8;
+}
+.category-breakdown .row:nth-child(3n + 1) i {
+  background: #f1a1b2;
+}
+.category-breakdown .row:nth-child(3n + 2) i {
+  background: #c5d867;
+}
+.category-breakdown .row:nth-child(3n + 3) i {
+  background: #b6a4ed;
+}
+.badge {
+  background: #f2f0f8;
+  color: #74678c;
+}
+.table-wrap th {
+  background: white;
+  border-color: #f0f0f5;
+  color: #9395a0;
+}
+.table-wrap td {
+  border-color: #f2f2f6;
+}
+.table-wrap tbody tr:hover {
+  background: #fcfbff;
+}
+.page-actions button {
+  border-radius: 50px;
+}
+.page-footer {
+  border-color: #e3e4ec;
+  color: #999ba6;
+}
+input,
+select,
+textarea {
+  color: var(--ink);
+  border-color: #e3e4ec;
+  background-color: white;
+}
+dialog {
+  color: var(--ink);
+  border-radius: 24px;
+}
+.transaction-section {
+  border-color: #edeef3;
+}
+.date-time-field > legend {
+  color: #555968;
+}
+.time-input-row,
+.date-calendar-panel {
+  background: #fafafe;
+  border-color: #e4e1ed;
+}
+.date-input-row button {
+  color: #6b5b88;
+  background: #f0ebfc;
+  border-color: #e4dcef;
+}
+.date-input-row button[aria-expanded='true'] {
+  background: var(--ink);
+  color: white;
+}
+.time-input-row > svg,
+.time-zone,
+.date-calendar-header > button,
+.date-time-field .date-now,
+.date-calendar-footer button {
+  color: #6b5b88;
+}
+.time-input-row select,
+.date-calendar td button {
+  color: var(--ink);
+}
+.date-calendar td button.selected {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+.date-calendar td button[aria-current='date']:not(.selected) {
+  border-color: #bba7de;
+}
+.date-calendar td button:hover:not(.selected) {
+  background: #ece7f6;
+}
+.date-calendar-header > button,
+.date-month-select input,
+.date-month-select select {
+  background: #f0edf6;
+}
+.date-time-field .date-hint {
+  color: var(--muted);
+}
+.status-message {
+  background: #f1edf9;
+  color: #635676;
+}
+.billow-page,
+.billow-header,
+.billow-hero,
+.auth-screen {
+  color: var(--ink);
+  background: #f1f2f7;
+}
+.billow-header .brand,
+.billow-hero h1 {
+  color: var(--ink);
+}
+.billow-header .brand-mark,
+.welcome-account button.primary {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.billow-header nav a,
+.billow-hero > p,
+.billow-hero > small {
+  color: #727483;
+}
+.welcome-pill {
+  color: #635771;
+  border-color: #dcd9e5;
+  background: #faf9fc;
+}
+.welcome-cta {
+  background: linear-gradient(105deg, #ee4766, #ff8b40);
+  border: 0;
+  color: #241c22;
+  box-shadow: 0 8px 24px #f24b6826;
+}
+.welcome-cta:hover {
+  background: #e94962;
+}
+.welcome-product::before {
+  background: radial-gradient(ellipse, #ffc1d366, #ffe4bd55 50%, transparent 72%);
+  filter: blur(30px);
+}
+.welcome-cockpit {
+  background: #f1f2f7;
+  border-color: #e2e1eb;
+  border-radius: 24px;
+  box-shadow: 0 24px 70px #191b2912;
+}
+.welcome-cockpit > aside {
+  background: white;
+  border-radius: 18px;
+  border: 0;
+  color: #86818e;
+}
+.preview-selected {
+  background: var(--ink);
+  color: white;
+}
+.preview-chart {
+  background: white;
+  border: 0;
+  border-radius: 18px;
+}
+.preview-chart h3,
+.preview-chart > strong {
+  color: var(--ink);
+}
+.preview-chart h2,
+.preview-workspace h3,
+.preview-numbers strong,
+.billow-page .auth-card h2 {
+  color: var(--ink);
+}
+.preview-numbers article {
+  border: 0;
+  border-radius: 18px;
+  background: white;
+}
+.preview-numbers article:nth-child(1) {
+  background: var(--lime);
+}
+.preview-numbers article:nth-child(2) {
+  background: #ffe1e9;
+}
+.preview-numbers article:nth-child(3) {
+  background: #ffe9d7;
+}
+.preview-numbers article:nth-child(4) {
+  background: var(--lavender);
+}
+.preview-numbers span {
+  color: #5c5865;
+}
+.preview-wallets {
+  background: white;
+  border: 0;
+  border-radius: 14px;
+  color: #5c5865;
+}
+.preview-wallets small {
+  background: #f0ebf9;
+  color: #6f5e82;
+}
+.welcome-feature-grid article > svg {
+  color: #806498;
+}
+.billow-page .welcome-faq .t-acc-panel p {
+  color: var(--muted);
+}
+.preview-plan {
+  border: 0;
+  border-radius: 18px;
+  background: var(--lime);
+}
+.preview-plan + .preview-plan {
+  background: linear-gradient(100deg, #ffe2eb, #ffe8d8);
+}
+.preview-plan strong {
+  color: var(--ink);
+}
+.welcome-feature-grid article {
+  background: white;
+  border: 0;
+  border-radius: 20px;
+}
+.welcome-feature-grid article > span {
+  color: #8a739e;
+  background: #f1ebf8;
+}
+.welcome-features h2,
+.welcome-faq h2,
+.welcome-feature-grid h3 {
+  color: var(--ink);
+}
+.welcome-faq .t-acc-head {
+  color: var(--ink);
+}
+.welcome-faq .t-acc-panel p {
+  color: #767684;
+}
+.auth-panel,
+.auth-story {
+  background: white;
+  color: var(--ink);
+}
+.auth-panel h1,
+.auth-story h1 {
+  color: var(--ink);
+}
+.auth-story p {
+  color: var(--muted);
+}
+.auth-panel .brand-mark {
+  background: var(--ink);
+}
+.welcome-footer {
+  border-color: #e3e4ed;
+  color: #858390;
+}
+/* Catalog refresh: Watermelon budget-card / animated-button visual adaptations.
+   MIT notice in public/licenses/Watermelon-MIT.txt. Motion uses existing Transitions.dev tokens. */
+:root {
+  --surface-shadow: 0 3px 5px #24213803, 0 12px 32px #24213806;
+}
+body {
+  background: #f3f3f8;
+}
+.app,
+.main {
+  background: transparent;
+}
+.main {
+  background-image: radial-gradient(ellipse at 95% 0%, #e9e3ff80, transparent 45%);
+}
+.app > aside {
+  box-shadow: var(--surface-shadow);
+  border: 1px solid #ffffff;
+}
+.app > aside .brand-mark {
+  background: var(--lime);
+  color: var(--ink);
+  box-shadow: 0 4px 10px #b2c96822;
+}
+.app > aside nav button.active {
+  background: var(--lime);
+  color: var(--ink);
+  box-shadow: 0 4px 12px #aac64825;
+}
+.main > header {
+  border-bottom: 1px solid #dfdfe866;
+}
+.page-heading h1 {
+  font-size: clamp(28px, 2.6vw, 40px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+.page-heading p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.page-heading .eyebrow {
+  color: #75698b;
+  font-weight: 700;
+}
+.workspace-title {
+  margin-top: 10px;
+  margin-bottom: 28px;
+}
+.toolbar .scope {
+  padding: 4px;
+  background: #ffffff90;
+  border-radius: 18px;
+  box-shadow: var(--surface-shadow);
+}
+.toolbar select {
+  font-weight: 700;
+  min-height: 42px;
+  border-radius: 14px;
+}
+.overview {
+  gap: 20px;
+}
+.planning-summary {
+  gap: 16px;
+}
+.overview .plan-summary-card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  min-height: 196px;
+  padding: 22px;
+  border-radius: 24px;
+  box-shadow: var(--surface-shadow);
+}
+.plan-summary-card > div {
+  width: 100%;
+}
+.plan-summary-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: #ffffff70;
+  color: #465126;
+}
+.plan-summary-icon.savings {
+  background: #ffffff70;
+  color: #79584f;
+}
+.plan-summary-icon svg {
+  width: 19px;
+  height: 19px;
+}
+.plan-summary-card > div > span,
+.cockpit-count > span:not(.count-symbol) {
+  font-size: 13px;
+  font-weight: 600;
+}
+.plan-summary-card h2 {
+  font-size: clamp(22px, 2vw, 30px);
+  margin: 9px 0 5px;
+  letter-spacing: -1px;
+  overflow-wrap: anywhere;
+}
+.plan-summary-card small {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.plan-summary-card .plan-summary-link {
+  display: grid;
+  width: 34px;
+  min-height: 34px;
+  top: 22px;
+  right: 20px;
+  border: 1px solid #ffffff70;
+  background: #ffffff50;
+}
+.overview .cockpit-count {
+  gap: 9px;
+}
+.count-symbol {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: #ffffff60;
+  margin-bottom: 5px;
+}
+.count-symbol svg {
+  width: 19px;
+  height: 19px;
+}
+.cockpit-count strong {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -1px;
+}
+.planning-summary .plan-summary-card:nth-child(4) {
+  background: #ffd2b7;
+}
+.budget-pulse {
+  margin-top: 15px;
+}
+.budget-pulse-track {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #53672120;
+}
+.budget-pulse-track span {
+  display: block;
+  height: 100%;
+  background: #3e4c22;
+  border-radius: inherit;
+}
+.budget-pulse small {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 7px;
+  color: #465126;
+}
+.budget-pulse[data-over='true'] .budget-pulse-track span {
+  background: #9b253f;
+}
+.budget-pulse[data-over='true'] small {
+  color: #852137;
+}
+.overview .balance-card {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 20px;
+}
+.balance-pocket {
+  order: 0;
+  justify-content: flex-start;
+  padding: 30px;
+  border-radius: 28px;
+  background: radial-gradient(ellipse at 100% 0%, #50505e, transparent 65%), #202128;
+  box-shadow: 0 12px 32px #26233316;
+}
+.balance-pocket::before {
+  width: 160px;
+  height: 210px;
+  border-radius: 24px;
+  right: -55px;
+  top: 45px;
+  transform: rotate(-26deg);
+  border-color: #ffffff0c;
+  box-shadow:
+    0 0 0 18px #ffffff03,
+    0 0 0 36px #ffffff02;
+}
+.balance-pocket h2 {
+  position: relative;
+  font-size: clamp(28px, 3vw, 46px);
+  margin-top: 35px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.balance-card-signature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #ffffff18;
+  color: #c8cdbe;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.balance-card-signature svg {
+  color: var(--lime);
+  width: 26px;
+  height: 26px;
+}
+.balance-wallet-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 13px 14px;
+  background: #ffffff08;
+  border: 1px solid #ffffff0c;
+  border-radius: 14px;
+  text-align: left;
+  color: white;
+}
+.balance-wallet-link:hover {
+  background: #ffffff12;
+}
+.balance-wallet-link > span {
+  min-width: 0;
+}
+.balance-wallet-link small,
+.balance-wallet-link strong {
+  display: block;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.balance-wallet-link small {
+  color: #b6b8c5;
+  font-weight: 400;
+}
+.balance-wallet-link strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 3px;
+  font-weight: 600;
+}
+.balance-wallet-link svg {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+}
+.balance-shortcuts {
+  margin-top: auto;
+  padding-top: 24px;
+}
+.balance-shortcuts button {
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.balance-shortcuts button svg {
+  width: 44px;
+  height: 44px;
+  padding: 12px;
+  border-radius: 16px;
+}
+.cashflow-panel,
+.panel {
+  border: 1px solid #ffffff;
+  box-shadow: var(--surface-shadow);
+  border-radius: 26px;
+}
+.cashflow-panel {
+  padding: 28px;
+}
+.balance-card .cashflow-panel h3,
+.section-heading h2 {
+  font-size: 19px;
+  letter-spacing: -0.5px;
+  font-weight: 700;
+}
+.cashflow-panel .section-heading p,
+.section-heading p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.balance-card .cashflow-panel .balance-flow strong {
+  font-size: clamp(19px, 2vw, 27px);
+  letter-spacing: -0.8px;
+}
+.chart-line.chart-income {
+  stroke: #647a3d;
+}
+circle.chart-income {
+  fill: #647a3d;
+}
+.quick.panel {
+  padding: 20px;
+  border: 1px solid #ded5f3;
+  background: linear-gradient(105deg, #eee7ff, #faf7ff 65%);
+  border-radius: 24px;
+  margin-block: 20px;
+}
+.quick-icon {
+  background: #d8c9fa;
+  color: #534179;
+  border-radius: 16px;
+}
+.quick strong {
+  font-size: 16px;
+  letter-spacing: -0.3px;
+}
+.quick form input {
+  background: #ffffffb0;
+  border-radius: 14px;
+}
+.quick form button {
+  border-radius: 14px;
+}
+.wallet-card,
+.goal-card {
+  border: 1px solid #ffffff;
+  box-shadow: var(--surface-shadow);
+  position: relative;
+  border-radius: 24px;
+}
+.wallet-card::after {
+  content: '';
+  width: 34px;
+  height: 46px;
+  position: absolute;
+  bottom: 22px;
+  right: 22px;
+  border: 1px solid #ffffff80;
+  border-radius: 10px;
+  transform: rotate(-16deg);
+  box-shadow: -8px 0 0 #ffffff20;
+  pointer-events: none;
+}
+.wallet-card h3,
+.goal-card h3 {
+  font-size: 17px;
+  letter-spacing: -0.3px;
+}
+.wallet-card p {
+  font-weight: 800;
+}
+.table-wrap tbody tr:hover {
+  background: #f6f3fd;
+}
+.billow-hero {
+  position: relative;
+  isolation: isolate;
+}
+.billow-hero::before {
+  background: radial-gradient(ellipse, #e4d7ff90, transparent 68%);
+}
+.billow-hero .hero-accent {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+}
+.hero-accent::after {
+  content: '';
+  position: absolute;
+  inset: 60% -8px 4%;
+  background: var(--lime);
+  border-radius: 8px;
+  transform: rotate(-2deg);
+  z-index: -1;
+}
+.welcome-cockpit {
+  box-shadow: 0 24px 90px #49387514;
+  border: 1px solid #ffffff;
+}
+.welcome-feature-grid article {
+  border: 1px solid #ffffff;
+  border-radius: 28px;
+  box-shadow: var(--surface-shadow);
+}
+.welcome-feature-grid article:first-child {
+  background: #edf6d7;
+}
+.welcome-feature-grid article:nth-child(2) {
+  background: #fff0e7;
+}
+.welcome-feature-grid article:nth-child(3) {
+  background: #eee7ff;
+}
+.auth-panel {
+  background: radial-gradient(ellipse at 80% 20%, #efe8ff, transparent 65%), #f7f7fb;
+}
+.auth-card {
+  box-shadow: 0 16px 60px #4533570d;
+  border: 1px solid white;
+  border-radius: 28px;
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .main > main,
+  .main > header {
+    padding-inline: 22px;
+  }
+  .planning-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .overview .balance-card {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  }
+  .balance-pocket {
+    padding: 20px;
+  }
+  .balance-pocket h2 {
+    font-size: 27px;
+  }
+  .cashflow-panel {
+    padding: 20px;
+  }
+}
+@media (max-width: 800px) {
+  .app > aside {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+  }
+  .app > aside .brand,
+  .app > aside .sidebar-bottom {
+    display: none;
+  }
+  .app > aside nav {
+    gap: 0;
+    padding: 5px 10px calc(5px + env(safe-area-inset-bottom));
+    background: #17191f;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .app > aside nav button {
+    width: auto;
+    flex: 1;
+    min-height: 52px;
+    gap: 5px;
+    color: #9597a6;
+    padding: 5px 2px;
+    border-radius: 14px;
+  }
+  .app > aside nav button.active {
+    background: #32343e;
+    color: white;
+  }
+  .app > aside nav button .nav-label {
+    display: inline;
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    font-size: 9px;
+  }
+  .app > aside nav button svg {
+    width: 18px;
+    height: 18px;
+  }
+  .main {
+    width: 100%;
+    margin-left: 0;
+  }
+  .main > header {
+    padding-inline: 20px;
+    height: 64px;
+  }
+  .main > main {
+    padding: 14px 20px 190px;
+  }
+  .page-heading h1 {
+    font-size: 26px;
+  }
+  .page-heading p {
+    font-size: 11px;
+  }
+  .workspace-title {
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .planning-summary {
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .overview .plan-summary-card {
+    padding: 16px;
+    min-height: 120px;
+    border-radius: 18px;
+  }
+  .plan-summary-card h2 {
+    font-size: 21px;
+    letter-spacing: -0.6px;
+    margin-top: 18px;
+    overflow-wrap: anywhere;
+  }
+  .plan-summary-card small {
+    font-size: 9px;
+  }
+  .overview .balance-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0;
+  }
+  .balance-pocket {
+    order: 0;
+    padding: 24px;
+    border-radius: 20px;
+  }
+  .balance-pocket h2 {
+    font-size: 34px;
+    margin-top: 24px;
+  }
+  .balance-shortcuts {
+    margin: 22px 0 0;
+    gap: 8px;
+  }
+  .balance-shortcuts button {
+    font-size: 10px;
+    min-height: 68px;
+  }
+  .cashflow-panel {
+    padding: 20px;
+    border-radius: 20px;
+  }
+  .balance-card .cashflow-panel .balance-flow strong {
+    font-size: 19px;
+  }
+  .cashflow-panel .flow-totals {
+    gap: 18px;
+  }
+  .quick.panel,
+  .panel {
+    padding: 18px;
+    border-radius: 18px;
+  }
+  .quick form button {
+    padding-inline: 15px;
+  }
+  .page-actions {
+    background: #f1f2f7;
+    border: 0;
+    box-shadow: none;
+    padding: 8px 16px;
+    bottom: calc(62px + env(safe-area-inset-bottom));
+  }
+  .mobile-more {
+    font-size: 9px;
+  }
+  .preview-plan {
+    border-radius: 14px;
+  }
+}
+@media (max-width: 360px) {
+  .main > main {
+    padding-inline: 14px;
+  }
+  .main > header {
+    padding-inline: 14px;
+  }
+  .overview .plan-summary-card {
+    padding: 13px;
+  }
+  .plan-summary-card h2 {
+    font-size: 18px;
+  }
+  .plan-summary-card .plan-summary-link {
+    right: 8px;
+    top: 8px;
+  }
+  .balance-pocket {
+    padding: 20px;
+  }
+  .balance-pocket h2 {
+    font-size: 30px;
+  }
+  .cashflow-panel {
+    padding: 16px;
+  }
+  .balance-card .cashflow-panel .balance-flow strong {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 800px) {
+  .overview .balance-card {
+    order: -2;
+  }
+  .overview .plan-summary-card {
+    min-height: 170px;
+    gap: 10px;
+  }
+  .plan-summary-card h2 {
+    margin-top: 9px;
+    font-size: clamp(16px, 4.8vw, 20px);
+  }
+  .plan-summary-icon {
+    display: grid;
+    width: 30px;
+    height: 30px;
+  }
+  .plan-summary-card > div > span,
+  .cockpit-count > span:not(.count-symbol) {
+    font-size: 12px;
+  }
+  .plan-summary-card .plan-summary-link {
+    top: 14px;
+    right: 12px;
+    width: 30px;
+    min-height: 30px;
+  }
+  .cockpit-count strong {
+    font-size: 30px;
+  }
+  .budget-pulse small {
+    font-size: 10px;
+  }
+  .count-symbol {
+    width: 30px;
+    height: 30px;
+  }
+  .balance-card-signature {
+    margin-top: 20px;
+    padding-bottom: 18px;
+  }
+  .page-heading p {
+    font-size: 12px;
+  }
+  .quick strong {
+    font-size: 15px;
+  }
+  .app > aside nav button.active {
+    background: var(--lime);
+    color: var(--ink);
+    box-shadow: none;
+  }
+  .page-actions {
+    background: #f3f3f8;
+  }
+}
+@media (max-width: 360px) {
+  .plan-summary-card h2 {
+    font-size: 16px;
+  }
+  .plan-summary-card > div > span,
+  .cockpit-count > span:not(.count-symbol) {
+    font-size: 11px;
+  }
+  .budget-pulse small {
+    flex-wrap: wrap;
+  }
+}

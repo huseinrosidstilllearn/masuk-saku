@@ -1,0 +1,20 @@
+name: Attachment retention and transaction trash cleanup
+on:
+  # Optional manual fallback. Production already uses its database15min scheduler.
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invoke authenticated maintenance
+        shell: bash
+        env:
+          MAINTENANCE_URL: ${{ secrets.MAINTENANCE_URL }}
+          MAINTENANCE_SECRET: ${{ secrets.MAINTENANCE_SECRET }}
+        run: |
+          test -n "$MAINTENANCE_URL" && test -n "$MAINTENANCE_SECRET"
+          curl --fail --silent --show-error --max-time 60 \
+            -X POST -H "Authorization: Bearer $MAINTENANCE_SECRET" \
+            -H "Content-Type: application/json" -d '{}' "$MAINTENANCE_URL"

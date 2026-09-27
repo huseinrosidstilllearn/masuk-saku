@@ -1,0 +1,13 @@
+# Tanggal dan waktu transaksi
+
+Pilihan tanggal transaksi memakai kalender khusus berbahasa Indonesia, Senin–Minggu, dan input manual `DD/MM/YYYY`. Jam dan menit dipilih terpisah: `00–23` dan `00–59`, tanpa AM/PM. WIB (`Asia/Jakarta`, UTC+07:00) tetap menjadi zona waktu pencatatan, termasuk ketika bahasa atau zona waktu browser berbeda.
+
+`src/components/DateTimeField.tsx` menyimpan pilihan di draft TransactionForm. `src/domain/date-time.ts` memvalidasi tanggal Gregorian dan mengonversi draft ke instant UTC hanya saat submit yang dikonfirmasi. Contoh `27/09/2026 00:15 WIB` tersimpan sebagai `2026-09-26T17:15:00.000Z`. Saat diedit, instant tersebut ditampilkan kembali dalam WIB. Input tanggal tidak valid memblokir submit; pintasan Waktu sekarang memperbaiki input manual dan mengisi waktu WIB saat ini. Hari ini mengubah tanggal saja, mempertahankan jam pilihan. Detik tidak ditampilkan dan disimpan sebagai 00, sesuai resolusi menit editor sebelumnya.
+
+Kalender muncul sebagai disclosure dalam dialog transaksi, sehingga tidak menambah dialog bersarang. Panah mengubah hari/minggu, Home/End awal/akhir minggu, Page Up/Down bulan, Shift+Page Up/Down tahun. Enter memilih; Escape pertama menutup kalender dan mengembalikan fokus ke tombol kalender, Escape berikutnya mengikuti perilaku dialog transaksi. Satu tanggal berada dalam urutan Tab. Label bulan, nama hari penuh, penanda hari ini, dan tanggal terpilih tersedia untuk teknologi bantu.
+
+Referensi keyboard dan semantik yang diperiksa: [W3C APG date picker](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/). Implementasi ini menggunakan disclosure inline dan tidak menyalin modal contoh tersebut. Pengujian browser/keyboard tidak merupakan sertifikasi seluruh pembaca layar.
+
+Visual awal hijau kini mengikuti [Dashboard V2](DASHBOARD-V2.md): primary charcoal dan lavender, dengan DM Sans/ikon Lucide tetap. `src/date-time.css` diimpor sebelum override Dashboard V2 dan `src/motion.css`; buka/tutup memakai recipe accordion21 Transitions.dev yang sudah didokumentasikan di [MOTION](MOTION.md). Kalender tujuh kolom memiliki aturan terpisah dari tabel transaksi yang berubah menjadi kartu pada layar kecil. Tidak menambah paket kalender, CDN, atau layanan eksternal. Editor tanggal periode anggaran/target tidak diubah dalam permintaan ini.
+
+Regresi di `tests/date-time.test.ts` mencakup tahun kabisat, tanggal mustahil, tengah malam/siang/23:59, batas tahun, navigasi akhir bulan dan kalender Senin42hari. `tests/e2e/date-time.spec.ts` memakai locale en-US dan zona America/New_York untuk memeriksa UI Indonesia, jam24, preview/confirm/edit/UTC export, input invalid, Waktu sekarang, keyboard lintas bulan dan tujuh kolom pada320px.

@@ -1,0 +1,8 @@
+node_modules
+dist
+work
+package-lock.json
+supabase/functions/deno.lock
+docs/source
+supabase/migrations
+

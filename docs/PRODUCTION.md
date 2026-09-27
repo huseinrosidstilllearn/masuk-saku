@@ -1,5 +1,26 @@
 # Production — masuksaku.my.id
 
+## Current release — 27 September 2026
+
+Latest authorized promotion includes all Development changes through68dad2b: password recovery, AI credential lifecycle, transaction filters/pagination/reports, active membership controls, private profiles/avatars/username, mobile avatar fix, photo-first layout, AI settings shortcut/endpoint display, centred footer and spacing audit.
+
+- Frontend: **7c1e8539**, [canonical](https://masuksaku.my.id), [immutable](https://7c1e8539.masuk-saku-production.pages.dev).
+- Supabase: **11 migrations**, all applied; dry-run reports up-to-date. Six Edge Functions redeployed from current source.
+- Development remains **07fe1ec8**, 11 migrations; primary CLI still Development. Production operations use explicit ref and isolated work/production-cli.
+- Pre-promotion encrypted backup [36332334635](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36332334635) succeeded before migrations9–11.
+- Verification: current source CI passed; local84unit/SQL,44demo,16configured browser, build/format and spacing audit passed in preceding Development slice. Fresh Deno11tests and checks of all6functions passed. Production build/preflight, canonical/Pages HTTP200, matching assets, Production-only backend, CSP, SPA and320px signup/no page errors passed. Backend anonymous/CORS/quota/private resolver negative checks passed.
+- Auth/SMTP/encryption keys were preserved; no Development data or credentials were copied. Google remains disabled.
+
+This release is a deployment promotion, not completion of every V1 requirement. Real-account finance/AI/profile upload, multiaccount revoke/rejoin, physical camera and retention pilots, independent recovery-key copy, durable Drive OAuth, isolated restore rehearsal and Storage-byte backup remain unresolved. Database backup does not include photo/receipt bytes.
+
+Rollback frontend reference: e2da5fd5. New migrations are append-only; do not blindly roll back database schema or reset hosted data. See OPERATIONS.md for recovery planning.
+
+## Historical deployment notes
+
+The entries below document earlier deployments and are superseded by the current release above.
+
+# Production — masuksaku.my.id
+
 ## Current frontend release —27September2026
 
 Production **e2da5fd5** at [masuksaku.my.id](https://masuksaku.my.id) promotes all current Development78e8c110 frontend changes: dropdowns/component motion/login activity fix/banking navigation/3capture options/camera/8px spacing. User expressly authorized promotion. Fresh78unit/SQL+41demo browser+5configured-mode passed, format/preflight/deploy and hosted domain/artifact/Production-only backend/CSP/SPA/320/signup/dropdown/hover/reduced-motion/camera policy/mocked-login checks passed. See [release evidence](VERIFICATION.md) and NOTES. Physical camera/BYOK/authenticated finance pilot pending; no backend/data/SMTP/secret changes. Previous5fd70f43 is the frontend rollback reference.

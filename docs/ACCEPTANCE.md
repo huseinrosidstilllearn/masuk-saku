@@ -92,6 +92,8 @@ Current release work: password recovery request/PKCE callback/hash navigation/up
 
 # Personal profile addition
 
+Deployment update27September2026: all current Development application changes promoted to Production7c1e8539,11migrations/6functions. Fresh pre-promotion encrypted backup36332334635 succeeded. Hosted canonical/mobile/assets/backend isolation and anonymous profile/BYOK denial checks passed. User finance/profile/AI/multiaccount pilots and restore/Storage-byte backup remain separate acceptance gates.
+
 - Full name/nickname editable; optional phone, birth date, city and bio; email read-only.
 - Only nickname shared with household; profile rows/photos restricted to own account.
 - JPEG/PNG/WebP ≤2 MiB; selection/removal requires Save, with preview and retryable failures.

@@ -80,10 +80,12 @@ export function Welcome({
           </button>
           <button className="welcome-demo-link" onClick={onDemo}>
             <Icon name="dashboard" />
-            <span>Jelajahi demo interaktif</span>
+            <span>Coba demo tanpa daftar</span>
           </button>
         </div>
-        <small>Catat manual atau dengan AI. Kamu yang mengonfirmasi.</small>
+        <small>
+          Data contoh reset setelah 15 menit tidak aktif. Transaksi nyata tetap kamu konfirmasi.
+        </small>
       </section>
       <section className="welcome-product" id="ringkasan" aria-label="Contoh ringkasan keuangan">
         <span className="welcome-pill">

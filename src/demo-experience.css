@@ -1,5 +1,6 @@
 .billow-hero {
   text-align: center;
+  padding-bottom: 58px;
 }
 .welcome-hero-actions {
   display: flex;
@@ -21,9 +22,9 @@
   padding: 9px 16px;
   border: 0;
   border-radius: 13px;
-  background: #bd405b;
+  background: #a63d4f;
   color: #fff;
-  box-shadow: 0 8px 22px #e9506944;
+  box-shadow: 0 5px 14px #a63d4f33;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -52,10 +53,10 @@
   z-index: -1;
   inset: 2px;
   border-radius: 11px;
-  background: linear-gradient(115deg, #b53354, #d95151);
+  background: linear-gradient(115deg, #9e3b4c, #bc5256);
 }
 .welcome-demo-link:hover {
-  box-shadow: 0 10px 25px #e9506966;
+  box-shadow: 0 8px 18px #a63d4f55;
   transform: translateY(-1px);
 }
 .welcome-demo-link:focus-visible {
@@ -72,6 +73,9 @@
   height: 16px;
 }
 @media (max-width: 760px) {
+  .billow-hero {
+    padding-bottom: 38px;
+  }
   .welcome-hero-actions .welcome-cta {
     width: 100%;
   }

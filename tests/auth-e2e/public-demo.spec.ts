@@ -8,7 +8,7 @@ test('public demo changes only local example data and resets on reload', async (
       writes.push(request.url());
   });
   await page.goto('/');
-  await page.getByRole('button', { name: 'Jelajahi demo interaktif' }).click();
+  await page.getByRole('button', { name: 'Coba demo tanpa daftar' }).click();
   await expect(page).toHaveURL(/\/demo$/);
   await expect(
     page.getByText('Simulasi lokal dengan data fiktif.', { exact: false }),

@@ -22,18 +22,28 @@ export function HouseholdManager({
   data,
   isOwner,
   onSaved,
+  initialInvite = false,
+  onInviteHandled,
 }: {
   data: Snapshot;
   isOwner: boolean;
   onSaved?: () => Promise<void>;
+  initialInvite?: boolean;
+  onInviteHandled?: () => void;
 }) {
   const [revoking, setRevoking] = useState<Snapshot['members'][number] | null>(null);
   const [rows, setRows] = useState<Invitation[]>([]);
-  const [editor, setEditor] = useState(false);
+  const [editor, setEditor] = useState(initialInvite && isOwner);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [issued, setIssued] = useState<{ id: string; email: string; code: string } | null>(null);
   const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (initialInvite && isOwner) {
+      setEditor(true);
+      onInviteHandled?.();
+    }
+  }, [initialInvite, isOwner, onInviteHandled]);
   useEffect(() => {
     let active = true;
     setRows([]);

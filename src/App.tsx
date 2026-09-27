@@ -29,6 +29,7 @@ import {
 } from './domain/finance';
 import { parseQuickAdd } from './domain/quick-add';
 import { HouseholdManager } from './components/Household';
+import { FamilyOverview } from './components/FamilyOverview';
 import { CatalogManager } from './components/Catalog';
 import type { Snapshot, Transaction, TransactionInput } from './domain/types';
 import { configured, supabase } from './lib/supabase';
@@ -72,6 +73,7 @@ export default function App() {
   const currentUser = useRef<string | null>(configured ? null : demoUser);
   const [filters, setFilters] = useState<Filters>({});
   const [profileVersion, setProfileVersion] = useState(0);
+  const [inviteRequested, setInviteRequested] = useState(false);
   const [listPage, setListPage] = useState(1);
   const [user, setUser] = useState<string | null>(configured ? null : demoUser),
     [authLoading, setAuthLoading] = useState(configured),
@@ -874,6 +876,22 @@ export default function App() {
                     </article>
                   </div>
                 </section>
+                <FamilyOverview
+                  data={data}
+                  balance={balance}
+                  fmt={fmt}
+                  owner={owner}
+                  onSelect={setOwner}
+                  isOwner={role === 'owner'}
+                  onManage={() => {
+                    setInviteRequested(false);
+                    setPage('settings');
+                  }}
+                  onInvite={() => {
+                    setInviteRequested(true);
+                    setPage('settings');
+                  }}
+                />
                 <section className="dashboard-more panel" aria-labelledby="dashboard-more-title">
                   <div className="section-heading">
                     <div>
@@ -1141,6 +1159,8 @@ export default function App() {
               <HouseholdManager
                 data={data}
                 isOwner={role === 'owner'}
+                initialInvite={inviteRequested}
+                onInviteHandled={() => setInviteRequested(false)}
                 onSaved={async () => {
                   await refresh();
                 }}

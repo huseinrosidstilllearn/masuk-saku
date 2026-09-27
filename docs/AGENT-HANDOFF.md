@@ -1,5 +1,13 @@
 # Agent handoff — current release
 
+## Dashboard keluarga — 28 September 2026
+
+Approved addition: Dashboard now shows a Keuangan keluarga panel immediately after the main overview. Each member has a recorded balance based on their active personal wallets; shared wallets are a separate card and counted once. Existing balance masking covers every amount. Member cards select the existing personal dashboard scope, while the shared card returns to the combined family scope. Inactive members retain a clearly marked historical balance.
+
+Owner's Tambah anggota opens the existing email-bound invitation dialog directly; the one-shot request is consumed so normal later Settings visits do not reopen it. Kelola anggota opens Settings. Existing invitation RPCs, verified-email onboarding, RLS, financial writes and private profile visibility are unchanged. No bank synchronization or automatic invitation email was added. Hosted two-account invitation/finance pilot remains a separate acceptance step.
+
+Development deployment: 756e1c2b. Production remains 64f9f8a6; database/Edge unchanged at 11 migrations/6 functions. Fresh checks: 84 unit/SQL, 45 demo browser and 16 configured auth tests, typecheck/build/format passed. Local screenshots at 320/768/1440 reviewed with no page overflow. Earlier network-suspended failures did not recur; the old mobile layout assertion now checks that secondary destinations remain below the overview without requiring immediate adjacency.
+
 Read AGENTS.md, PRD.md, TECHNICAL-SPEC.md, ACCEPTANCE.md and the latest private NOTES.md if present. This browser-only application is online, version0.1.0 toward V1; do not claim every release criterion complete.
 
 ## Environments — 27 September 2026

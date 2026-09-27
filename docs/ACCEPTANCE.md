@@ -92,6 +92,15 @@ Current release work: password recovery request/PKCE callback/hash navigation/up
 
 # Personal profile addition
 
+## Dashboard keluarga
+
+- Owner can open the existing invitation dialog using Tambah anggota directly from Dashboard.
+- Recorded balances appear for each member's active personal wallets, with shared wallets shown separately. Their sum matches the combined family balance; archived wallets are excluded.
+- Clicking a member selects that member's dashboard scope; the shared-wallet card returns to the whole family.
+- Hide balance removes amounts from all member/shared cards immediately.
+- The panel remains usable at 320, 768 and 1440 pixels; normal Settings visits do not reopen a previously dismissed invitation.
+- Adding an actual second account and recording its transactions must still be exercised against the hosted backend; local browser checks do not prove that pilot.
+
 Deployment update27September2026: all current Development application changes promoted to Production7c1e8539,11migrations/6functions. Fresh pre-promotion encrypted backup36332334635 succeeded. Hosted canonical/mobile/assets/backend isolation and anonymous profile/BYOK denial checks passed. User finance/profile/AI/multiaccount pilots and restore/Storage-byte backup remain separate acceptance gates.
 
 - Full name/nickname editable; optional phone, birth date, city and bio; email read-only.

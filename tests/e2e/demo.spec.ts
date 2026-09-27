@@ -109,11 +109,9 @@ test('mobile Dashboard holds secondary destinations below the overview', async (
   await expect(extra.getByRole('button', { name: 'Buka target tabungan' })).toBeVisible();
   await expect(extra.getByRole('button', { name: 'Buka sampah' })).toBeVisible();
   await expect(extra.getByRole('button', { name: 'Buka pengaturan' })).toBeVisible();
-  expect(
-    await page
-      .locator('.overview')
-      .evaluate((el) => el.nextElementSibling?.classList.contains('dashboard-more')),
-  ).toBe(true);
+  const overviewBox = (await page.locator('.overview').boundingBox())!;
+  const extraBox = (await extra.boundingBox())!;
+  expect(extraBox.y).toBeGreaterThanOrEqual(overviewBox.y + overviewBox.height);
   await extra.getByRole('button', { name: 'Buka target tabungan' }).click();
   await expect(page.locator('.breadcrumb')).toContainText('Target tabungan');
   await expect(page.getByRole('heading', { name: 'Kamera baru', exact: true })).toBeVisible();

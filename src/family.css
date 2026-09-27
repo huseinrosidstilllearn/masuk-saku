@@ -1,0 +1,76 @@
+.family-overview {
+  margin-block: 24px;
+}
+.family-overview .section-heading {
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.family-balance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 16px;
+  margin-block: 24px;
+}
+button.family-balance-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 20px;
+  min-width: 0;
+  text-align: left;
+  white-space: normal;
+  background: #f6f5fb;
+  border: 1px solid #e6e3ee;
+  border-radius: 20px;
+}
+button.family-balance-card[aria-pressed='true'] {
+  border-color: #74649b;
+  box-shadow: inset 0 0 0 1px #74649b;
+}
+button.family-shared-card {
+  background: #f3f7e9;
+}
+.family-member-name,
+.family-card-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-wrap: anywhere;
+}
+.family-member-name {
+  font-weight: 700;
+}
+.family-member-name svg,
+.family-card-link svg {
+  flex-shrink: 0;
+}
+.family-balance-card strong {
+  font-size: clamp(20px, 2vw, 26px);
+  overflow-wrap: anywhere;
+}
+.family-balance-card small {
+  line-height: 1.6;
+}
+.family-card-link {
+  margin-top: auto;
+  font-size: 12px;
+  justify-content: space-between;
+}
+.family-overview-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.family-overview-footer p {
+  flex: 1 1 250px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.family-overview-footer button {
+  flex-shrink: 0;
+}

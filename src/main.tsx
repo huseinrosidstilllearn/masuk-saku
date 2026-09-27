@@ -12,6 +12,7 @@ import './navigation.css';
 import './profile.css';
 import './family.css';
 import './account-pages.css';
+import './welcome-details.css';
 import './motion.css';
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

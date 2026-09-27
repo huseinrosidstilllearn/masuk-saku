@@ -92,6 +92,13 @@ Current release work: password recovery request/PKCE callback/hash navigation/up
 
 # Personal profile addition
 
+## Pengenalan publik dan self-host
+
+- Beranda tanpa sesi menjelaskan manfaat keluarga, alur mulai mencatat, pilihan input tanpa AI, batas sinkronisasi bank, dan cara mencoba versi web.
+- Tautan GitHub dan panduan deployment mengarah ke repositori publik yang benar; pilihan self-host menyatakan bahwa database sendiri memerlukan Supabase/config milik operator, bukan hanya clone source.
+- Tidak ada janji data bank otomatis, penulisan transaksi AI otomatis, langganan AI wajib, atau instalasi mandiri satu klik.
+- CTA akhir membuka `/daftar`; beranda tetap bebas formulir akun dan responsif di 320, 768, dan 1440 piksel.
+
 ## Halaman pengenalan dan akun
 
 - Untuk pengunjung tanpa sesi, `/` berisi pengenalan produk dan tidak memuat formulir login/daftar.

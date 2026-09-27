@@ -1,5 +1,11 @@
 # Agent handoff — current release
 
+## Expanded public introduction — 28 September 2026
+
+Signed-out landing page now includes six feature explanations, three onboarding steps, clear no-bank-sync and AI-human-confirmation copy, expanded FAQ, a self-host comparison and final signup CTA. Self-host content links the public GitHub repository and deployment guide. It explicitly warns that cloning source alone does not separate data; operators must set up their own Supabase project, schema/Edge functions, Storage/Auth and frontend/deployment configuration. This does not claim an automatic one-click self-host path. Existing demo preview remains generic. No auth/financial/backend behavior changed.
+
+Development deployment 76b0ae42. Production remains 64f9f8a6. Fresh checks: 84 unit/SQL, 45 demo browser, 18 configured auth, typecheck/build/format passed. Twelve section screenshots at 320/768/1440 inspected (mobile self-host and desktop guide visually reviewed), no overflow, 6 features, 3 steps, GitHub link and final signup CTA verified. Hosted public landing/source/deployment smoke is separate from authenticated finance and self-host pilot.
+
 ## Separate public account pages — 28 September 2026
 
 For signed-out visitors, `/` is the introduction/landing page only; `/masuk` is login and `/daftar` is registration. Landing CTAs navigate to these routes rather than scrolling to an embedded form. Account pages have their own brand/home header and document titles. SPA fallback supports direct links and refresh; popstate handles browser back/forward. Password/display state is cleared when changing account pages. Existing authenticated Dashboard behavior, Google redirect to origin, email confirmation and PKCE recovery remain; finishing recovery returns to `/masuk`. No provider settings or backend migrations changed.

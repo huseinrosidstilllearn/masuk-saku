@@ -1,6 +1,10 @@
 # Interactive operator setup. Never pass passwords as command arguments or print them.
 [CmdletBinding()]
-param([string]$Repository = 'huseinrosidstilllearn/masuk-saku')
+param(
+  [string]$Repository = 'huseinrosidstilllearn/masuk-saku',
+  [string]$DatabaseHost = '',
+  [string]$DatabaseUser = ''
+)
 $ErrorActionPreference = 'Stop'
 $taskRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $keygen = Get-Command age-keygen -ErrorAction SilentlyContinue
@@ -38,8 +42,10 @@ if (Test-Path -LiteralPath $machineRecovery) {
   Write-Host 'Keep this encrypted file with a separate recovery copy. Its decryption identity remains private.'
 }
 Write-Host 'Open Supabase Production > Connect > Session pooler (port5432). Do not use transaction pooler6543.'
-$backupHost = (Read-Host 'Session pooler hostname (without password/URL)').Trim()
-$backupUser = (Read-Host 'Database username, usually postgres.PROJECT_REF').Trim()
+$backupHost = $DatabaseHost.Trim()
+$backupUser = $DatabaseUser.Trim()
+if (-not $backupHost) { $backupHost = (Read-Host 'Session pooler hostname (without password/URL)').Trim() }
+if (-not $backupUser) { $backupUser = (Read-Host 'Database username, usually postgres.PROJECT_REF').Trim() }
 if ($backupHost -notmatch '^[a-zA-Z0-9.-]+$' -or $backupUser -notmatch '^[a-zA-Z0-9._-]+$') { throw 'Invalid hostname or username.' }
 $password = Read-Host 'Production DATABASE password (input hidden)' -AsSecureString
 try {

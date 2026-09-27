@@ -15,6 +15,7 @@ export const snapshotSchema = z.object({
       household_id: id,
       role: z.enum(['owner', 'member']),
       display_name: z.string(),
+      active: z.boolean().default(true),
     }),
   ),
   wallets: z.array(

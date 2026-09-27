@@ -10,7 +10,9 @@
 
 Kode berlaku tujuh hari. Owner dapat membatalkan undangan yang belum diterima. Kode hanya ditampilkan setelah dibuat dan tidak disimpan pada URL/localStorage. Jika kode hilang, batalkan undangan aktif dan buat yang baru. Daftar menampilkan maksimal100 undangan terbaru; maksimal20 undangan aktif per household. Undangan yang sudah diterima tidak dapat dibatalkan untuk menghapus anggota.
 
-Mode demo menampilkan form tetapi tidak membuat undangan nyata. Pergantian household, penghapusan anggota dan pengiriman email otomatis belum tersedia. Akun yang sudah memiliki membership ditolak pada operasi penerimaan undangan baru; backend lama masih mendukung beberapa household, sementara loader aplikasi memilih membership pertama. Jangan memakai pembuatan household tambahan untuk mengganti household aktif.
+Mode demo menampilkan form tetapi tidak membuat undangan nyata. Owner dapat memilih Nonaktifkan akses pada anggota dengan konfirmasi terpisah. Riwayat dan dompet tetap tersimpan; Owner tidak dapat dinonaktifkan. Kode yang sudah diterima tidak mengaktifkan akses kembali: perlu undangan baru untuk email terverifikasi yang sama. Akun dengan membership aktif ditolak pada penerimaan undangan baru. Pergantian household dan pengiriman email otomatis belum tersedia; loader memilih membership aktif pertama.
+
+Penonaktifan berlaku untuk akses server berikutnya melalui RLS, RPC dan pemeriksaan Edge yang memakai JWT pengguna. Data yang sudah dilihat/disalin tidak dapat ditarik kembali; signed URL struk yang sudah diterbitkan dapat bertahan sampai kedaluwarsa. Browser tidak menghapus riwayat atau mengalokasikan ulang saldo. Aktor/pemilik nonaktif tidak bisa dipilih untuk transaksi/dompet baru; revisi historis boleh mempertahankan identitas lama.
 
 ## Kontrak server
 
@@ -22,6 +24,8 @@ Mode demo menampilkan form tetapi tidak membuat undangan nyata. Pergantian house
 | accept_household_invitation(p_token,p_display_name)           | Authenticated; email verified dari auth.users cocok; kode aktif; belum memiliki membership; insert Member + consume atomik; UUID household |
 
 Raw code dibuat dari dua crypto.randomUUID di browser, dikirim hanya dalam body RPC melalui HTTPS (localhost untuk development). private.household_invitations menyimpan SHA-256 kode. Tidak ada akses tabel langsung untuk public/anon/authenticated. Semua RPC security definer memakai search_path kosong, auth.uid dan pemeriksaan role/membership. Membership tidak menerima role dari browser. Locks menserialisasi pembuatan undangan dalam household dan penerimaan per akun/kode. Retry accept oleh penerima yang sama mengembalikan household tanpa menambah membership/audit lagi. Audit hanya berisi actor/entity/action, tanpa kode/email. Backup template mencakup private schema.
+
+Migration10 menambahkan active, memperbarui private.is_member/is_owner, dan menyediakan revoke_household_member(p_household,p_user) khusus Owner dengan lock/retry idempotent/audit. Policy penghapusan kontribusi virtual juga memerlukan membership aktif; DELETE tanpa WHERE tidak boleh lolos hanya karena created_by. Trigger identitas aktif berlaku pada penulisan pengguna, sedangkan restore administratif tanpa JWT dapat memuat identitas historis nonaktif; grants/RPC/RLS tetap menolak penulisan anonim.
 
 Email confirmation di Supabase Auth harus tetap aktif. email_confirmed_at menjadi acuan server; Supabase dapat mengisi field ini secara otomatis jika Confirm Email dimatikan. Development diperiksa pada27September2026: mailer_autoconfirm=false. Rujukan resmi: [Supabase users](https://supabase.com/docs/guides/auth/users), [Auth general configuration](https://supabase.com/docs/guides/auth/general-configuration).
 

@@ -9,6 +9,8 @@ import {
 } from '../lib/invitations';
 import { EditorDialog } from './Planning';
 import { Icon } from './Icon';
+import { configured } from '../lib/supabase';
+import { revokeHouseholdMember } from '../lib/invitations';
 
 const labels = {
   pending: 'Menunggu',
@@ -16,7 +18,16 @@ const labels = {
   revoked: 'Dibatalkan',
   expired: 'Kedaluwarsa',
 };
-export function HouseholdManager({ data, isOwner }: { data: Snapshot; isOwner: boolean }) {
+export function HouseholdManager({
+  data,
+  isOwner,
+  onSaved,
+}: {
+  data: Snapshot;
+  isOwner: boolean;
+  onSaved?: () => Promise<void>;
+}) {
+  const [revoking, setRevoking] = useState<Snapshot['members'][number] | null>(null);
   const [rows, setRows] = useState<Invitation[]>([]);
   const [editor, setEditor] = useState(false);
   const [error, setError] = useState('');
@@ -71,7 +82,19 @@ export function HouseholdManager({ data, isOwner }: { data: Snapshot; isOwner: b
       {data.members.map((member) => (
         <div className="catalog-row" key={member.user_id}>
           <strong>{member.display_name}</strong>
-          <span>{member.role === 'owner' ? 'Owner' : 'Member'}</span>
+          <span>
+            {member.role === 'owner' ? 'Owner' : 'Member'}
+            {member.active === false ? ' · Nonaktif' : ''}
+          </span>
+          {isOwner && member.role === 'member' && member.active !== false && (
+            <button
+              disabled={busy || !configured}
+              aria-label={'Nonaktifkan akses ' + member.display_name}
+              onClick={() => setRevoking(member)}
+            >
+              Nonaktifkan akses
+            </button>
+          )}
         </div>
       ))}
       {isOwner && (
@@ -152,6 +175,27 @@ export function HouseholdManager({ data, isOwner }: { data: Snapshot; isOwner: b
             }
           }}
         />
+      )}
+      {revoking && (
+        <EditorDialog
+          title="Nonaktifkan akses anggota"
+          submitLabel="Ya, nonaktifkan akses"
+          onClose={() => setRevoking(null)}
+          onSave={async () => {
+            await revokeHouseholdMember(data.household.id, revoking.user_id);
+            await onSaved?.();
+          }}
+        >
+          <p>
+            Nonaktifkan akses {revoking.display_name}? Riwayat transaksi dan dompet tetap tersimpan.
+            Anggota tidak bisa membaca atau mencatat data keluarga lagi.
+          </p>
+          <p>
+            Kode undangan lama tidak dapat dipakai kembali. Buat undangan baru jika ingin
+            mengaktifkan akses lagi. Data yang sudah pernah dilihat tidak bisa ditarik kembali dari
+            perangkat penerima.
+          </p>
+        </EditorDialog>
       )}
     </section>
   );

@@ -12,6 +12,7 @@ export async function loadSnapshot(userId: string): Promise<Snapshot | null> {
     .from('household_members')
     .select('*')
     .eq('user_id', userId)
+    .eq('active', true)
     .order('household_id')
     .limit(1);
   check(membership.error);

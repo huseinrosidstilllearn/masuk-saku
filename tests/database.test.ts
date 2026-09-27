@@ -43,6 +43,7 @@ beforeAll(async () => {
     '202609270007_household_invitations.sql',
     '202609270008_account_usernames.sql',
     '202609270009_ai_credential_lifecycle.sql',
+    '202609270010_membership_lifecycle.sql',
   ])
     await db.exec(readFileSync(new URL('../supabase/migrations/' + file, import.meta.url), 'utf8'));
   await asUser(users[0]);
@@ -68,6 +69,147 @@ beforeAll(async () => {
 });
 afterAll(async () => {
   await db?.close();
+});
+
+it('Owner revokes membership without deleting history, denies former-member access and requires fresh verified re-invitation', async () => {
+  const owner = crypto.randomUUID(),
+    member = crypto.randomUUID(),
+    outsider = crypto.randomUUID();
+  await db.exec('reset role');
+  for (const [id, email] of [
+    [owner, 'lifecycle-owner@example.test'],
+    [member, 'lifecycle-member@example.test'],
+    [outsider, 'lifecycle-outsider@example.test'],
+  ])
+    await db.query('insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())', [
+      id,
+      email,
+    ]);
+  await asUser(owner);
+  const h = String((await scalar("select public.create_household('Lifecycle','Owner') as id"))!.id);
+  const oldToken = 'ab'.repeat(32),
+    freshToken = 'cd'.repeat(32);
+  await db.query('select public.create_household_invitation($1,$2,$3,$4)', [
+    h,
+    'lifecycle-member@example.test',
+    crypto.randomUUID(),
+    oldToken,
+  ]);
+  await asUser(member);
+  await db.query("select public.accept_household_invitation($1,'Member')", [oldToken]);
+  await expect(
+    db.query('select public.revoke_household_member($1,$2)', [h, owner]),
+  ).rejects.toThrow(/Owner required/);
+  await asUser(owner);
+  await db.query(
+    "insert into public.wallets(household_id,name,type,ownership,wallet_owner,initial_balance) values($1,'Member bank','bank','personal',$2,500)",
+    [h, member],
+  );
+  const w = String((await scalar('select id from public.wallets where household_id=$1', [h]))!.id);
+  const goal = String(
+    (await scalar(
+      "insert into public.savings_goals(household_id,title,target_amount) values($1,'Lifecycle goal',1000) returning id",
+      [h],
+    ))!.id,
+  );
+  await asUser(member);
+  const contribution = crypto.randomUUID();
+  await db.query(
+    'insert into public.goal_contributions(id,household_id,goal_id,amount) values($1,$2,$3,20)',
+    [contribution, h, goal],
+  );
+  const tx = String(
+    (await scalar('select public.create_transaction($1::jsonb,$2) as id', [
+      JSON.stringify({
+        household_id: h,
+        type: 'expense',
+        amount: 50,
+        wallet_id: w,
+        transaction_actor: member,
+        transaction_scope: 'family',
+        occurred_at: '2026-09-27T04:00:00Z',
+      }),
+      crypto.randomUUID(),
+    ]))!.id,
+  );
+  await asUser(owner);
+  await expect(
+    db.query('select public.revoke_household_member($1,$2)', [h, owner]),
+  ).rejects.toThrow(/Owner cannot/);
+  await db.query('select public.revoke_household_member($1,$2)', [h, member]);
+  await db.query('select public.revoke_household_member($1,$2)', [h, member]);
+  expect(
+    (await scalar('select current_balance from public.wallet_balances where id=$1', [w]))!
+      .current_balance,
+  ).toBe(450);
+  expect(
+    (await scalar(
+      'select active from public.household_members where household_id=$1 and user_id=$2',
+      [h, member],
+    ))!.active,
+  ).toBe(false);
+  await expect(
+    db.query('select public.create_transaction($1::jsonb,$2)', [
+      JSON.stringify({
+        household_id: h,
+        type: 'expense',
+        amount: 10,
+        wallet_id: w,
+        transaction_actor: member,
+        transaction_scope: 'family',
+        occurred_at: '2026-09-27T04:00:00Z',
+      }),
+      crypto.randomUUID(),
+    ]),
+  ).rejects.toThrow(/active member/);
+  // A trusted database restore has no end-user JWT. Historical inactive identities
+  // must remain restorable while browser grants/RPC checks still enforce membership.
+  await db.exec("reset role; set request.jwt.claim.sub = '';");
+  const restoredId = crypto.randomUUID();
+  await db.query(
+    `insert into public.transactions(id,household_id,type,amount,wallet_id,transaction_actor,
+      transaction_scope,scope_member_id,status,occurred_at,created_by)
+     values($1,$2,'expense',50,$3,$4,'personal',$4,'cancelled',now(),$4)`,
+    [restoredId, h, w, member],
+  );
+  await db.query('delete from public.transactions where id=$1', [restoredId]);
+  await asUser(member);
+  expect(
+    (await db.query('select * from public.transactions where household_id=$1', [h])).rows,
+  ).toHaveLength(0);
+  await expect(db.query('select public.trash_transaction($1)', [tx])).rejects.toThrow(
+    /access denied/,
+  );
+  await expect(
+    db.query('select * from public.get_my_ai_credential_status($1)', [h]),
+  ).rejects.toThrow(/access denied/);
+  await expect(
+    db.query("select public.accept_household_invitation($1,'Member')", [oldToken]),
+  ).rejects.toThrow(/unavailable invitation/);
+  // DELETE without a WHERE/RETURNING does not rely on the SELECT RLS policy.
+  await db.exec('delete from public.goal_contributions');
+  await asUser(owner);
+  expect(
+    (await db.query('select id from public.goal_contributions where id=$1', [contribution])).rows,
+  ).toHaveLength(1);
+  await asUser(outsider);
+  await expect(
+    db.query('select public.revoke_household_member($1,$2)', [h, member]),
+  ).rejects.toThrow(/Owner required/);
+  await asUser(owner);
+  await db.query('select public.create_household_invitation($1,$2,$3,$4)', [
+    h,
+    'lifecycle-member@example.test',
+    crypto.randomUUID(),
+    freshToken,
+  ]);
+  await asUser(member);
+  await db.query("select public.accept_household_invitation($1,'Member returned')", [freshToken]);
+  expect(
+    (await scalar('select current_balance from public.wallet_balances where id=$1', [w]))!
+      .current_balance,
+  ).toBe(450);
+  await asUser(users[0]);
 });
 
 it('AI status and revocation expose only requester metadata and deny foreign households', async () => {

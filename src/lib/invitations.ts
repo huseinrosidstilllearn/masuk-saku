@@ -47,6 +47,13 @@ export async function revokeInvitation(id: string) {
   const result = await client().rpc('revoke_household_invitation', { p_id: id });
   if (result.error) throw new Error(failure(result.error.message));
 }
+export async function revokeHouseholdMember(household: string, user: string) {
+  const result = await client().rpc('revoke_household_member', {
+    p_household: household,
+    p_user: user,
+  });
+  if (result.error) throw new Error('Akses anggota belum berhasil dinonaktifkan. Coba lagi.');
+}
 export async function acceptInvitation(code: string, displayName: string) {
   const token = code.trim().toLowerCase();
   if (!/^[a-f0-9]{64}$/.test(token)) throw new Error('Kode undangan harus berisi 64 karakter.');

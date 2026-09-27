@@ -4,6 +4,7 @@ export interface Member {
   household_id: string;
   role: Role;
   display_name: string;
+  active?: boolean;
 }
 export interface Wallet {
   id: string;

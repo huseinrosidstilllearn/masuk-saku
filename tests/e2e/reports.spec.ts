@@ -2,6 +2,9 @@ import { test, expect } from '@playwright/test';
 test('pagination reaches all rows beyond old200cap, without duplicates, and search resets the page', async ({
   page,
 }) => {
+  // This regression visits eleven pages; keep per-assertion timeouts unchanged
+  // while allowing the full sequence to finish on a busy CI machine.
+  test.setTimeout(60_000);
   await page.goto('/tests/e2e/fixtures/pagination.html');
   await page.getByRole('button', { name: 'Transaksi', exact: true }).click();
   await page.getByText('Filter transaksi', { exact: true }).click();

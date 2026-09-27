@@ -1107,7 +1107,15 @@ export default function App() {
                 }}
               />
             )}
-            {page === 'settings' && <HouseholdManager data={data} isOwner={role === 'owner'} />}
+            {page === 'settings' && (
+              <HouseholdManager
+                data={data}
+                isOwner={role === 'owner'}
+                onSaved={async () => {
+                  await refresh();
+                }}
+              />
+            )}
           </MotionPage>
           <div className="page-actions">
             <button
@@ -1251,11 +1259,13 @@ function WalletCreator({
           Pemilik
           <select value={owner} onChange={(e) => setOwner(e.target.value)}>
             <option value="shared">Keluarga / Shared</option>
-            {data.members.map((m) => (
-              <option key={m.user_id} value={m.user_id}>
-                {m.display_name}
-              </option>
-            ))}
+            {data.members
+              .filter((m) => m.active !== false)
+              .map((m) => (
+                <option key={m.user_id} value={m.user_id}>
+                  {m.display_name}
+                </option>
+              ))}
           </select>
         </label>
         <label>

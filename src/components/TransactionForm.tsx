@@ -312,7 +312,13 @@ export function TransactionForm({
                 Dilakukan oleh
                 <select value={actor} onChange={(e) => setActor(e.target.value)}>
                   {data.members.map((m) => (
-                    <option key={m.user_id} value={m.user_id}>
+                    <option
+                      key={m.user_id}
+                      value={m.user_id}
+                      disabled={
+                        m.active === false && !(editing && initial.transaction_actor === m.user_id)
+                      }
+                    >
                       {m.display_name}
                     </option>
                   ))}
@@ -330,7 +336,13 @@ export function TransactionForm({
                   Untuk siapa
                   <select value={scopeMember} onChange={(e) => setScopeMember(e.target.value)}>
                     {data.members.map((m) => (
-                      <option key={m.user_id} value={m.user_id}>
+                      <option
+                        key={m.user_id}
+                        value={m.user_id}
+                        disabled={
+                          m.active === false && !(editing && initial.scope_member_id === m.user_id)
+                        }
+                      >
                         {m.display_name}
                       </option>
                     ))}

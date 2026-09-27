@@ -5,7 +5,7 @@
 | Project ref         | kxezrgvnpoaqzcseymts             | snqkfrcxjfdjkwxjiabc                       |
 | Database migrations | 11 applied                       | 11 applied, fresh dry-run up-to-date       |
 | Edge Functions      | 6 deployed                       | 6 freshly redeployed                       |
-| Frontend            | 07fe1ec8                         | 7c1e8539                                   |
+| Frontend            | 58458d65                         | 64f9f8a6                                   |
 | Domain              | masuk-saku-development.pages.dev | masuksaku.my.id                            |
 | CLI                 | Primary linked project           | Explicit ref, isolated work/production-cli |
 | Google Auth         | Disabled                         | Disabled                                   |

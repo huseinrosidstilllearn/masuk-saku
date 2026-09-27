@@ -1,6 +1,18 @@
+![Masuk Saku — Satu saku, semua catatan keuangan.](docs/assets/readme-cover.png)
+
+<div align="center">
+
 # Masuk Saku
 
 **Satu saku, semua catatan keuangan.**
+
+[![Build](https://github.com/huseinrosidstilllearn/masuk-saku/actions/workflows/ci.yml/badge.svg)](https://github.com/huseinrosidstilllearn/masuk-saku/actions)
+[![Version](https://img.shields.io/badge/version-0.1.0-164c3e?style=flat)](package.json)
+[![License: MIT](https://img.shields.io/badge/license-MIT-00a878?style=flat)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Web_App-7762d4?style=flat)](https://masuksaku.my.id)
+[![AI](https://img.shields.io/badge/AI-BYOK_%C2%B7_Human_Confirmed-164c3e?style=flat)](docs/PRD.md)
+
+</div>
 
 Web app open source untuk mengelola keuangan pribadi dan keluarga: dompet, pemasukan, pengeluaran, anggaran, dan target tabungan. AI membantu membaca struk dan menyiapkan draft; kamu tetap memeriksa dan mengonfirmasi sebelum transaksi disimpan.
 
@@ -41,6 +53,19 @@ Google login direncanakan, tetapi provider pada deployment saat ini belum aktif.
 - **BYOK:** kunci AI dienkripsi di server, tidak disimpan di localStorage. Endpoint OpenRouter otomatis; custom endpoint belum tersedia.
 
 ## Teknologi dan arsitektur
+
+```mermaid
+flowchart LR
+  User[Pengguna] --> Web[Web app · Cloudflare Pages]
+  Web --> Auth[Supabase Auth]
+  Web --> DB[PostgreSQL · RLS / RPC]
+  Web --> Storage[Private Storage]
+  Web --> Edge[Edge Functions]
+  Edge --> AI[OpenRouter · BYOK]
+  AI --> Draft[Draft yang bisa dikoreksi]
+  Draft --> Review[Konfirmasi pengguna]
+  Review --> DB
+```
 
 | Lapisan       | Teknologi                                          |
 | ------------- | -------------------------------------------------- |

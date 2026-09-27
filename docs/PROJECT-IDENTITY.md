@@ -28,3 +28,7 @@ Web app responsif ini memakai Cloudflare Pages dan Supabase/PostgreSQL. Source t
 - Menampilkan nominal nyata, kondisi kosong dan kegagalan secara jujur.
 
 Gunakan contoh akun/dompet generik, ikon SVG dan visual multicolor mengikuti DESIGN-SYSTEM.md. Jangan mengklaim V1 selesai, AI selalu benar, backup mencakup isi Storage atau Google login aktif bila belum terverifikasi. Status operasional mengacu pada PRODUCTION.md dan ACCEPTANCE.md.
+
+## Aset visual
+
+Cover README: docs/assets/readme-cover.png, memakai gambar yang disediakan pengelola proyek. Favicon web memakai public/favicon-96x96.png dan favicon.ico; Apple touch icon dan ikon192/512 juga berasal dari aset yang diberikan. site.webmanifest memakai display=browser, tanpa service worker atau alur installable PWA. README menampilkan badge CI, versi, MIT, web app dan BYOK serta diagram arsitektur Mermaid.

@@ -4,7 +4,7 @@ Read AGENTS.md, PRD.md, TECHNICAL-SPEC.md, ACCEPTANCE.md and the latest private 
 
 ## Environments — 27 September 2026
 
-Production7c1e8539 at https://masuksaku.my.id and Development07fe1ec8 contain application source through68dad2b. Both have11migrations; Production6EdgeFunctions freshly redeployed. Primary CLI link stays Development; use explicit Production ref and isolated profile. No Dev data/keys copied; no SMTP or encryption-key changes.
+Production64f9f8a6 at https://masuksaku.my.id and Development58458d65 contain application source through68dad2b. Both have11migrations; Production6EdgeFunctions freshly redeployed. Primary CLI link stays Development; use explicit Production ref and isolated profile. No Dev data/keys copied; no SMTP or encryption-key changes.
 
 ## Product and implementation
 
@@ -27,3 +27,5 @@ Weekly age-encrypted database backup to Drive/GitHub artifact is active. Pre-pro
 Independent age/server recovery copy, durable Google OAuth audience, isolated restore rehearsal and Storage object backup remain gates. Earlier local decrypt/cleanup command was rejected by policy; no decryption or restore success claimed. Private OAuth/config/recovery files remain ignored.
 
 Other V1 work: Google provider, real multiaccount/financial/AI/physical-camera/retention pilot, wallet lifecycle, recurring runner, deterministic rollover, import/restore and server report pagination/presets per roadmap. Public source contains no private notes, tokens, financial data or screenshots. README/identity/GitHub description now describe actual capabilities and limits.
+
+Brand assets: operator-supplied README cover atdocs/assets/readme-cover.png and faviconPNG/ICO/Apple/192/512 installed. index.html references them; manifest displaybrowser(noSW/PWA). Original suppliedSVG~9.75MB not shipped; referenced96PNG12.5KB. README cover first, badges and Mermaid architecture; source suppliedfiles remain outside checkout.

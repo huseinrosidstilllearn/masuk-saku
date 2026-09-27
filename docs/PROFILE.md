@@ -11,3 +11,5 @@ Replacement uploads precede the profile transaction. Previous objects are delete
 Database backups include profile rows. Existing pg_dump backups do not include Storage photo bytes; backing up and restoring avatar objects remains an operational release gate. No secrets or profile data belong in the public repository.
 
 Verification: SQL tests cover owner-only reads/writes, conflicting revisions, foreign avatars, birthday constraints and unchanged identities. Configured browser tests cover 2 MiB rejection, staged removal, failed-save retry, committed old-object deletion and 320 px layout. These fixtures do not substitute for a hosted account upload pilot.
+
+Username is shown and editable in a separate explicit-save form using existing get_my_username/set_my_username RPCs. It is distinct from nickname; subsequent logins use the saved username. Duplicate rejection preserves input. Mobile avatar remains visible inside a40px account button; inherited small-avatar hiding is overridden only for that button.

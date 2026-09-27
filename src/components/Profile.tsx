@@ -10,6 +10,7 @@ import {
 import { configured, supabase } from '../lib/supabase';
 import { dateInJakarta } from '../domain/finance';
 import { Icon } from './Icon';
+import { getMyUsername, setMyUsername, USERNAME_PATTERN, USERNAME_HELP } from '../lib/account';
 export function Profile({
   userId,
   nickname,
@@ -22,6 +23,31 @@ export function Profile({
   const [profile, setProfile] = useState<ProfileData>(() => blankProfile(userId, nickname));
   const [persisted, setPersisted] = useState<ProfileData>(() => blankProfile(userId, nickname));
   const [file, setFile] = useState<File>();
+  const [username, setUsername] = useState('');
+  const [usernameReady, setUsernameReady] = useState(false);
+  const [usernameBusy, setUsernameBusy] = useState(false);
+  const [usernameError, setUsernameError] = useState('');
+  const [usernameMessage, setUsernameMessage] = useState('');
+  const [reload, setReload] = useState(0);
+  useEffect(() => {
+    let active = true;
+    setUsernameReady(false);
+    void getMyUsername()
+      .then((value) => {
+        if (active) {
+          setUsername(value ?? '');
+          setUsernameReady(true);
+          setUsernameError('');
+        }
+      })
+      .catch(() => {
+        if (active)
+          setUsernameError('Username belum bisa dimuat. Muat ulang profil untuk mencoba lagi.');
+      });
+    return () => {
+      active = false;
+    };
+  }, [userId, reload]);
   const [signed, setSigned] = useState<string | null>(null),
     [preview, setPreview] = useState<string | null>(null);
   const [email, setEmail] = useState(''),
@@ -29,8 +55,7 @@ export function Profile({
     [ready, setReady] = useState(false),
     [busy, setBusy] = useState(false);
   const [error, setError] = useState(''),
-    [message, setMessage] = useState(''),
-    [reload, setReload] = useState(0);
+    [message, setMessage] = useState('');
   useEffect(() => {
     let active = true;
     setLoading(true);
@@ -96,6 +121,63 @@ export function Profile({
       )}
       {!loading && !ready && (
         <button onClick={() => setReload(reload + 1)}>Muat ulang profil</button>
+      )}
+      {ready && (
+        <form
+          className="profile-username"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setUsernameBusy(true);
+            setUsernameError('');
+            setUsernameMessage('');
+            try {
+              setUsername(await setMyUsername(username));
+              setUsernameMessage(
+                'Username berhasil disimpan. Gunakan username baru saat login berikutnya.',
+              );
+            } catch (error) {
+              setUsernameError(
+                error instanceof Error ? error.message : 'Username belum bisa disimpan.',
+              );
+            } finally {
+              setUsernameBusy(false);
+            }
+          }}
+        >
+          <label>
+            Username
+            <input
+              autoComplete="username"
+              value={username}
+              required
+              pattern={USERNAME_PATTERN}
+              minLength={3}
+              maxLength={30}
+              disabled={!configured || !usernameReady || usernameBusy}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setUsernameMessage('');
+              }}
+              aria-describedby="profile-username-help"
+            />
+          </label>
+          <small id="profile-username-help">
+            {USERNAME_HELP} Username berbeda dari nama panggilan dan digunakan untuk login.
+          </small>
+          {usernameError && (
+            <p role="alert" className="error">
+              {usernameError}
+            </p>
+          )}
+          {usernameMessage && (
+            <p role="status" className="success">
+              {usernameMessage}
+            </p>
+          )}
+          <button disabled={!configured || !usernameReady || usernameBusy} type="submit">
+            {usernameBusy ? 'Menyimpan username…' : 'Simpan username'}
+          </button>
+        </form>
       )}
       {ready && (
         <form

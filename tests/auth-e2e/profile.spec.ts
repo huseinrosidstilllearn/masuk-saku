@@ -1,4 +1,49 @@
 import { test, expect } from '@playwright/test';
+test('profile loads login username and preserves edits when a duplicate is rejected', async ({
+  page,
+}) => {
+  let writes = 0;
+  await page.route(/https:\/\/session-fixture\.supabase\.co\//, async (route) => {
+    const path = new URL(route.request().url()).pathname;
+    const headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    };
+    const reply = (value: unknown, status = 200) =>
+      route.fulfill({
+        status,
+        headers,
+        contentType: 'application/json',
+        body: JSON.stringify(value),
+      });
+    if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers });
+    if (path.endsWith('/user_profiles')) return reply(null);
+    if (path.endsWith('/get_my_username')) return reply('akun_awal');
+    if (path.endsWith('/set_my_username')) {
+      writes++;
+      expect(route.request().postDataJSON()).toEqual({ p_username: 'akun_baru' });
+      return writes === 1
+        ? reply({ message: 'already in use', code: 'P0001' }, 400)
+        : reply('akun_baru');
+    }
+    return reply({});
+  });
+  await page.goto('/');
+  await page.addScriptTag({
+    type: 'module',
+    content: "import {show} from '/tests/e2e/fixtures/profile.tsx';show();",
+  });
+  const input = page.getByRole('textbox', { name: 'Username', exact: true });
+  await expect(input).toHaveValue('akun_awal');
+  await input.fill('AKUN_BARU');
+  await page.getByRole('button', { name: 'Simpan username', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('Username sudah dipakai');
+  await expect(input).toHaveValue('AKUN_BARU');
+  await page.getByRole('button', { name: 'Simpan username', exact: true }).click();
+  await expect(input).toHaveValue('akun_baru');
+  await expect(page.getByRole('status')).toContainText('login berikutnya');
+});
 test('photo preview stays local until Save and explicit rejection cleans only its candidate', async ({
   page,
 }) => {

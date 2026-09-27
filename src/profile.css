@@ -108,14 +108,86 @@
 }
 .profile-username {
   display: grid;
-  gap: 10px;
+  gap: 16px;
   padding-block: 20px;
   border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+}
+.profile-username label,
+.profile-fields label {
+  margin: 0;
+  gap: 10px;
+}
+.profile-heading > button {
+  margin-top: 8px;
+}
+.settings-profile-action {
+  margin-bottom: 28px;
+}
+.settings-grid {
+  gap: 28px;
+  align-items: start;
+}
+.settings-grid > .panel {
+  min-width: 0;
+  margin-bottom: 0;
+}
+.settings-grid .panel > h2 {
+  margin-bottom: 16px;
+}
+.settings-grid .panel > .muted {
+  margin-bottom: 24px;
+  line-height: 1.65;
+}
+.ai-credentials {
+  display: grid;
+  gap: 16px;
+}
+.ai-credentials form {
+  display: grid;
+  gap: 16px;
+}
+.ai-credentials form label {
+  margin: 0;
+  gap: 10px;
+}
+.ai-credentials form > button {
+  justify-self: start;
+  margin-top: 4px;
+}
+.ai-credentials + form {
+  margin-top: 28px;
+  padding-top: 24px;
+}
+.form-grid {
+  row-gap: 12px;
+}
+.profile-photo-row strong {
+  display: block;
+  margin-bottom: 10px;
+}
+.profile-photo-row p {
+  margin-bottom: 16px;
+}
+.profile-photo-row .text-button {
+  margin-left: 12px;
 }
 .profile-username button {
   justify-self: start;
 }
 @media (max-width: 520px) {
+  .household-panel .catalog-row {
+    flex-wrap: wrap;
+    gap: 12px 16px;
+  }
+  .household-panel .catalog-row > strong:first-child {
+    flex: 1 0 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .household-panel .catalog-row > button {
+    margin-left: auto;
+  }
   .profile-fields {
     grid-template-columns: 1fr;
   }

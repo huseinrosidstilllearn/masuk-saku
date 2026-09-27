@@ -29,3 +29,5 @@ Profile follow-up: username now appears with an independent save action using ex
 Profile layout follows user order: photo first, username second, personal details below. Photo controls are outside the personal form; selection/removal still stage state until explicit Simpan profil. Username retains its separate save action.
 
 Footer branding now centers both lines. Profile has Pengaturan AI & API key shortcut to Settings; AI credentials form displays the actual fixed OpenRouter chat-completions endpoint read-only. Only the API key is configurable; no custom provider URL/backend change.
+
+Layout spacing audit: settings profile shortcut has28px separation from account cards, settings cards use28px grid gaps and no duplicated bottom margins. Profile username/details and AI form fields/buttons have consistent16–28px spacing; form-grid rows gain12px. Mobile household member rows wrap actions below names to avoid squeezed names. Playwright visual audit at320/768/1440 shows settings shortcut gap28px and no page overflow in settings/profile; screenshots remain private in work/.

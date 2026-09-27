@@ -1099,10 +1099,12 @@ export default function App() {
             )}
             {page === 'settings' && (
               <>
-                <button onClick={() => setPage('profile')}>
-                  <Icon name="user" />
-                  Edit profil saya
-                </button>{' '}
+                <div className="settings-profile-action">
+                  <button onClick={() => setPage('profile')}>
+                    <Icon name="user" />
+                    Edit profil saya
+                  </button>
+                </div>
                 <Settings
                   data={data}
                   role={role}

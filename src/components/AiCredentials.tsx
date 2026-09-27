@@ -40,7 +40,7 @@ export function AiCredentials({ household }: { household: string }) {
     };
   }, [household, retry]);
   return (
-    <div>
+    <div className="ai-credentials">
       {loaded && (
         <p>
           <strong>{status ? 'Kunci akunmu tersimpan' : 'Belum ada kunci untuk akunmu'}</strong>

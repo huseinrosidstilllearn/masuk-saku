@@ -29,3 +29,5 @@ Independent age/server recovery copy, durable Google OAuth audience, isolated re
 Other V1 work: Google provider, real multiaccount/financial/AI/physical-camera/retention pilot, wallet lifecycle, recurring runner, deterministic rollover, import/restore and server report pagination/presets per roadmap. Public source contains no private notes, tokens, financial data or screenshots. README/identity/GitHub description now describe actual capabilities and limits.
 
 Brand assets: operator-supplied README cover atdocs/assets/readme-cover.png and faviconPNG/ICO/Apple/192/512 installed. index.html references them; manifest displaybrowser(noSW/PWA). Original suppliedSVG~9.75MB not shipped; referenced96PNG12.5KB. README cover first, badges and Mermaid architecture; source suppliedfiles remain outside checkout.
+
+Google login setup: public Auth settings confirm external.google=false in BOTH environments. User has no Web OAuth client and requests guidance; Desktop Drive OAuth is separate and was not reused/read. See GOOGLE-LOGIN.md for exact origins/callbacks and operator dashboard secret entry. No provider/config/frontend changes yet; real Google login remains pending.

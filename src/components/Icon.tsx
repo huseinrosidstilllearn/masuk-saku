@@ -31,9 +31,11 @@ import {
   Tag,
   Copy,
   Camera,
+  UserRound,
   type LucideProps,
 } from 'lucide-react';
 const icons = {
+  user: UserRound,
   camera: Camera,
   calendar: CalendarDays,
   clock: Clock3,

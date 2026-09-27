@@ -41,3 +41,7 @@ Owner manual email-bound codes,7d expiration,private SHA256 storage,Member-only 
 ## Navigation/camera extension
 
 [Navigation/capture](NAVIGATION-CAPTURE.md): native chooser, ReceiptCamera getUserMedia video-only/local JPEG, existing attachment-upload → ai-preview → editable TransactionForm → explicit ai-confirm. camera=(self) header, permission/track/late-resolution cleanup; no database/Edge changes. Configured-mode API failure/retry coverage alongside auth session tests.
+
+# Personal profile extension
+
+See [PROFILE.md](PROFILE.md) for migration11, own-user profile privacy, versioned save RPC and private avatars storage (2 MiB JPEG/PNG/WebP). Profile updates synchronize only active membership nicknames and never financial ownership/actor IDs. Photo bytes need separate operational backup.

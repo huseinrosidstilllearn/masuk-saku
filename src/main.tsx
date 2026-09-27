@@ -9,6 +9,7 @@ import './date-time.css';
 import './dashboard-v2.css';
 import './select.css';
 import './navigation.css';
+import './profile.css';
 import './motion.css';
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

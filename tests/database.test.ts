@@ -44,6 +44,7 @@ beforeAll(async () => {
     '202609270008_account_usernames.sql',
     '202609270009_ai_credential_lifecycle.sql',
     '202609270010_membership_lifecycle.sql',
+    '202609270011_user_profiles.sql',
   ])
     await db.exec(readFileSync(new URL('../supabase/migrations/' + file, import.meta.url), 'utf8'));
   await asUser(users[0]);
@@ -69,6 +70,79 @@ beforeAll(async () => {
 });
 afterAll(async () => {
   await db?.close();
+});
+
+it('profiles are private to their account; nickname updates preserve financial identity and versions reject stale saves', async () => {
+  await asUser(users[0]);
+  const profile = {
+    full_name: 'Test Owner',
+    nickname: 'New nickname',
+    phone: '+62 812 000',
+    birth_date: '1999-01-02',
+    city: 'Test city',
+    bio: 'Private biography',
+    avatar_path: null,
+  };
+  await db.query('select public.save_my_profile($1::jsonb,0)', [JSON.stringify(profile)]);
+  expect(
+    (await scalar('select full_name,revision from public.user_profiles where user_id=$1', [
+      users[0],
+    ]))!.revision,
+  ).toBe(1);
+  expect(
+    (await scalar(
+      'select display_name from public.household_members where household_id=$1 and user_id=$2',
+      [household, users[0]],
+    ))!.display_name,
+  ).toBe('New nickname');
+  await expect(
+    db.query('select public.save_my_profile($1::jsonb,0)', [JSON.stringify(profile)]),
+  ).rejects.toThrow(/profile conflict/);
+  await expect(
+    db.query("update public.user_profiles set full_name='Spoof' where user_id=$1", [users[0]]),
+  ).rejects.toThrow(/permission denied/);
+  await expect(
+    db.query('select public.save_my_profile($1::jsonb,1)', [
+      JSON.stringify({ ...profile, avatar_path: `${users[1]}/${crypto.randomUUID()}.png` }),
+    ]),
+  ).rejects.toThrow(/avatar/);
+  await expect(
+    db.query('select public.save_my_profile($1::jsonb,1)', [
+      JSON.stringify({ ...profile, birth_date: '2999-01-01' }),
+    ]),
+  ).rejects.toThrow(/birth date/);
+  await asUser(users[1]);
+  expect((await db.query('select * from public.user_profiles')).rows).toHaveLength(0);
+  await db.exec("reset role; set request.jwt.claim.sub = ''; set role anon;");
+  await expect(db.query('select * from public.user_profiles')).rejects.toThrow(/permission denied/);
+  await expect(
+    db.query('select public.save_my_profile($1::jsonb,0)', [JSON.stringify(profile)]),
+  ).rejects.toThrow(/permission denied/);
+  await db.exec(
+    'reset role; grant usage on schema storage to authenticated; grant select,insert,delete on storage.objects to authenticated;',
+  );
+  await asUser(users[0]);
+  const avatar = `${users[0]}/${crypto.randomUUID()}.png`;
+  await db.query("insert into storage.objects(bucket_id,name) values('avatars',$1)", [avatar]);
+  await db.query('select public.save_my_profile($1::jsonb,1)', [
+    JSON.stringify({ ...profile, avatar_path: avatar }),
+  ]);
+  await asUser(users[1]);
+  expect(
+    (await db.query("select * from storage.objects where bucket_id='avatars'")).rows,
+  ).toHaveLength(0);
+  await expect(
+    db.query("insert into storage.objects(bucket_id,name) values('avatars',$1)", [avatar]),
+  ).rejects.toThrow(/row-level security/);
+  await db.exec("delete from storage.objects where bucket_id='avatars'");
+  await asUser(users[0]);
+  expect(
+    (
+      await db.query("select * from storage.objects where bucket_id='avatars' and name=$1", [
+        avatar,
+      ])
+    ).rows,
+  ).toHaveLength(1);
 });
 
 it('Owner revokes membership without deleting history, denies former-member access and requires fresh verified re-invitation', async () => {

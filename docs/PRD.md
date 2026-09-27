@@ -92,3 +92,7 @@ Latest public-example decision: demo household/member/wallet labels and signup/c
 ## Latest navigation/capture decision —27September2026
 
 Bottom nav: Dashboard, Dompet, center Tambah, Transaksi, Anggaran. Center opens Upload struk/Foto struk/Tambah manual; secondary menus on Dashboard below financial overview. Photo requests camera only after explicit selection and auto-prepares AI draft after capture, with editable human confirmation before save. See [navigation/capture](NAVIGATION-CAPTURE.md); this preserves AI-assisted human-confirmed.
+
+# Agreed profile extension
+
+Personal account customization includes full name, nickname, private photo (maximum 2 MB), optional phone, birthday, city and short bio. Only nickname is visible to the household. Changes require explicit Save; financial identity and email login remain separate. See [PROFILE.md](PROFILE.md).

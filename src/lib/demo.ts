@@ -275,6 +275,11 @@ export function walletDemo(wallet: Snapshot['wallets'][number]) {
 export function settingsDemo(settings: Partial<Snapshot['household']>) {
   data.household = { ...data.household, ...settings };
 }
+export function renameDemoMember(userId: string, nickname: string) {
+  data.members = data.members.map((member) =>
+    member.user_id === userId ? { ...member, display_name: nickname } : member,
+  );
+}
 export function budgetDemo(
   budget: Snapshot['budgets'][number],
   original?: Snapshot['budgets'][number],

@@ -89,3 +89,11 @@ AC22 fresh-login regression: a new authenticated session starts a fresh activity
 Production promotion27September2026: AC22/AC42/AC43 and component motion now shipped to Productione2da5fd5 as well as Development78e8c110. Release tests78unit/SQL+41demo browser+5configured-mode and public hosted checks passed; real-device/AI/financial gates remain pending as recorded in VERIFICATION.
 
 Current release work: password recovery request/PKCE callback/hash navigation/update/cancel tested with configured fixtures; BYOK own-status/replace/revoke tested with SQL/fixtures and migration9 on Development. Custom-period reports, typed transaction filters and25row UI pagination now local;260row traversal verified, backend10000row snapshot ceiling remains. Weekly backup has public workflow/operator setup helper; Secrets/first backup/isolated restore still pending. See PASSWORD-RECOVERY, BYOK-LIFECYCLE, REPORTS and AGENT-HANDOFF. Full V1 gates are not closed.
+
+# Personal profile addition
+
+- Full name/nickname editable; optional phone, birth date, city and bio; email read-only.
+- Only nickname shared with household; profile rows/photos restricted to own account.
+- JPEG/PNG/WebP ≤2 MiB; selection/removal requires Save, with preview and retryable failures.
+- Revision conflicts rejected; replacing/removing photo cleans previous object after commit.
+- SQL and configured browser coverage required; hosted upload/delete pilot and photo-object backup still pending.

@@ -3,6 +3,7 @@ import { Auth, Onboarding } from './components/Auth';
 import { PasswordRecovery } from './components/PasswordRecovery';
 import { RECOVERY_HASH } from './lib/password-recovery';
 import { AccountUsername } from './components/AccountUsername';
+import { AccountAvatar, Profile } from './components/Profile';
 import { AiCredentials } from './components/AiCredentials';
 import { ReceiptCapture } from './components/ReceiptCapture';
 import { TransactionHistory } from './components/TransactionHistory';
@@ -43,7 +44,15 @@ import {
 } from './lib/repository';
 import { download } from './lib/export';
 type Page =
-  'dashboard' | 'transactions' | 'wallets' | 'budgets' | 'goals' | 'trash' | 'settings' | 'reports';
+  | 'dashboard'
+  | 'transactions'
+  | 'wallets'
+  | 'budgets'
+  | 'goals'
+  | 'trash'
+  | 'settings'
+  | 'reports'
+  | 'profile';
 const pages: { id: Page; label: string; icon: IconName }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
   { id: 'transactions', label: 'Transaksi', icon: 'transfer' },
@@ -53,6 +62,7 @@ const pages: { id: Page; label: string; icon: IconName }[] = [
   { id: 'trash', label: 'Sampah', icon: 'trash' },
   { id: 'settings', label: 'Pengaturan', icon: 'settings' },
   { id: 'reports', label: 'Laporan', icon: 'budget' },
+  { id: 'profile', label: 'Profil saya', icon: 'user' },
 ];
 export default function App() {
   const [recovering, setRecovering] = useState(
@@ -61,6 +71,7 @@ export default function App() {
   );
   const currentUser = useRef<string | null>(configured ? null : demoUser);
   const [filters, setFilters] = useState<Filters>({});
+  const [profileVersion, setProfileVersion] = useState(0);
   const [listPage, setListPage] = useState(1);
   const [user, setUser] = useState<string | null>(configured ? null : demoUser),
     [authLoading, setAuthLoading] = useState(configured),
@@ -574,7 +585,9 @@ export default function App() {
                 key={p.id}
                 className={[
                   page === p.id ? 'active' : '',
-                  ['goals', 'trash', 'settings', 'reports'].includes(p.id) ? 'secondary-nav' : '',
+                  ['goals', 'trash', 'settings', 'reports', 'profile'].includes(p.id)
+                    ? 'secondary-nav'
+                    : '',
                 ].join(' ')}
                 aria-current={page === p.id ? 'page' : undefined}
                 aria-label={p.label}
@@ -613,7 +626,13 @@ export default function App() {
             <p>Catatan hari ini membantu rencana besok.</p>
           </div>
           <div className="member">
-            <span className="avatar">{member.display_name[0]}</span>
+            <button
+              className="profile-open"
+              aria-label="Profil akun"
+              onClick={() => setPage('profile')}
+            >
+              <AccountAvatar userId={user} name={member.display_name} version={profileVersion} />
+            </button>
             <div>
               <strong>{member.display_name}</strong>
               <small>{role === 'owner' ? 'Owner household' : 'Member household'}</small>
@@ -658,7 +677,13 @@ export default function App() {
               </span>
               {hide ? 'Tampilkan saldo' : 'Sembunyikan saldo'}
             </button>
-            <span className="avatar small-avatar">{member.display_name[0]}</span>
+            <button
+              className="profile-open"
+              aria-label="Buka profil saya"
+              onClick={() => setPage('profile')}
+            >
+              <AccountAvatar userId={user} name={member.display_name} version={profileVersion} />
+            </button>
             {configured && (
               <button
                 className="mobile-signout"
@@ -1074,7 +1099,10 @@ export default function App() {
             )}
             {page === 'settings' && (
               <>
-                {' '}
+                <button onClick={() => setPage('profile')}>
+                  <Icon name="user" />
+                  Edit profil saya
+                </button>{' '}
                 <Settings
                   data={data}
                   role={role}
@@ -1112,6 +1140,16 @@ export default function App() {
                 data={data}
                 isOwner={role === 'owner'}
                 onSaved={async () => {
+                  await refresh();
+                }}
+              />
+            )}
+            {page === 'profile' && (
+              <Profile
+                userId={user}
+                nickname={member.display_name}
+                onSaved={async () => {
+                  setProfileVersion((v) => v + 1);
                   await refresh();
                 }}
               />

@@ -123,6 +123,66 @@ export function Profile({
         <button onClick={() => setReload(reload + 1)}>Muat ulang profil</button>
       )}
       {ready && (
+        <div className="profile-photo-row">
+          <div className="profile-photo">
+            {shownPhoto ? (
+              <img
+                src={shownPhoto}
+                alt="Foto profil saya"
+                onError={() => {
+                  setSigned(null);
+                  setPreview(null);
+                }}
+              />
+            ) : (
+              <Icon name="user" size={42} />
+            )}
+          </div>
+          <div>
+            <strong>Foto profil</strong>
+            <p>JPEG, PNG, atau WebP. Maksimal 2 MB.</p>
+            <label className="profile-upload-label">
+              <Icon name="camera" />
+              Pilih foto
+              <input
+                aria-label="Pilih foto profil"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                disabled={busy || !configured}
+                onChange={async (e) => {
+                  const selected = e.target.files?.[0];
+                  e.target.value = '';
+                  if (!selected) return;
+                  setError('');
+                  setMessage('');
+                  try {
+                    await validateAvatar(selected);
+                    setFile(selected);
+                  } catch (e) {
+                    setError(e instanceof Error ? e.message : 'Foto tidak valid.');
+                  }
+                }}
+              />
+            </label>
+            {(file || profile.avatar_path) && (
+              <button
+                type="button"
+                className="text-button"
+                disabled={busy}
+                onClick={() => {
+                  setFile(undefined);
+                  setProfile({ ...profile, avatar_path: null });
+                  setMessage('');
+                }}
+              >
+                Hapus foto
+              </button>
+            )}
+            {!configured && <small>Upload foto tersedia saat masuk ke akun.</small>}
+          </div>
+        </div>
+      )}
+      {ready && (
         <form
           className="profile-username"
           onSubmit={async (e) => {
@@ -214,64 +274,6 @@ export function Profile({
             }
           }}
         >
-          <div className="profile-photo-row">
-            <div className="profile-photo">
-              {shownPhoto ? (
-                <img
-                  src={shownPhoto}
-                  alt="Foto profil saya"
-                  onError={() => {
-                    setSigned(null);
-                    setPreview(null);
-                  }}
-                />
-              ) : (
-                <Icon name="user" size={42} />
-              )}
-            </div>
-            <div>
-              <strong>Foto profil</strong>
-              <p>JPEG, PNG, atau WebP. Maksimal 2 MB.</p>
-              <label className="profile-upload-label">
-                <Icon name="camera" />
-                Pilih foto
-                <input
-                  aria-label="Pilih foto profil"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  disabled={busy || !configured}
-                  onChange={async (e) => {
-                    const selected = e.target.files?.[0];
-                    e.target.value = '';
-                    if (!selected) return;
-                    setError('');
-                    setMessage('');
-                    try {
-                      await validateAvatar(selected);
-                      setFile(selected);
-                    } catch (e) {
-                      setError(e instanceof Error ? e.message : 'Foto tidak valid.');
-                    }
-                  }}
-                />
-              </label>
-              {(file || profile.avatar_path) && (
-                <button
-                  type="button"
-                  className="text-button"
-                  disabled={busy}
-                  onClick={() => {
-                    setFile(undefined);
-                    setProfile({ ...profile, avatar_path: null });
-                    setMessage('');
-                  }}
-                >
-                  Hapus foto
-                </button>
-              )}
-              {!configured && <small>Upload foto tersedia saat masuk ke akun.</small>}
-            </div>
-          </div>
           <fieldset disabled={busy} className="profile-fields">
             <legend className="sr-only">Informasi profil</legend>
             <label>

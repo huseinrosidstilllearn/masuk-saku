@@ -27,3 +27,5 @@ Latest profile release: Development c44ece3a now has 11 migrations/6 functions, 
 Profile follow-up: username now appears with an independent save action using existing account RPCs. Mobile header avatar was hidden by inherited small-avatar CSS; targeted40px button and visible child fix it. Regression checks:84 unit/SQL,43 existing demo scenarios plus new320px avatar navigation,16 configured auth scenarios passed. Earlier parallel camera timing failure passed on full configured rerun with2workers. No migration/Production change. Previous CI36328967711 passed.
 
 Profile layout follows user order: photo first, username second, personal details below. Photo controls are outside the personal form; selection/removal still stage state until explicit Simpan profil. Username retains its separate save action.
+
+Footer branding now centers both lines. Profile has Pengaturan AI & API key shortcut to Settings; AI credentials form displays the actual fixed OpenRouter chat-completions endpoint read-only. Only the API key is configurable; no custom provider URL/backend change.

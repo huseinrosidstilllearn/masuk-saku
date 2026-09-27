@@ -74,6 +74,18 @@ export function AiCredentials({ household }: { household: string }) {
         }}
       >
         <label>
+          Endpoint AI
+          <input
+            type="url"
+            readOnly
+            value="https://openrouter.ai/api/v1/chat/completions"
+            aria-describedby="ai-endpoint-help"
+          />
+        </label>
+        <small id="ai-endpoint-help">
+          Endpoint OpenRouter sudah diatur otomatis. Cukup masukkan API key OpenRouter milikmu.
+        </small>
+        <label>
           API key OpenRouter
           <input
             type="password"

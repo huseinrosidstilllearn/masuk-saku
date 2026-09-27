@@ -15,10 +15,12 @@ export function Profile({
   userId,
   nickname,
   onSaved,
+  onOpenAi,
 }: {
   userId: string;
   nickname: string;
   onSaved: () => Promise<void>;
+  onOpenAi?: () => void;
 }) {
   const [profile, setProfile] = useState<ProfileData>(() => blankProfile(userId, nickname));
   const [persisted, setPersisted] = useState<ProfileData>(() => blankProfile(userId, nickname));
@@ -107,6 +109,12 @@ export function Profile({
         <p>
           Lengkapi profilmu. Nama panggilan tampil di keluarga; informasi lainnya hanya untukmu.
         </p>
+        {onOpenAi && (
+          <button type="button" onClick={onOpenAi}>
+            <Icon name="settings" />
+            Pengaturan AI & API key
+          </button>
+        )}
       </div>
       {loading && <p role="status">Memuat profil…</p>}
       {error && (

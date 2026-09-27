@@ -1146,6 +1146,7 @@ export default function App() {
             )}
             {page === 'profile' && (
               <Profile
+                onOpenAi={() => setPage('settings')}
                 userId={user}
                 nickname={member.display_name}
                 onSaved={async () => {

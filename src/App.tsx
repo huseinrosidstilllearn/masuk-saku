@@ -240,7 +240,7 @@ export default function App() {
       <PasswordRecovery
         authenticated={!!user}
         onDone={() => {
-          window.history.replaceState(null, '', location.pathname);
+          window.history.replaceState(null, '', '/masuk');
           setRecovering(false);
         }}
       />

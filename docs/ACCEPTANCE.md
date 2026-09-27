@@ -92,7 +92,15 @@ Current release work: password recovery request/PKCE callback/hash navigation/up
 
 # Personal profile addition
 
-## Dashboard keluarga
+## Halaman pengenalan dan akun
+
+- Untuk pengunjung tanpa sesi, `/` berisi pengenalan produk dan tidak memuat formulir login/daftar.
+- CTA masuk/daftar membuka `/masuk` dan `/daftar`; kedua halaman dapat dibuka langsung dan dimuat ulang.
+- Tombol kembali di browser serta tautan Kembali ke beranda berfungsi; pergantian halaman menghapus password yang diisi.
+- Username/email login, registrasi username, Google, pemulihan PKCE dan inactivity lock tetap berlaku.
+- Formulir dan header tidak bertumpuk atau menimbulkan overflow pada lebar 320, 768 dan 1440 piksel.
+
+## Ringkasan anggota di Dashboard
 
 - Owner can open the existing invitation dialog using Tambah anggota directly from Dashboard.
 - Recorded balances appear for each member's active personal wallets, with shared wallets shown separately. Their sum matches the combined family balance; archived wallets are excluded.

@@ -12,13 +12,19 @@ test('Billow-style welcome uses real signup/login form and labelled demo preview
     page.getByRole('heading', { name: 'Semua uang keluarga. Dalam satu saku.' }),
   ).toBeVisible();
   await expect(page.getByText('Contoh tampilan · Data demo', { exact: true })).toBeVisible();
+  await expect(page.locator('.auth-card')).toHaveCount(0);
   await page.getByRole('button', { name: 'Mulai catat sekarang', exact: true }).click();
   await expect(
     page.getByRole('heading', { name: 'Buat akun pertamamu', exact: true }),
   ).toBeVisible();
+  await expect(page).toHaveURL(/\/daftar$/);
+  await expect(page.locator('.billow-hero')).toHaveCount(0);
   await expect(page.getByRole('textbox', { name: 'Email', exact: true })).toBeFocused();
   await page.getByRole('button', { name: 'Sudah punya akun? Masuk', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Masuk ke sakumu.', exact: true })).toBeVisible();
+  await expect(page).toHaveURL(/\/masuk$/);
+  await page.getByRole('link', { name: 'Kembali ke beranda', exact: true }).click();
+  await expect(page.locator('.auth-card')).toHaveCount(0);
   await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({
     path: 'docs/screenshots/billow-welcome-desktop.png',

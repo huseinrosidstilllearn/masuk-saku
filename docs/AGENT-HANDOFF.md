@@ -1,5 +1,11 @@
 # Agent handoff — current release
 
+## Separate public account pages — 28 September 2026
+
+For signed-out visitors, `/` is the introduction/landing page only; `/masuk` is login and `/daftar` is registration. Landing CTAs navigate to these routes rather than scrolling to an embedded form. Account pages have their own brand/home header and document titles. SPA fallback supports direct links and refresh; popstate handles browser back/forward. Password/display state is cleared when changing account pages. Existing authenticated Dashboard behavior, Google redirect to origin, email confirmation and PKCE recovery remain; finishing recovery returns to `/masuk`. No provider settings or backend migrations changed.
+
+Development cd19e455 contains this change and the family dashboard. Production remains 64f9f8a6. Fresh checks: 84 unit/SQL, 45 demo browser and 18 configured auth tests, typecheck/build/format passed. Screenshots of landing/login/signup at 320/768/1440 reviewed; header height adapts on narrow screens, home links work and no horizontal overflow. Hosted public route checks are separate from real-account login/provider pilots.
+
 ## Dashboard keluarga — 28 September 2026
 
 Approved addition: Dashboard now shows a Keuangan keluarga panel immediately after the main overview. Each member has a recorded balance based on their active personal wallets; shared wallets are a separate card and counted once. Existing balance masking covers every amount. Member cards select the existing personal dashboard scope, while the shared card returns to the combined family scope. Inactive members retain a clearly marked historical balance.

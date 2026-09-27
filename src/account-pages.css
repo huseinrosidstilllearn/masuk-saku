@@ -1,0 +1,45 @@
+.account-page {
+  min-height: 100vh;
+}
+.account-page-header {
+  height: auto;
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px clamp(20px, 5vw, 72px);
+}
+.account-page-header > a:last-child {
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.account-page-header .brand {
+  color: var(--ink);
+  text-decoration: none;
+}
+.account-page .auth-form-area {
+  margin: 0;
+  min-height: calc(100vh - 92px);
+  padding: 40px 20px 64px;
+  border: 0;
+}
+.account-page .auth-card h1 {
+  font-size: clamp(28px, 4vw, 38px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin: 12px 0 16px;
+  font-weight: 800;
+}
+@media (max-width: 480px) {
+  .account-page-header {
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+  .account-page .auth-form-area {
+    padding-top: 20px;
+  }
+}

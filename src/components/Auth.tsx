@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { acceptInvitation } from '../lib/invitations';
 import { createHousehold } from '../lib/repository';
@@ -13,15 +13,44 @@ import {
   USERNAME_PATTERN,
 } from '../lib/account';
 export function Auth() {
+  const [path, setPath] = useState(location.pathname);
+  const signup = path === '/daftar';
+  const landing = path !== '/masuk' && path !== '/daftar';
   const [reset, setReset] = useState(false);
   const [email, setEmail] = useState(''),
     [username, setUsername] = useState(''),
     [password, setPassword] = useState(''),
-    [signup, setSignup] = useState(false),
     [showPassword, setShowPassword] = useState(false),
     [message, setMessage] = useState(''),
     [failed, setFailed] = useState(false),
     [busy, setBusy] = useState(false);
+  useEffect(() => {
+    const sync = () => {
+      setPath(location.pathname);
+      setReset(false);
+    };
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, []);
+  useEffect(() => {
+    setPassword('');
+    setShowPassword(false);
+    setMessage('');
+    setFailed(false);
+    document.title = landing
+      ? 'Masuk Saku — Satu saku, semua catatan keuangan.'
+      : signup
+        ? 'Daftar — Masuk Saku'
+        : 'Masuk — Masuk Saku';
+    if (!landing)
+      document.querySelector<HTMLInputElement>('.auth-card input')?.focus({ preventScroll: true });
+  }, [path, landing, signup]);
+  function navigate(next: string) {
+    window.history.pushState(null, '', next);
+    setPath(next);
+    setReset(false);
+    window.scrollTo(0, 0);
+  }
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
@@ -44,32 +73,48 @@ export function Auth() {
     }
   }
   if (reset) return <PasswordResetRequest onBack={() => setReset(false)} />;
+  if (landing)
+    return (
+      <main className="billow-page">
+        <Welcome onAccess={(nextSignup) => navigate(nextSignup ? '/daftar' : '/masuk')} />
+      </main>
+    );
   return (
-    <main className="billow-page">
-      <Welcome
-        onAccess={(nextSignup) => {
-          setSignup(nextSignup);
-          setMessage('');
-          document.getElementById('akses')?.scrollIntoView({
-            behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
-            block: 'start',
-          });
-          setTimeout(
-            () =>
-              document
-                .getElementById('akses')
-                ?.querySelector<HTMLInputElement>('input')
-                ?.focus({ preventScroll: true }),
-            0,
-          );
-        }}
-      />
+    <main className="billow-page account-page">
+      <header className="account-page-header">
+        <a
+          href="/"
+          className="brand"
+          onClick={(event) => {
+            if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+              event.preventDefault();
+              navigate('/');
+            }
+          }}
+        >
+          <span className="brand-mark">
+            <Icon name="wallet" />
+          </span>
+          <span>masuk saku</span>
+        </a>
+        <a
+          href="/"
+          onClick={(event) => {
+            if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+              event.preventDefault();
+              navigate('/');
+            }
+          }}
+        >
+          Kembali ke beranda
+        </a>
+      </header>
       <section className="auth-form-area" id="akses" aria-label="Akses akun">
         <form onSubmit={submit} className="panel auth-card">
           <span className="eyebrow">
             {signup ? 'MULAI PERJALANANMU' : 'SELAMAT DATANG KEMBALI'}
           </span>
-          <h2>{signup ? 'Buat akun pertamamu' : 'Masuk ke sakumu.'}</h2>
+          <h1>{signup ? 'Buat akun pertamamu' : 'Masuk ke sakumu.'}</h1>
           <p className="muted">
             {signup
               ? 'Satu akun untuk memulai catatan keuangan keluarga.'
@@ -205,9 +250,7 @@ export function Auth() {
             className="text-button"
             disabled={busy}
             onClick={() => {
-              setSignup(!signup);
-              setMessage('');
-              setShowPassword(false);
+              navigate(signup ? '/masuk' : '/daftar');
             }}
           >
             {signup ? 'Sudah punya akun? Masuk' : 'Belum punya akun? Daftar'}

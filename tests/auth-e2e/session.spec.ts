@@ -77,7 +77,7 @@ for (const identifier of ['fixture_saku', 'fixture@example.test'])
     page,
   }) => {
     const fixture = await setup(page);
-    await page.goto('/');
+    await page.goto('/masuk');
     await page.getByRole('textbox', { name: 'Username atau email', exact: true }).fill(identifier);
     await page.getByLabel('Password', { exact: true }).fill('test-only-password');
     await page.locator('.auth-card').getByRole('button', { name: 'Masuk', exact: true }).click();
@@ -94,14 +94,14 @@ for (const identifier of ['fixture_saku', 'fixture@example.test'])
   });
 test('restored expired session is locked and its activity is cleared', async ({ page }) => {
   const fixture = await setup(page, { restored: true, idleMinutes: 16 });
-  await page.goto('/');
+  await page.goto('/masuk');
   await expect(page.getByRole('heading', { name: 'Masuk ke sakumu.', exact: true })).toBeVisible();
   expect(fixture.logout()).toBe(1);
   expect(await page.evaluate((key) => sessionStorage.getItem(key), activityKey)).toBeNull();
 });
 test('revalidation for the same signed-in user does not reset inactivity', async ({ page }) => {
   const fixture = await setup(page, { restored: true, idleMinutes: 5 });
-  await page.goto('/');
+  await page.goto('/masuk');
   await expect(
     page.getByRole('heading', { name: 'Saku pertama keluargamu', exact: true }),
   ).toBeVisible();

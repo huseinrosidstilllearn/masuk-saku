@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 test('same-document recovery hash navigation opens invalid-link panel instead of silently remaining at login', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('/masuk');
   await expect(
     page.getByRole('textbox', { name: 'Username atau email', exact: true }),
   ).toBeVisible();
@@ -32,7 +32,7 @@ test('forgot password requests email privately and returns a generic success mes
       body: '{}',
     });
   });
-  await page.goto('/');
+  await page.goto('/masuk');
   await page.getByRole('button', { name: 'Lupa password?', exact: true }).click();
   await page.getByLabel('Email pemulihan', { exact: true }).fill('unknown@example.test');
   await page.getByRole('button', { name: 'Kirim tautan pemulihan', exact: true }).click();

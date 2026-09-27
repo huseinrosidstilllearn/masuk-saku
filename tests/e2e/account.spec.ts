@@ -6,9 +6,9 @@ test('signup requires a valid username; login accepts a handle without email val
   await page.goto('/');
   await page.addScriptTag({
     type: 'module',
-    content: "import {show} from '/tests/e2e/fixtures/auth.tsx';show();",
+    content: "import {show} from '/tests/e2e/fixtures/auth.tsx';show('/masuk');",
   });
-  await page.getByRole('button', { name: 'Mulai catat sekarang', exact: true }).click();
+  await page.getByRole('button', { name: 'Belum punya akun? Daftar', exact: true }).click();
   await page.getByLabel('Email', { exact: true }).fill('owner@example.test');
   await page.getByLabel('Password', { exact: true }).fill('test-only-password');
   const username = page.getByRole('textbox', { name: 'Username', exact: true });
@@ -22,6 +22,7 @@ test('signup requires a valid username; login accepts a handle without email val
   const identifier = page.getByRole('textbox', { name: 'Username atau email', exact: true });
   await identifier.fill('Owner_Saku');
   expect(await identifier.evaluate((el: HTMLInputElement) => el.validity.valid)).toBe(true);
+  await page.getByLabel('Password', { exact: true }).fill('test-only-password');
   await page.locator('.auth-card').getByRole('button', { name: 'Masuk', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Hubungkan Supabase');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);

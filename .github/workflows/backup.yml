@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt-get update && sudo apt-get install -y age
+      - run: sudo apt-get update && sudo apt-get install -y age rclone
       - shell: bash
         env:
           PGHOST: ${{ secrets.BACKUP_PGHOST }}
@@ -20,6 +20,12 @@ jobs:
           PGDATABASE: postgres
           BACKUP_AGE_RECIPIENT: ${{ secrets.BACKUP_AGE_RECIPIENT }}
         run: bash scripts/backup.sh
+      - name: Upload encrypted backup to Google Drive
+        if: vars.BACKUP_DRIVE_ENABLED == 'true'
+        shell: bash
+        env:
+          BACKUP_RCLONE_CONFIG: ${{ secrets.BACKUP_RCLONE_CONFIG }}
+        run: bash scripts/upload-backup-drive.sh
       - uses: actions/upload-artifact@v4
         with:
           name: encrypted-weekly-backup

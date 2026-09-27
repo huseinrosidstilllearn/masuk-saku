@@ -2,6 +2,8 @@
 
 ## Weekly backup
 
+Google Drive is an optional encrypted backup destination: [setup and verification](GOOGLE-DRIVE-BACKUP.md). It does not replace the database dump credentials or independently retained decryption identity.
+
 RPO7days maximum. .github/workflows/backup.yml runs Sunday19UTC and supports manual dispatch. Uses PostgreSQL17 pg_dump in an official container; custom dump includes public, auth, private and storage schemas/data. This includes household/member identities, wallets, ledger/splits/tags, categories, budgets, virtual goals/contributions, preferences, recurring templates, audit and encrypted BYOK ciphertext. Storage object bytes are **not** in a PostgreSQL dump. By default receipts follow their retention policy; metadata may outlive physical objects after restore.
 
 Dump encrypted with age using an operator-held public recipient; private decryption identity never present in CI. Only .age file uploaded as artifact;90day artifact retention. Ciphertext credential backup is useless without separately stored AI_ENCRYPTION_KEY, so keep that in a secret manager with version metadata. Full backup is distinct from user schema_version1 JSON snapshot/export; frontend snapshot does not contain all auth/metadata tables and cannot be called full-system recovery.

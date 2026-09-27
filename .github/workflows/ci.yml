@@ -12,6 +12,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: node --test tests/backup-drive.test.mjs
       - run: npm run check
       - run: npm run format:check
       - run: node scripts/check-public-source.mjs

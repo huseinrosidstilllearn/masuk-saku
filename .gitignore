@@ -19,3 +19,5 @@ docs/screenshots/
 *.key
 *.pem
 *.dpapi.txt
+rclone.conf
+client_secret*.json

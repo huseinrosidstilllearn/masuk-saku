@@ -2,9 +2,9 @@
 
 ## Status implementasi — 28 September 2026
 
-Fitur tersisa V1 telah dilengkapi: lifecycle dompet, ask/auto recurrence, closure/carryover anggaran, append import, PDF/draf/lampiran, preset laporan, widget order/hide, Ctrl+K, Realtime, activity dan backup byte Storage. Baca [panduan V1](V1-FEATURES.md). Production dan Development memakai migrasi 1–17 dan maintenance yang diperbarui; [promosi Production](PRODUCTION.md) dan [QA](QA-HOSTED.md) telah dicatat. Gate perangkat/provider nyata, pemulihan terisolasi dan instalasi self-host tetap terbuka.
+Fitur tersisa V1 telah dilengkapi: lifecycle dompet, ask/auto recurrence, closure/carryover anggaran, append import, PDF/draf/lampiran, preset laporan, widget order/hide, Ctrl+K, Realtime, activity dan backup byte Storage. Baca [panduan V1](V1-FEATURES.md). Production dan Development memakai migrasi 1–17 dan maintenance yang diperbarui; [promosi Production](PRODUCTION.md) dan [QA](QA-HOSTED.md) telah dicatat. [Pemulihan terisolasi](RESTORE-REHEARSAL.md) telah diuji, termasuk saldo, login, RLS, byte Storage dan kunci BYOK. Gate perangkat/provider nyata, salinan kunci independen dan instalasi self-host lengkap tetap terbuka.
 
-Sprint berikutnya adalah validasi rilis: jalankan combined database/Storage backup, restore terisolasi dengan kunci independen, pilot keluarga/provider/kamera/dua perangkat dan clean self-host install. Kelengkapan kode tidak otomatis menutup syarat peluncuran. Catatan sprint di bawah adalah rencana dan riwayat sebelumnya.
+Sprint berikutnya adalah validasi rilis: simpan salinan kunci independen, lakukan pilot keluarga/provider/kamera/dua perangkat, lalu validasi clean self-host install. Backup database/Storage terbaru dan latihan restore lokal telah lulus. Kelengkapan kode tidak otomatis menutup syarat peluncuran. Catatan sprint di bawah adalah rencana dan riwayat sebelumnya.
 
 One developer, indicative 1–2 week sprints; scope exit criteria govern timing. Foundation 0.1.0 is delivered locally; V1 readiness needs remaining slices and hosted verification.
 

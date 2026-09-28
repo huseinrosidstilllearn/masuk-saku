@@ -1,5 +1,9 @@
 # Verification evidence
 
+## Isolated recovery evidence — 28 September 2026
+
+[Restore rehearsal](RESTORE-REHEARSAL.md) passed on local isolated PostgreSQL 17.6/Auth/REST/Storage: 56 snapshot tables reconciled, independent integer balances matched before/after six upgrade migrations, 199 FK/check validations, restored login/username/membership and real-JWT family isolation. Actual backed-up BYOK ciphertext decrypted with portable server recovery; wrong context rejected. Storage snapshot had zero objects; separate archived synthetic bytes and own/foreign private-avatar access were tested. Plaintext/local stack cleanup verified. Fresh Production database+Storage/Drive backup [36435944403](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36435944403) passed, including post-promotion schema inventory. This closes the local restore exercise, not independent key copies or full self-host/provider/device acceptance. No application source or live financial data changed.
+
 ## Demo toolbar alignment — 28 September 2026
 
 App **de37056** is deployed to Development **1671b142** and Production **0c3a7e68**. Hosted geometry at 320/390/768/1440 verified zero label margin, touch controls at least 44px, matching dropdown/button top and bottom edges when on the same row, wrapping without horizontal overflow at narrow widths, and no browser errors. Final toolbar screenshot was inspected. Both public demo smokes matched current build hashes and passed local-only edits, idle/reload reset and zero Supabase writes. No backend or financial changes.

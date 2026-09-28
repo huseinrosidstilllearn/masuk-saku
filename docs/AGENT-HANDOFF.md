@@ -1,5 +1,13 @@
 # Agent handoff — current release
 
+## Isolated restore verified — 28 September 2026
+
+Database snapshot from backup 36401935020 was restored to a disposable local WSL/Docker Supabase stack, then upgraded from migrations 1–11 to 1–17. All rows in 56 data tables matched, independently calculated integer balances matched, and 199 foreign-key/check validations passed. Source Auth/Storage migration histories were deliberately excluded; documented Auth compatibility repairs were required. Restored Owner password login/user ID/username/membership/balances and real-JWT foreign-family read/write denials passed. Latest paired Storage snapshot had zero objects; a separate older synthetic-image archive proved byte/checksum recovery, with own-avatar access and cross-account denial. Portable age server recovery matched current server keys and decrypted actual backed-up BYOK ciphertext, rejecting wrong AES-GCM context.
+
+Fresh post-promotion Production backup **36435944403** passed database/Storage encryption, Drive upload/checksum and artifact upload. Its decrypted inventory contains post-promotion schema objects; the full restore used the older snapshot. See [restore evidence and limits](RESTORE-REHEARSAL.md). Approximately 26 minutes including first runtime setup; not a full-deployment RTO guarantee. Local plaintext/container/volume/proxy cleanup verified; no Production/Development restore/reset or data mutations. App/deployments remain de37056 / Dev1671b142 / Prod0c3a7e68, 17 migrations/six Edge functions.
+
+Still open: independent off-machine key copies, valid-key OpenRouter/physical camera/two physical devices, and complete clean self-host deployment. Local Auth/REST/Storage restoration does not prove Google/SMTP/Edge/realtime/cron redeployment. Private harness and sanitized result are ignored under work/restore-rehearsal; no decrypted backup or financial values published.
+
 ## Demo alignment published — 28 September 2026
 
 Latest app **de37056**: Development **1671b142**, Production **0c3a7e68**. Scope dropdown and balance/reset buttons in the public demo are aligned: label margins removed, all controls at least 44px high, selector specificity matches the shared native-select styling. At 320/390px controls wrap with 12px gaps; at 768/1440px both top and bottom edges align within one pixel. Local and hosted geometry checks passed in both environments; screenshot reviewed. Hosted demo asset hashes, transaction/idle/reload reset, zero Supabase writes, no overflow/page errors passed in both environments. Backend remains 17 migrations/six functions; no data/Auth/secret changes.

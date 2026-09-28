@@ -130,9 +130,9 @@ node --test tests/backup-drive.test.mjs tests/backup-storage.test.mjs
 
 Versi saat ini adalah **0.1.0**. Aplikasi sudah online dan fitur utama dapat digunakan, tetapi pengembangan V1 masih berjalan.
 
-Lifecycle dompet, transaksi berulang, rollover, impor, PDF capture, draf AI, pengaturan dashboard dan laporan sudah tersedia di **Production dan Development**. Pengujian langsung dengan akun sementara telah memeriksa alur keuangan, izin anggota, dan pembaruan saldo antaranggota; hasilnya ada di [laporan QA](docs/QA-HOSTED.md). Pilot keluarga, kamera fisik, provider AI dengan key valid, dan pemulihan terisolasi tetap menjadi syarat peluncuran. Lihat [roadmap](docs/ROADMAP.md) dan [acceptance criteria](docs/ACCEPTANCE.md) untuk status lengkap.
+Lifecycle dompet, transaksi berulang, rollover, impor, PDF capture, draf AI, pengaturan dashboard dan laporan sudah tersedia di **Production dan Development**. Pengujian langsung dengan akun sementara telah memeriksa alur keuangan, izin anggota, dan pembaruan saldo antaranggota; hasilnya ada di [laporan QA](docs/QA-HOSTED.md). Pilot keluarga, kamera fisik, provider AI dengan key valid, dan salinan kunci pemulihan di tempat terpisah tetap menjadi syarat peluncuran. Lihat [roadmap](docs/ROADMAP.md) dan [acceptance criteria](docs/ACCEPTANCE.md) untuk status lengkap.
 
-Backup mingguan kini menyiapkan database dan isi Storage sebagai dua berkas terenkripsi untuk Google Drive. Keberhasilan backup dan restore dicatat terpisah; pemulihan terisolasi serta salinan kunci yang independen tetap perlu dibuktikan sebelum rilis.
+Backup mingguan kini menyiapkan database dan isi Storage sebagai dua berkas terenkripsi untuk Google Drive. [Uji pemulihan terisolasi](docs/RESTORE-REHEARSAL.md) sudah berhasil: data, saldo, login, izin akses, dan pemulihan kunci diperiksa. Salinan kunci yang independen serta instalasi self-host lengkap masih perlu dibuktikan sebelum rilis.
 
 ## Jelajahi dokumentasi
 

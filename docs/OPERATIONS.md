@@ -1,5 +1,9 @@
 # Operations, backups and self-hosting
 
+## Verified local recovery
+
+The [28 September rehearsal](RESTORE-REHEARSAL.md) restored a Production snapshot in isolated local Supabase, reconciled 56 data tables and integer balances, applied migrations 12–17 without changing balances, and passed Auth/RLS/Storage/key recovery checks. Vendor Auth compatibility required explicit review; platform migration histories were not overwritten. Local plaintext and test volumes were removed. A fresh post-promotion database/Storage backup [36435944403](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36435944403) also passed Drive checksum verification. Independent recovery-key copies and complete service redeployment remain separate requirements.
+
 ## Storage byte backup — 28 September 2026
 
 Weekly Actions now runs `scripts/backup-storage.mjs` after the PostgreSQL dump. It lists every bucket, traverses folders with pagination, downloads objects into a private temporary directory, and archives bytes with a versioned manifest. The archive is age-encrypted; only `*.storage.tar.age` leaves the runner. Paths, keys and financial content are not printed. Failed download/encryption fails the job and temporary plaintext is removed. Database/Storage are sequential snapshots rather than an atomic point-in-time snapshot; reconcile concurrent changes and expired receipts during recovery.

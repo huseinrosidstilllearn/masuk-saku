@@ -1,5 +1,11 @@
 # Agent handoff — current release
 
+## Realtime catch-up fix — 28 September 2026
+
+Hosted two-session testing exposed a race: a transaction committed before the Member's replication subscription joined never produced a change event for that session. Delaying the real WebSocket join by five seconds reproduced the stale balance reliably. The frontend now waits for PostgreSQL subscription readiness and refreshes on successful subscription, replication readiness and reconnection. Cleanup ignores late callbacks from old channels; existing event debouncing and focus refresh remain.
+
+Two regression tests failed against the previous behavior and pass with the fix. Fresh local verification passed 97 unit/domain/SQL, 50 demo browser and 20 configured auth tests, typecheck/build/format. Development deployment and post-fix hosted replay are pending at this source checkpoint. Production is unchanged. Do not infer launch acceptance from local checks; the later hosted QA entry records the actual deployment and results.
+
 ## V1 Development — verified 28 September 2026
 
 Latest application commit: ea852b4. Development deployment: 73c75aeb at https://masuk-saku-development.pages.dev/. Backend: migrations 1–17, six Edge functions, maintenance every 15 minutes. The scheduler is active and has 27 successful dispatch records; an authenticated direct maintenance call returned all four counters. Production remains at frontend 64f9f8a6 and migrations 1–11.

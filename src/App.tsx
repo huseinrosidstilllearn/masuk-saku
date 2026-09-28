@@ -43,6 +43,7 @@ import { Activity } from './components/Activity';
 import { CatalogManager } from './components/Catalog';
 import type { Snapshot, Transaction, TransactionInput } from './domain/types';
 import { configured, supabase } from './lib/supabase';
+import { subscribeHousehold } from './lib/household-realtime';
 import { demoUser } from './lib/demo';
 import {
   aiPreview,
@@ -193,21 +194,7 @@ export default function App() {
       clearTimeout(timer);
       timer = setTimeout(() => void refresh(), 250);
     };
-    let channel = supabase.channel('household:' + data.household.id + ':' + user);
-    for (const table of [
-      'transactions',
-      'wallets',
-      'budgets',
-      'household_members',
-      'goal_contributions',
-      'savings_goals',
-    ])
-      channel = channel.on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table, filter: 'household_id=eq.' + data.household.id },
-        schedule,
-      );
-    channel.subscribe();
+    const stop = subscribeHousehold(supabase, data.household.id, user, schedule);
     const visible = () => {
       if (document.visibilityState === 'visible') schedule();
     };
@@ -215,7 +202,7 @@ export default function App() {
     document.addEventListener('visibilitychange', visible);
     return () => {
       clearTimeout(timer);
-      void supabase!.removeChannel(channel);
+      stop();
       window.removeEventListener('focus', schedule);
       document.removeEventListener('visibilitychange', visible);
     };

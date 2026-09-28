@@ -17,7 +17,11 @@ import { MotionPage, MotionNotice, MotionLoadingText } from './components/Motion
 import { BudgetPage, GoalsPage } from './components/Planning';
 import { Reports } from './components/Reports';
 import { TransactionFilters } from './components/TransactionFilters';
-import { filterTransactions, type TransactionFilters as Filters } from './domain/reports';
+import {
+  filterTransactions,
+  categoryTotals,
+  type TransactionFilters as Filters,
+} from './domain/reports';
 import {
   balances,
   budgetSpent,
@@ -25,18 +29,23 @@ import {
   dashboard,
   money,
   monthInJakarta,
-  parseMoney,
 } from './domain/finance';
 import { parseQuickAdd } from './domain/quick-add';
 import { HouseholdManager } from './components/Household';
 import { FamilyOverview } from './components/FamilyOverview';
+import { WalletManager } from './components/WalletManager';
+import { RecurringPage } from './components/Recurring';
+import { ImportData } from './components/ImportData';
+import { AiDrafts } from './components/AiDrafts';
+import { DashboardWidgets } from './components/DashboardWidgets';
+import { CommandPalette } from './components/CommandPalette';
+import { Activity } from './components/Activity';
 import { CatalogManager } from './components/Catalog';
 import type { Snapshot, Transaction, TransactionInput } from './domain/types';
 import { configured, supabase } from './lib/supabase';
 import { demoUser } from './lib/demo';
 import {
   aiPreview,
-  createWallet,
   loadSnapshot,
   restoreTransaction,
   saveTransaction,
@@ -50,6 +59,9 @@ type Page =
   | 'wallets'
   | 'budgets'
   | 'goals'
+  | 'recurring'
+  | 'drafts'
+  | 'activity'
   | 'trash'
   | 'settings'
   | 'reports'
@@ -60,6 +72,9 @@ const pages: { id: Page; label: string; icon: IconName }[] = [
   { id: 'wallets', label: 'Dompet', icon: 'wallet' },
   { id: 'budgets', label: 'Anggaran', icon: 'budget' },
   { id: 'goals', label: 'Target tabungan', icon: 'goal' },
+  { id: 'recurring', label: 'Transaksi berulang', icon: 'clock' },
+  { id: 'drafts', label: 'Draf AI', icon: 'sparkle' },
+  { id: 'activity', label: 'Aktivitas', icon: 'history' },
   { id: 'trash', label: 'Sampah', icon: 'trash' },
   { id: 'settings', label: 'Pengaturan', icon: 'settings' },
   { id: 'reports', label: 'Laporan', icon: 'budget' },
@@ -74,6 +89,7 @@ export default function App() {
   const [filters, setFilters] = useState<Filters>({});
   const [profileVersion, setProfileVersion] = useState(0);
   const [inviteRequested, setInviteRequested] = useState(false);
+  const [commandOpen, setCommandOpen] = useState(false);
   const [listPage, setListPage] = useState(1);
   const [user, setUser] = useState<string | null>(configured ? null : demoUser),
     [authLoading, setAuthLoading] = useState(configured),
@@ -160,6 +176,50 @@ export default function App() {
   useEffect(() => {
     if (!recovering) void refresh();
   }, [refresh, recovering]);
+  useEffect(() => {
+    const key = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && user && data) {
+        event.preventDefault();
+        setCommandOpen((open) => !open);
+      }
+    };
+    window.addEventListener('keydown', key);
+    return () => window.removeEventListener('keydown', key);
+  }, [user, data]);
+  useEffect(() => {
+    if (!supabase || !user || !data?.household.id) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => void refresh(), 250);
+    };
+    let channel = supabase.channel('household:' + data.household.id + ':' + user);
+    for (const table of [
+      'transactions',
+      'wallets',
+      'budgets',
+      'household_members',
+      'goal_contributions',
+      'savings_goals',
+    ])
+      channel = channel.on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table, filter: 'household_id=eq.' + data.household.id },
+        schedule,
+      );
+    channel.subscribe();
+    const visible = () => {
+      if (document.visibilityState === 'visible') schedule();
+    };
+    window.addEventListener('focus', schedule);
+    document.addEventListener('visibilitychange', visible);
+    return () => {
+      clearTimeout(timer);
+      void supabase!.removeChannel(channel);
+      window.removeEventListener('focus', schedule);
+      document.removeEventListener('visibilitychange', visible);
+    };
+  }, [user, data?.household.id, refresh]);
   useEffect(() => {
     if (!configured || !user) return;
     let timer: ReturnType<typeof setTimeout>;
@@ -272,6 +332,8 @@ export default function App() {
     role = member.role;
   const activeBudgets = data.budgets.filter(
     (b) =>
+      b.active !== false &&
+      !b.closed_at &&
       b.start_date <= month + '-31' &&
       b.end_date >= month + '-01' &&
       (owner === 'family' || (b.wallet_id && summary.wallets.some((w) => w.id === b.wallet_id))),
@@ -283,7 +345,7 @@ export default function App() {
       n +
       b.amount +
       b.rollover_amount -
-      budgetSpent(b, data.transactions, data.splits, selectedIds),
+      budgetSpent(b, data.transactions, data.splits, selectedIds, data.categories),
     0,
   );
   const visible = filterTransactions(
@@ -479,7 +541,7 @@ export default function App() {
   const budgets = (
     <div className="budget-list">
       {activeBudgets.map((b) => {
-        const spent = budgetSpent(b, data.transactions, data.splits, selectedIds),
+        const spent = budgetSpent(b, data.transactions, data.splits, selectedIds, data.categories),
           limit = b.amount + b.rollover_amount,
           pct = (spent / limit) * 100;
         return (
@@ -587,7 +649,7 @@ export default function App() {
                 key={p.id}
                 className={[
                   page === p.id ? 'active' : '',
-                  ['goals', 'trash', 'settings', 'reports', 'profile'].includes(p.id)
+                  !['dashboard', 'transactions', 'wallets', 'budgets'].includes(p.id)
                     ? 'secondary-nav'
                     : '',
                 ].join(' ')}
@@ -762,8 +824,12 @@ export default function App() {
           )}
           <MotionPage page={page}>
             {page === 'dashboard' && (
-              <>
-                <section className="overview" aria-label="Ringkasan keuangan">
+              <DashboardWidgets household={data.household.id} user={user}>
+                <section
+                  data-widget="overview"
+                  className="overview"
+                  aria-label="Ringkasan keuangan"
+                >
                   <article className="stat featured balance-card">
                     <div className="balance-pocket">
                       <div className="balance-topline">
@@ -876,28 +942,37 @@ export default function App() {
                     </article>
                   </div>
                 </section>
-                <FamilyOverview
-                  data={data}
-                  balance={balance}
-                  fmt={fmt}
-                  owner={owner}
-                  onSelect={setOwner}
-                  isOwner={role === 'owner'}
-                  onManage={() => {
-                    setInviteRequested(false);
-                    setPage('settings');
-                  }}
-                  onInvite={() => {
-                    setInviteRequested(true);
-                    setPage('settings');
-                  }}
-                />
-                <section className="dashboard-more panel" aria-labelledby="dashboard-more-title">
+                <div data-widget="family">
+                  <FamilyOverview
+                    data={data}
+                    balance={balance}
+                    fmt={fmt}
+                    owner={owner}
+                    onSelect={setOwner}
+                    isOwner={role === 'owner'}
+                    onManage={() => {
+                      setInviteRequested(false);
+                      setPage('settings');
+                    }}
+                    onInvite={() => {
+                      setInviteRequested(true);
+                      setPage('settings');
+                    }}
+                  />
+                </div>
+                <section
+                  data-widget="menu"
+                  className="dashboard-more panel"
+                  aria-labelledby="dashboard-more-title"
+                >
                   <div className="section-heading">
                     <div>
                       <h3 id="dashboard-more-title">Lebih banyak di sakumu</h3>
                       <p>Rencana dan pengaturan keluarga, dalam satu tempat.</p>
                     </div>
+                    <button onClick={() => setCommandOpen(true)}>
+                      <Icon name="search" /> Pencarian cepat <small>Ctrl+K</small>
+                    </button>
                   </div>
                   <div className="dashboard-more-grid">
                     {pages.slice(4).map((p) => (
@@ -911,18 +986,30 @@ export default function App() {
                         </span>
                         <strong>{p.label}</strong>
                         <small>
-                          {p.id === 'goals'
-                            ? 'Wujudkan rencana keluarga'
-                            : p.id === 'trash'
-                              ? 'Pulihkan dalam 30 hari'
-                              : 'Akun, keluarga, dan AI'}
+                          {
+                            {
+                              goals: 'Wujudkan rencana keluarga',
+                              recurring: 'Atur pencatatan rutin',
+                              drafts: 'Lanjutkan hasil pembacaan',
+                              activity: 'Riwayat perubahan keluarga',
+                              trash: 'Pulihkan dalam 30 hari',
+                              reports: 'Bandingkan arus kas',
+                              profile: 'Lengkapi identitasmu',
+                              settings: 'Akun, keluarga, dan AI',
+                            }[
+                              p.id as Exclude<
+                                Page,
+                                'dashboard' | 'transactions' | 'wallets' | 'budgets'
+                              >
+                            ]
+                          }
                         </small>
                         <Icon name="chevronRight" />
                       </button>
                     ))}
                   </div>
                 </section>
-                <section className="quick panel">
+                <section data-widget="quick" className="quick panel">
                   <span className="quick-icon">
                     <Icon name="sparkle" />
                   </span>
@@ -950,7 +1037,7 @@ export default function App() {
                     </button>
                   </form>
                 </section>
-                <section className="panel recent-transactions">
+                <section data-widget="recent" className="panel recent-transactions">
                   <div className="section-heading">
                     <div>
                       <h2>Transaksi terbaru</h2>
@@ -962,7 +1049,7 @@ export default function App() {
                   </div>
                   {transactions}
                 </section>
-                <div className="dashboard-grid fintech-overview">
+                <div data-widget="breakdown" className="dashboard-grid fintech-overview">
                   <section className="panel category-panel">
                     <div className="section-heading">
                       <div>
@@ -972,36 +1059,26 @@ export default function App() {
                       <Icon name="budget" />
                     </div>
                     <div className="category-breakdown">
-                      {data.categories
-                        .filter((c) =>
-                          summary.rows.some((t) => t.type === 'expense' && t.category_id === c.id),
-                        )
-                        .map((c) => (
-                          <div className="row" key={c.id}>
-                            <span>
-                              <i />
-                              {c.name}
-                            </span>
-                            <strong>
-                              {fmt(
-                                summary.rows
-                                  .filter((t) => t.type === 'expense' && t.category_id === c.id)
-                                  .reduce((n, t) => n + t.amount, 0),
-                              )}
-                            </strong>
-                            {!hide && (
-                              <div className="category-meter" aria-hidden="true">
-                                <span
-                                  style={{
-                                    width: `${(summary.rows.filter((t) => t.type === 'expense' && t.category_id === c.id).reduce((n, t) => n + t.amount, 0) / Math.max(summary.expense, 1)) * 100}%`,
-                                  }}
-                                />
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                      {categoryTotals(data, summary.rows).map(([name, amount]) => (
+                        <div className="row" key={name}>
+                          <span>
+                            <i />
+                            {name}
+                          </span>
+                          <strong>{fmt(amount)}</strong>
+                          {!hide && (
+                            <div className="category-meter" aria-hidden="true">
+                              <span
+                                style={{
+                                  width: `${(amount / Math.max(summary.expense, 1)) * 100}%`,
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                    {!summary.rows.some((t) => t.type === 'expense' && t.category_id) && (
+                    {!categoryTotals(data, summary.rows).length && (
                       <p className="muted category-empty">
                         Belum ada pengeluaran berkategori bulan ini.
                       </p>
@@ -1020,7 +1097,7 @@ export default function App() {
                     {budgets}
                   </section>
                 </div>
-                <section>
+                <section data-widget="wallets">
                   <div className="section-heading">
                     <h2>Dompet keluarga</h2>
                     <button className="text-button" onClick={() => setPage('wallets')}>
@@ -1029,14 +1106,14 @@ export default function App() {
                   </div>
                   {wallets}
                 </section>
-                <section>
+                <section data-widget="goals">
                   <div className="section-heading">
                     <h2>Pelan-pelan, menuju tujuan.</h2>
                     <span className="muted">Kontribusi tidak mengubah saldo dompet</span>
                   </div>
                   {goals}
                 </section>
-              </>
+              </DashboardWidgets>
             )}
             {(page === 'transactions' || page === 'trash') && (
               <section className="panel">
@@ -1077,17 +1154,58 @@ export default function App() {
               </section>
             )}
             {page === 'reports' && <Reports data={data} owner={owner} hide={hide} />}
+            {page === 'activity' &&
+              (role === 'owner' ? (
+                <Activity household={data.household.id} members={data.members} hide={hide} />
+              ) : (
+                <section className="panel">
+                  <h2>Aktivitas keluarga</h2>
+                  <p>Log aktivitas lengkap hanya tersedia untuk Owner keluarga.</p>
+                </section>
+              ))}
+            {page === 'drafts' && (
+              <AiDrafts
+                household={data.household.id}
+                hide={hide}
+                onResume={(result) =>
+                  setPreview({
+                    initial: result.candidate,
+                    key: crypto.randomUUID(),
+                    draftId: result.draft_id,
+                    confidence: result.confidence,
+                  })
+                }
+              />
+            )}
+            {page === 'recurring' && (
+              <RecurringPage
+                data={data}
+                user={user}
+                role={role}
+                hide={hide}
+                onSaved={async (text) => {
+                  if (!(await refresh()))
+                    throw new Error('Tersimpan, tetapi data belum dapat dimuat ulang.');
+                  setMessageKind('success');
+                  setMessage(text);
+                }}
+              />
+            )}
             {page === 'wallets' && (
-              <>
-                {wallets}
-                {role === 'owner' && (
-                  <WalletCreator
-                    data={data}
-                    busy={busy}
-                    onCreate={(input) => run(() => createWallet(input), 'Dompet ditambahkan.')}
-                  />
-                )}
-              </>
+              <WalletManager
+                data={data}
+                owner={owner}
+                hide={hide}
+                role={role}
+                onSaved={async (text) => {
+                  if (!(await refresh()))
+                    throw new Error(
+                      'Tersimpan, tetapi data belum dapat dimuat ulang. Coba muat ulang halaman.',
+                    );
+                  setMessageKind('success');
+                  setMessage(text);
+                }}
+              />
             )}
             {page === 'budgets' && (
               <BudgetPage
@@ -1117,6 +1235,18 @@ export default function App() {
             )}
             {page === 'settings' && (
               <>
+                {role === 'owner' && (
+                  <ImportData
+                    data={data}
+                    user={user}
+                    onSaved={async () => {
+                      if (!(await refresh()))
+                        throw new Error('Data diimpor, tetapi belum dapat dimuat ulang.');
+                      setMessageKind('success');
+                      setMessage('Data impor ditambahkan.');
+                    }}
+                  />
+                )}
                 <div className="settings-profile-action">
                   <button onClick={() => setPage('profile')}>
                     <Icon name="user" />
@@ -1210,6 +1340,17 @@ export default function App() {
           }}
         />
       )}
+      {commandOpen && (
+        <CommandPalette
+          pages={pages}
+          onClose={() => setCommandOpen(false)}
+          onNavigate={(id) => setPage(id as Page)}
+          onSearch={(text) => {
+            setSearch(text);
+            setPage('transactions');
+          }}
+        />
+      )}
       {receiptOpen && (
         <ReceiptCapture
           initialMode={receiptMode}
@@ -1263,88 +1404,6 @@ export default function App() {
         />
       )}
     </div>
-  );
-}
-function WalletCreator({
-  data,
-  busy,
-  onCreate,
-}: {
-  data: Snapshot;
-  busy: boolean;
-  onCreate: (w: Snapshot['wallets'][number]) => Promise<void>;
-}) {
-  const [name, setName] = useState(''),
-    [owner, setOwner] = useState('shared'),
-    [amount, setAmount] = useState('0'),
-    [type, setType] = useState<'bank' | 'cash' | 'e_wallet'>('bank'),
-    [error, setError] = useState('');
-  return (
-    <form
-      className="panel wallet-form"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        try {
-          setError('');
-          await onCreate({
-            id: crypto.randomUUID(),
-            household_id: data.household.id,
-            name,
-            type,
-            ownership: owner === 'shared' ? 'shared' : 'personal',
-            wallet_owner: owner === 'shared' ? null : owner,
-            initial_balance: amount === '0' ? 0 : parseMoney(amount),
-            active: true,
-          });
-          setName('');
-        } catch (e) {
-          setError(e instanceof Error ? e.message : 'Gagal membuat dompet');
-        }
-      }}
-    >
-      <h2>Tambah dompet</h2>
-      <div className="form-grid">
-        <label>
-          Nama
-          <input value={name} maxLength={100} required onChange={(e) => setName(e.target.value)} />
-        </label>
-        <label>
-          Jenis
-          <select value={type} onChange={(e) => setType(e.target.value as typeof type)}>
-            <option value="bank">Bank</option>
-            <option value="cash">Cash</option>
-            <option value="e_wallet">E-wallet</option>
-          </select>
-        </label>
-        <label>
-          Pemilik
-          <select value={owner} onChange={(e) => setOwner(e.target.value)}>
-            <option value="shared">Keluarga / Shared</option>
-            {data.members
-              .filter((m) => m.active !== false)
-              .map((m) => (
-                <option key={m.user_id} value={m.user_id}>
-                  {m.display_name}
-                </option>
-              ))}
-          </select>
-        </label>
-        <label>
-          Saldo awal (rupiah)
-          <input
-            inputMode="numeric"
-            pattern="[0-9]+"
-            value={amount}
-            required
-            onChange={(e) => setAmount(e.target.value)}
-          />
-        </label>
-      </div>
-      <button className="primary" disabled={busy}>
-        Tambah dompet
-      </button>
-      {error && <p role="alert">{error}</p>}
-    </form>
   );
 }
 function Settings({

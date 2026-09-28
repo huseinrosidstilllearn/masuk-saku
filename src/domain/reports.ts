@@ -84,6 +84,21 @@ export function previousPeriod(from: string, to: string) {
   dateOrdinal(prior.to);
   return prior;
 }
+export function categoryTotals(data: Snapshot, rows: Transaction[]) {
+  const categories = new Map<string, number>();
+  for (const t of rows.filter(
+    (t) => t.type === 'expense' && t.status === 'completed' && !t.deleted_at,
+  )) {
+    const splits = data.splits.filter((s) => s.transaction_id === t.id);
+    for (const item of splits.length
+      ? splits
+      : [{ category_id: t.category_id, amount: t.amount }]) {
+      const name = data.categories.find((c) => c.id === item.category_id)?.name ?? 'Tanpa kategori';
+      categories.set(name, (categories.get(name) ?? 0) + item.amount);
+    }
+  }
+  return [...categories.entries()].sort((a, b) => b[1] - a[1]);
+}
 export function periodReport(data: Snapshot, from: string, to: string, wallets: Set<string>) {
   previousPeriod(from, to);
   const rows = data.transactions.filter(
@@ -98,19 +113,10 @@ export function periodReport(data: Snapshot, from: string, to: string, wallets: 
     rows.filter((t) => t.type === type).reduce((n, t) => n + t.amount, 0);
   const income = sum('income'),
     expense = sum('expense');
-  const categories = new Map<string, number>();
-  for (const t of rows.filter((t) => t.type === 'expense')) {
-    const splits = data.splits.filter((s) => s.transaction_id === t.id);
-    const items = splits.length ? splits : [{ category_id: t.category_id, amount: t.amount }];
-    for (const item of items) {
-      const name = data.categories.find((c) => c.id === item.category_id)?.name ?? 'Tanpa kategori';
-      categories.set(name, (categories.get(name) ?? 0) + item.amount);
-    }
-  }
   return {
     income,
     expense,
     net: income - expense,
-    categories: [...categories.entries()].sort((a, b) => b[1] - a[1]),
+    categories: categoryTotals(data, rows),
   };
 }

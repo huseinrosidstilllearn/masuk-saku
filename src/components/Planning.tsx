@@ -1,6 +1,13 @@
 import { useId, useState, type ReactNode, type FormEvent } from 'react';
 import { useMotionDialog } from '../lib/motion';
-import { budgetSpent, dateInJakarta, money, parseMoney } from '../domain/finance';
+import {
+  budgetSpent,
+  dateInJakarta,
+  money,
+  parseMoney,
+  dashboard,
+  monthInJakarta,
+} from '../domain/finance';
 import { goalPlan, parseThresholds, validateBudget, validateGoal } from '../domain/planning';
 import type { Budget, Goal, Snapshot } from '../domain/types';
 import {
@@ -8,6 +15,7 @@ import {
   removeGoalContribution,
   saveBudget,
   saveGoal,
+  closeBudget,
 } from '../lib/planning-repository';
 import { Icon } from './Icon';
 
@@ -131,6 +139,12 @@ function BudgetEditor({
   const [thresholds, setThresholds] = useState(
     (original?.warning_thresholds ?? [75, 90, 100]).join(', '),
   );
+  const [cadence, setCadence] = useState<NonNullable<Budget['cadence']>>(
+    original?.cadence ?? 'custom',
+  );
+  const [rollover, setRollover] = useState<Budget['rollover']>(original?.rollover ?? 'reset');
+  const [continuing, setContinuing] = useState(original?.auto_continue ?? false);
+  const [active, setActive] = useState(original?.active ?? true);
   return (
     <EditorDialog
       title={original ? 'Ubah anggaran' : 'Tambah anggaran'}
@@ -145,8 +159,11 @@ function BudgetEditor({
           start_date: start,
           end_date: end,
           warning_thresholds: parseThresholds(thresholds),
-          rollover: original?.rollover ?? 'reset',
+          rollover,
           rollover_amount: original?.rollover_amount ?? 0,
+          cadence,
+          auto_continue: continuing,
+          active,
         };
         validateBudget(budget);
         await saveBudget(data.household.id, budget, original);
@@ -234,9 +251,46 @@ function BudgetEditor({
         Pisahkan dengan koma, misalnya 75, 90, 100. Peringatan tidak menghalangi pencatatan
         pengeluaran.
       </p>
+      <div className="form-grid">
+        <label>
+          Jenis periode
+          <select value={cadence} onChange={(e) => setCadence(e.target.value as typeof cadence)}>
+            <option value="custom">Kustom (durasi yang sama)</option>
+            <option value="weekly">Mingguan (7 hari)</option>
+            <option value="monthly">Bulanan (bulan kalender)</option>
+          </select>
+        </label>
+        <label>
+          Sisa periode
+          <select value={rollover} onChange={(e) => setRollover(e.target.value as typeof rollover)}>
+            <option value="reset">Reset setiap periode</option>
+            <option value="rollover">Bawa sisa positif</option>
+          </select>
+        </label>
+        <label>
+          Periode berikutnya
+          <select
+            value={continuing ? 'yes' : 'no'}
+            onChange={(e) => setContinuing(e.target.value === 'yes')}
+          >
+            <option value="no">Satu periode saja</option>
+            <option value="yes">Lanjutkan otomatis</option>
+          </select>
+        </label>
+        <label>
+          Status anggaran
+          <select
+            value={active ? 'active' : 'archived'}
+            onChange={(e) => setActive(e.target.value === 'active')}
+          >
+            <option value="active">Aktif</option>
+            <option value="archived">Arsip</option>
+          </select>
+        </label>
+      </div>
       <p className="planning-note">
-        Periode baru tidak otomatis membawa sisa anggaran sebelumnya. Perhitungan rollover otomatis
-        belum tersedia.
+        Saat periode ditutup, pemakaian dan sisa dibekukan sebagai riwayat. Koreksi transaksi
+        setelah penutupan tetap terlihat tetapi tidak menghitung ulang sisa yang telah dibawa.
       </p>
     </EditorDialog>
   );
@@ -245,6 +299,7 @@ function BudgetEditor({
 export function BudgetPage({ data, hide, onSaved, owner }: Props & { owner: string }) {
   const [editing, setEditing] = useState<Budget | 'new' | null>(null);
   const [periodFilter, setPeriodFilter] = useState('all');
+  const [closing, setClosing] = useState<Budget | null>(null);
   const today = dateInJakarta(new Date().toISOString());
   const rows = data.budgets.filter(
     (budget) =>
@@ -252,7 +307,13 @@ export function BudgetPage({ data, hide, onSaved, owner }: Props & { owner: stri
         data.wallets.some(
           (wallet) => wallet.id === budget.wallet_id && wallet.wallet_owner === owner,
         )) &&
-      (periodFilter === 'all' || (budget.start_date <= today && budget.end_date >= today)),
+      (periodFilter === 'all' ||
+        (periodFilter === 'history'
+          ? Boolean(budget.closed_at) || budget.active === false
+          : budget.active !== false &&
+            !budget.closed_at &&
+            budget.start_date <= today &&
+            budget.end_date >= today)),
   );
   return (
     <>
@@ -271,11 +332,18 @@ export function BudgetPage({ data, hide, onSaved, owner }: Props & { owner: stri
         <select value={periodFilter} onChange={(event) => setPeriodFilter(event.target.value)}>
           <option value="all">Semua periode</option>
           <option value="active">Aktif hari ini</option>
+          <option value="history">Riwayat dan arsip</option>
         </select>
       </label>
       <div className="planning-grid">
         {rows.map((budget) => {
-          const spent = budgetSpent(budget, data.transactions, data.splits),
+          const spent = budgetSpent(
+              budget,
+              data.transactions,
+              data.splits,
+              undefined,
+              data.categories,
+            ),
             limit = budget.amount + budget.rollover_amount;
           const ratio = (spent / limit) * 100;
           const percentage = Math.round(ratio);
@@ -289,6 +357,7 @@ export function BudgetPage({ data, hide, onSaved, owner }: Props & { owner: stri
                   <Icon name="budget" />
                 </span>
                 <button
+                  disabled={Boolean(budget.closed_at)}
                   className="text-button"
                   aria-label={'Ubah anggaran ' + budget.name}
                   onClick={() => setEditing(budget)}
@@ -298,6 +367,12 @@ export function BudgetPage({ data, hide, onSaved, owner }: Props & { owner: stri
                 </button>
               </div>
               <h3>{budget.name}</h3>
+              {budget.automation_error && (
+                <p className="planning-warning">{budget.automation_error}</p>
+              )}
+              <span className="badge">
+                {budget.closed_at ? 'Periode ditutup' : budget.active === false ? 'Arsip' : 'Aktif'}
+              </span>
               <p className="planning-description">
                 {data.categories.find((category) => category.id === budget.category_id)?.name ??
                   'Semua kategori'}{' '}
@@ -338,6 +413,20 @@ export function BudgetPage({ data, hide, onSaved, owner }: Props & { owner: stri
               <p className="planning-date">
                 {budget.start_date} sampai {budget.end_date}
               </p>
+              {budget.rollover_amount > 0 && (
+                <p>Sisa dibawa: {money(budget.rollover_amount, hide)}</p>
+              )}
+              {budget.closed_at && (
+                <p>
+                  Terpakai saat penutupan: {money(budget.closed_spent ?? 0, hide)}
+                  {budget.closed_spent !== spent
+                    ? ' · Ada koreksi transaksi setelah penutupan.'
+                    : ''}
+                </p>
+              )}
+              {!budget.closed_at && budget.end_date < today && (
+                <button onClick={() => setClosing(budget)}>Tutup periode</button>
+              )}
             </article>
           );
         })}
@@ -365,6 +454,24 @@ export function BudgetPage({ data, hide, onSaved, owner }: Props & { owner: stri
           onSaved={onSaved}
           onClose={() => setEditing(null)}
         />
+      )}
+      {closing && (
+        <EditorDialog
+          title="Tutup periode anggaran?"
+          submitLabel="Tutup periode"
+          onClose={() => setClosing(null)}
+          onSave={async () => {
+            await closeBudget(closing.id);
+            await onSaved('Periode anggaran ditutup.');
+          }}
+        >
+          <p>
+            Pemakaian saat ini disimpan sebagai riwayat.{' '}
+            {closing.auto_continue && closing.active !== false
+              ? 'Periode berikutnya dibuat sesuai aturan sisa yang telah kamu pilih.'
+              : 'Tidak ada periode baru yang dibuat.'}
+          </p>
+        </EditorDialog>
       )}
     </>
   );
@@ -514,6 +621,15 @@ export function GoalsPage({ data, hide, onSaved, user }: Props & { user: string 
     [error, setError] = useState('');
   const today = dateInJakarta(new Date().toISOString());
   const rows = data.goals.filter((goal) => filter === 'all' || goal.status !== 'archived');
+  const cashflow = dashboard(
+    data.wallets,
+    data.transactions,
+    'family',
+    monthInJakarta(new Date().toISOString()),
+  );
+  const requiredMonthly = data.goals
+    .filter((goal) => goal.status === 'active')
+    .reduce((sum, goal) => sum + (goalPlan(goal, today).monthly ?? 0), 0);
   const historyGoal = data.goals.find((goal) => goal.id === history);
   const contributions = data.contributions
     .filter((item) => item.goal_id === history)
@@ -537,6 +653,15 @@ export function GoalsPage({ data, hide, onSaved, user }: Props & { user: string 
           <option value="all">Termasuk arsip</option>
         </select>
       </label>
+      {cashflow.rows.length > 0 &&
+        requiredMonthly > Math.max(0, cashflow.income - cashflow.expense) && (
+          <p className="planning-warning">
+            Kontribusi bulanan yang diperlukan {money(requiredMonthly, hide)} melebihi sisa arus kas
+            tercatat bulan ini {money(Math.max(0, cashflow.income - cashflow.expense), hide)}.
+            Tinjau pengeluaran atau tenggat target. Ini perbandingan catatan saat ini, bukan
+            prediksi; catatan yang belum lengkap memengaruhi hasil.
+          </p>
+        )}
       {error && (
         <p className="error" role="alert">
           {error}

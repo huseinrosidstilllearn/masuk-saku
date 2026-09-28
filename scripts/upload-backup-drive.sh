@@ -5,7 +5,7 @@ command -v rclone >/dev/null
 task_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 backup_dir="$task_root/backups"
 shopt -s nullglob
-encrypted_files=("$backup_dir"/masuk-saku-*.dump.age)
+encrypted_files=("$backup_dir"/masuk-saku-*.dump.age "$backup_dir"/masuk-saku-*.storage.tar.age)
 if (( ${#encrypted_files[@]} == 0 )); then
   echo 'No encrypted database backup found.' >&2
   exit 1
@@ -22,9 +22,9 @@ trap 'rm -f -- "$private_dir/rclone.conf"; rmdir -- "$private_dir"' EXIT
 printf '%s\n' "$BACKUP_RCLONE_CONFIG" > "$private_dir/rclone.conf"
 unset BACKUP_RCLONE_CONFIG
 rclone copy "$backup_dir" 'drivebackup:MasukSaku-Backups' \
-  --config "$private_dir/rclone.conf" --include '/masuk-saku-*.dump.age' \
+  --config "$private_dir/rclone.conf" --include '/masuk-saku-*.dump.age' --include '/masuk-saku-*.storage.tar.age' \
   --checksum --immutable --retries 3
 rclone check "$backup_dir" 'drivebackup:MasukSaku-Backups' \
-  --config "$private_dir/rclone.conf" --include '/masuk-saku-*.dump.age' \
+  --config "$private_dir/rclone.conf" --include '/masuk-saku-*.dump.age' --include '/masuk-saku-*.storage.tar.age' \
   --one-way --checksum
 echo 'Encrypted backup uploaded to Google Drive and checksum checked.'

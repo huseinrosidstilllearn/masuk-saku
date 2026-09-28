@@ -28,11 +28,11 @@ const result = () => ({
   confidence: { type: 0.99, amount: 0.8, wallet_id: 0.6, occurred_at: 0.99, category_id: null },
 });
 beforeEach(() => invoke.mockReset());
-it('rejects PDF, MIME/signature mismatch, empty and oversized files; accepts verified image headers', async () => {
+it('accepts PDF/image headers and rejects MIME/signature mismatch, empty and oversized files', async () => {
   await expect(validateReceipt(png())).resolves.toBeUndefined();
   await expect(
     validateReceipt(new File(['%PDF-test'], 'receipt.pdf', { type: 'application/pdf' })),
-  ).rejects.toThrow(/PDF/);
+  ).resolves.toBeUndefined();
   await expect(
     validateReceipt(new File(['not png'], 'x.png', { type: 'image/png' })),
   ).rejects.toThrow(/valid/);

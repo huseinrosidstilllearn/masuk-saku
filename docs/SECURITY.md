@@ -56,6 +56,8 @@ Cloudflare CSP now explicitly allows self/data fonts bundled by Vite; scripts re
 
 ## Production maintenance boundary
 
+V1 completion adds Owner-only versioned wallet/import RPCs, creator/Owner recurring template/occurrence permissions and server-managed immutable budget closure. Revoked creators cannot auto-write; failed occurrences pause without a partial ledger. Import remaps IDs into the current household and never transfers auth/profile credentials. Draft discard stays requester-only; downloads use current session RLS, not public URLs. PDF is bounded/local rendering; only rendered images reach the existing provider adapter. Separate service credentials for Storage-byte backup reside in Actions Secrets; plaintext temp archives are removed and recovery applies only to a different explicitly named isolated project.
+
 Production uses Vault and a private operator-only pg_cron enqueue function. Managed pg_net queue tables still have PUBLIC database grants owned by supabase_admin; postgres REVOKE is ineffective. net/private must remain unexposed via PostgREST, and application users must never receive direct SQL access or a queue-reading security-definer RPC. Existing public/private functions have no queue-reader; the enqueue function is not executable by anon/authenticated/service_role. Check ACL/API exposure after extension updates. See [Production](PRODUCTION.md) for recovery and scheduler evidence; no claim that queue grants were revoked.
 
 ## Receipt camera consent

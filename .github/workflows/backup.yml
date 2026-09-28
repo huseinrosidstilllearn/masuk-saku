@@ -20,7 +20,16 @@ jobs:
           PGDATABASE: postgres
           BACKUP_AGE_RECIPIENT: ${{ secrets.BACKUP_AGE_RECIPIENT }}
         run: bash scripts/backup.sh
-      - name: Upload encrypted backup to Google Drive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Encrypt private Storage backup
+        env:
+          BACKUP_SUPABASE_URL: ${{ secrets.BACKUP_SUPABASE_URL }}
+          BACKUP_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.BACKUP_SUPABASE_SERVICE_ROLE_KEY }}
+          BACKUP_AGE_RECIPIENT: ${{ secrets.BACKUP_AGE_RECIPIENT }}
+        run: node scripts/backup-storage.mjs
+      - name: Upload encrypted backups to Google Drive
         if: vars.BACKUP_DRIVE_ENABLED == 'true'
         shell: bash
         env:

@@ -15,6 +15,10 @@ export interface Wallet {
   wallet_owner: string | null;
   initial_balance: number;
   active: boolean;
+  icon?: string;
+  color?: string;
+  account_identifier?: string | null;
+  version?: number;
 }
 export interface Transaction {
   id: string;
@@ -35,6 +39,7 @@ export interface Transaction {
   deleted_at: string | null;
   parent_transaction_id?: string | null;
   source?: string;
+  recurring_template_id?: string | null;
   version?: number;
 }
 export interface Category {
@@ -65,6 +70,13 @@ export interface Budget {
   rollover: 'reset' | 'rollover';
   rollover_amount: number;
   warning_thresholds: number[];
+  active?: boolean;
+  cadence?: 'weekly' | 'monthly' | 'custom';
+  auto_continue?: boolean;
+  predecessor_id?: string | null;
+  closed_at?: string | null;
+  closed_spent?: number | null;
+  automation_error?: string | null;
 }
 export interface Goal {
   id: string;
@@ -99,6 +111,34 @@ export interface Snapshot {
   budgets: Budget[];
   goals: Goal[];
   contributions: GoalContribution[];
+  recurring?: RecurringTemplate[];
+  occurrences?: RecurringOccurrence[];
+}
+export interface RecurringTemplate {
+  id: string;
+  household_id: string;
+  created_by: string;
+  name: string;
+  mode: 'ask' | 'auto_create';
+  cadence: 'weekly' | 'monthly';
+  anchor_date: string;
+  next_run: string;
+  end_date: string | null;
+  run_time: string;
+  active: boolean;
+  occurrence_index: number;
+  version: number;
+  transaction_template: TransactionInput;
+}
+export interface RecurringOccurrence {
+  id: string;
+  template_id: string;
+  household_id: string;
+  scheduled_date: string;
+  status: 'pending' | 'created' | 'skipped' | 'error';
+  input: TransactionInput;
+  transaction_id: string | null;
+  error_reason: string | null;
 }
 export interface TransactionInput {
   type: Transaction['type'];

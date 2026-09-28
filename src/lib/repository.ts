@@ -2,6 +2,7 @@ import { previewCapture } from './receipt-capture';
 import { supabase } from './supabase';
 import * as demo from './demo';
 import { snapshotSchema } from './snapshot-schema';
+import { collectPages } from './pagination';
 import type { Snapshot, TransactionInput, Wallet } from '../domain/types';
 function check(error: { message: string } | null) {
   if (error) throw new Error(error.message);
@@ -30,26 +31,34 @@ export async function loadSnapshot(userId: string): Promise<Snapshot | null> {
     'budgets',
     'savings_goals',
     'goal_contributions',
+    'recurring_templates',
+    'recurring_occurrences',
   ] as const;
   const results = await Promise.all(
     names.map((n) =>
-      supabase!
-        .from(n)
-        .select('*')
-        .eq(n === 'households' ? 'id' : 'household_id', h)
-        .limit(10000),
+      collectPages<Record<string, unknown>>(async (offset, size) => {
+        let query = supabase!
+          .from(n)
+          .select('*', { count: 'exact' })
+          .eq(n === 'households' ? 'id' : 'household_id', h)
+          .order(
+            n === 'household_members'
+              ? 'user_id'
+              : n === 'transaction_tags' || n === 'transaction_splits'
+                ? 'transaction_id'
+                : 'id',
+          );
+        if (n === 'transaction_tags') query = query.order('tag_id');
+        if (n === 'transaction_splits') query = query.order('category_id');
+        return await query.range(offset, offset + size - 1);
+      }),
     ),
   );
-  results.forEach((r) => {
-    check(r.error);
-    if ((r.data?.length ?? 0) >= 10000)
-      throw new Error(
-        'Data melebihi batas starter. Gunakan loader dengan paginasi untuk 10.000 baris atau lebih.',
-      );
-  });
-  const rows = Object.fromEntries(names.map((n, i) => [n, results[i].data ?? []]));
+  const rows = Object.fromEntries(names.map((n, i) => [n, results[i]]));
   const num = (r: Record<string, unknown>, fields: string[]) =>
-    Object.fromEntries(Object.entries(r).map(([k, v]) => [k, fields.includes(k) ? Number(v) : v]));
+    Object.fromEntries(
+      Object.entries(r).map(([k, v]) => [k, fields.includes(k) && v !== null ? Number(v) : v]),
+    );
   return snapshotSchema.parse({
     household: rows.households[0],
     members: rows.household_members,
@@ -59,7 +68,7 @@ export async function loadSnapshot(userId: string): Promise<Snapshot | null> {
     tags: rows.tags,
     transactionTags: rows.transaction_tags,
     splits: rows.transaction_splits.map((r) => num(r, ['amount'])),
-    budgets: rows.budgets.map((r) => num(r, ['amount', 'rollover_amount'])),
+    budgets: rows.budgets.map((r) => num(r, ['amount', 'rollover_amount', 'closed_spent'])),
     goals: rows.savings_goals.map((g) => ({
       ...num(g, ['target_amount']),
       saved: rows.goal_contributions
@@ -67,6 +76,8 @@ export async function loadSnapshot(userId: string): Promise<Snapshot | null> {
         .reduce((n, c) => n + Number(c.amount), 0),
     })),
     contributions: rows.goal_contributions.map((c) => num(c, ['amount'])),
+    recurring: rows.recurring_templates,
+    occurrences: rows.recurring_occurrences,
   });
 }
 export async function createHousehold(name: string, display: string) {

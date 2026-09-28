@@ -10,8 +10,15 @@ const backends = {
   development: 'https://kxezrgvnpoaqzcseymts.supabase.co',
   production: 'https://snqkfrcxjfdjkwxjiabc.supabase.co',
 };
-const expected = backends[environment];
-const other = backends[environment === 'production' ? 'development' : 'production'];
+// Self-host deployments can supply their own expected and forbidden backend URL.
+const expected = process.env.PAGES_EXPECTED_SUPABASE_URL || backends[environment];
+const other =
+  process.env.PAGES_FORBIDDEN_SUPABASE_URL ||
+  backends[environment === 'production' ? 'development' : 'production'];
+for (const value of [expected, other])
+  if (!/^https:\/\/[^\s/]+(?::\d+)?$/.test(value))
+    throw new Error('Backend check URLs must be explicit HTTPS origins.');
+if (expected === other) throw new Error('Expected and forbidden backend must differ.');
 const names = fs.readdirSync(path.join(directory, 'assets')).filter((name) => name.endsWith('.js'));
 const bundle = names
   .map((name) => fs.readFileSync(path.join(directory, 'assets', name), 'utf8'))

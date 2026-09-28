@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useMotionDialog } from '../lib/motion';
 import { confidenceWarning, parseMoney, validateTransaction } from '../domain/finance';
 import type { Snapshot, TransactionInput } from '../domain/types';
@@ -26,6 +26,8 @@ export function TransactionForm({
   initial,
   confidence = {},
   editing = false,
+  purpose = 'transaction',
+  extraFields,
   receiptFile,
   hideReceipt = false,
   onSave,
@@ -35,6 +37,8 @@ export function TransactionForm({
   user: string;
   initial: Partial<TransactionInput>;
   editing?: boolean;
+  purpose?: 'transaction' | 'template';
+  extraFields?: ReactNode;
   receiptFile?: File;
   hideReceipt?: boolean;
   confidence?: Record<string, number | null>;
@@ -125,7 +129,13 @@ export function TransactionForm({
         <div className="modal-head">
           <div>
             <span className="eyebrow">TINJAU SEBELUM MENYIMPAN</span>
-            <h2 id="transaction-title">{editing ? 'Ubah transaksi' : 'Catat transaksi'}</h2>
+            <h2 id="transaction-title">
+              {purpose === 'template'
+                ? 'Jadwal transaksi berulang'
+                : editing
+                  ? 'Ubah transaksi'
+                  : 'Catat transaksi'}
+            </h2>
           </div>
           <button
             type="button"
@@ -139,7 +149,10 @@ export function TransactionForm({
           </button>
         </div>
         <p className="review-note">
-          <Icon name="check" /> Periksa detailnya. Saldo baru berubah setelah konfirmasi.
+          <Icon name="check" />{' '}
+          {purpose === 'template'
+            ? 'Setujui aturan jadwal. Mode otomatis boleh mencatat transaksi sesuai detail ini; mode tinjau meminta konfirmasi setiap kejadian.'
+            : 'Periksa detailnya. Saldo baru berubah setelah konfirmasi.'}
         </p>
         {receiptFile && (
           <div className="receipt-preview">
@@ -152,6 +165,7 @@ export function TransactionForm({
           </div>
         )}
         <fieldset disabled={busy}>
+          {extraFields}
           <fieldset className="transaction-section">
             <legend>Detail transaksi</legend>
             <div className="form-grid">
@@ -418,7 +432,11 @@ export function TransactionForm({
           </button>
           <button className="primary" disabled={busy || !data.wallets.length}>
             <Icon name="check" />
-            {busy ? 'Menyimpan…' : 'Konfirmasi & simpan'}
+            {busy
+              ? 'Menyimpan…'
+              : purpose === 'template'
+                ? 'Setujui jadwal'
+                : 'Konfirmasi & simpan'}
           </button>
         </footer>
       </form>

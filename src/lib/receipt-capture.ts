@@ -12,14 +12,22 @@ export async function validateReceipt(file: File) {
   const webp =
     new TextDecoder().decode(bytes.slice(0, 4)) === 'RIFF' &&
     new TextDecoder().decode(bytes.slice(8, 12)) === 'WEBP';
+  const pdf = new TextDecoder().decode(bytes.slice(0, 5)) === '%PDF-';
   if (!(
     (file.type === 'image/jpeg' && jpeg) ||
     (file.type === 'image/png' && png) ||
-    (file.type === 'image/webp' && webp)
+    (file.type === 'image/webp' && webp) ||
+    (file.type === 'application/pdf' && pdf)
   ))
-    throw new Error(
-      'Gunakan gambar JPEG, PNG, atau WebP yang valid. Ekstraksi PDF belum tersedia.',
-    );
+    throw new Error('Gunakan JPEG, PNG, WebP atau PDF yang valid.');
+}
+export async function prepareReceipt(file: File): Promise<File> {
+  await validateReceipt(file);
+  if (file.type !== 'application/pdf') return file;
+  const { renderPdfReceipt } = await import('./pdf-receipt');
+  const image = await renderPdfReceipt(file);
+  await validateReceipt(image);
+  return image;
 }
 const id = z.string().uuid().nullable(),
   score = z.number().min(0).max(1).nullable();

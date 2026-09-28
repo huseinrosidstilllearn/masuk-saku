@@ -1,5 +1,9 @@
 # Database and RLS
 
+## Current V1 additions — 28 September 2026
+
+Development has migrations 1–17. Append migrations 12–17 add wallet versions/audit details, recurring occurrences and approval/runner RPCs, immutable budget period closure and unique successors, atomic snapshot import receipts, requester draft discard and Realtime publication. Production remains at migrations 1–11 until separately promoted. Never rewrite an applied migration. See [API contracts](API-FLOWS.md), [feature behavior](V1-FEATURES.md) and [deployment](DEPLOYMENT.md) before changing these tables.
+
 Apply migrations in timestamp order to a **new Supabase project**. PostgreSQL 17 is configured; no destructive reset is needed for an existing project. Embedded tests scaffold Auth/Storage interfaces and execute all SQL on a real PostgreSQL engine.
 
 ## Entities
@@ -68,9 +72,9 @@ select public.restore_transaction('TRANSACTION_UUID'::uuid);
 
 Source balance reduces by 102500, destination increases by 100000. Household expense = 2500, principal transfer excluded from income/expense. Fee follows parent status/trash/restore and deletion cascades. Split input is validated before atomic insert; sum must equal amount. Category one-level guard and tenant FKs apply to direct metadata CRUD. Owner opening-balance edits are audited.
 
-## Limitations to resolve before full V1
+## Historical foundation limitations — 26 September 2026
 
-DB supports recurring template storage but does not execute unvalidated templates; runner absent. Revision RPC is absent; never grant raw ledger UPDATE to work around it. UI loader explicitly rejects 10k result ceilings; add paginated/aggregated queries and generated Supabase Database types for scale. Member deletion is restricted by historical FKs; implement inactive membership and invitations before account removal. Full restore uses migrations and controlled restore tooling, not arbitrary JSON import to privileged tables.
+The original foundation had no recurring runner/revision RPC and rejected the 10k query cap. Current migrations and the paginated loader replace those limitations; inactive membership and verified invitations preserve history. Generated Supabase Database types remain a developer improvement. Full restore still uses controlled tooling, not arbitrary JSON writes to privileged tables.
 
 ## Transaction revisions — migration202609270004
 

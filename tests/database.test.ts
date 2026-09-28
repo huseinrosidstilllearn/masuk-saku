@@ -45,6 +45,12 @@ beforeAll(async () => {
     '202609270009_ai_credential_lifecycle.sql',
     '202609270010_membership_lifecycle.sql',
     '202609270011_user_profiles.sql',
+    '202609280012_wallet_lifecycle.sql',
+    '202609280013_recurring_transactions.sql',
+    '202609280014_budget_periods.sql',
+    '202609280015_snapshot_import.sql',
+    '202609280016_draft_lifecycle.sql',
+    '202609280017_realtime.sql',
   ])
     await db.exec(readFileSync(new URL('../supabase/migrations/' + file, import.meta.url), 'utf8'));
   await asUser(users[0]);
@@ -70,6 +76,344 @@ beforeAll(async () => {
 });
 afterAll(async () => {
   await db?.close();
+});
+
+it('snapshot import remaps identities, appends atomically and rejects foreign access or mismatched retries', async () => {
+  await asUser(users[0]);
+  const sourceHousehold = crypto.randomUUID(),
+    sourceWallet = crypto.randomUUID(),
+    sourceTx = crypto.randomUUID();
+  const source = {
+    household: { id: sourceHousehold },
+    members: [{ user_id: 'original-user' }],
+    wallets: [
+      {
+        id: sourceWallet,
+        household_id: sourceHousehold,
+        name: 'ZZ imported',
+        type: 'cash',
+        ownership: 'personal',
+        wallet_owner: 'original-user',
+        initial_balance: 5000,
+        active: false,
+      },
+    ],
+    transactions: [
+      {
+        ...input({ wallet_id: sourceWallet, amount: 1000 }),
+        id: sourceTx,
+        household_id: sourceHousehold,
+        transaction_actor: 'original-user',
+        scope_member_id: null,
+        created_by: 'original-user',
+        deleted_at: null,
+      },
+    ],
+    categories: [],
+    tags: [],
+    budgets: [],
+    goals: [],
+    contributions: [],
+    splits: [],
+    transactionTags: [],
+  };
+  const key = crypto.randomUUID(),
+    map = { 'original-user': users[0] };
+  const save = (body: unknown, request = key) =>
+    scalar('select public.import_household_snapshot($1,$2::jsonb,$3::jsonb,$4) as count', [
+      household,
+      JSON.stringify(body),
+      JSON.stringify(map),
+      request,
+    ]);
+  await asUser(users[1]);
+  await expect(save(source)).rejects.toThrow(/Owner/);
+  await asUser(users[0]);
+  expect((await save(source))!.count).toBe(1);
+  expect((await save(source))!.count).toBe(0);
+  const imported = (await scalar("select id,active from public.wallets where name='ZZ imported'"))!;
+  expect(imported.id).not.toBe(sourceWallet);
+  expect(imported.active).toBe(false);
+  const row = (await scalar(
+    'select created_by,source,amount from public.transactions where wallet_id=$1',
+    [imported.id],
+  ))!;
+  expect(row).toEqual({ created_by: users[0], source: 'import', amount: 1000 });
+  await expect(
+    save({ ...source, tags: [{ id: crypto.randomUUID(), name: 'Different' }] }),
+  ).rejects.toThrow(/mismatch/);
+  const before = (await scalar('select count(*)::int as n from public.wallets'))!.n;
+  await expect(
+    save(
+      { ...source, transactions: [{ ...source.transactions[0], wallet_id: 'missing' }] },
+      crypto.randomUUID(),
+    ),
+  ).rejects.toThrow(/missing import reference/);
+  expect((await scalar('select count(*)::int as n from public.wallets'))!.n).toBe(before);
+});
+
+it('draft discard is requester-only, never changes ledger and expires unconfirmed attachments', async () => {
+  await db.exec('reset role');
+  const did = crypto.randomUUID();
+  await db.query(
+    "insert into public.ai_drafts(id,household_id,created_by,candidate,confidence) values($1,$2,$3,'{}','{}')",
+    [did, household, users[0]],
+  );
+  await asUser(users[1]);
+  await expect(scalar('select public.discard_ai_draft($1)', [did])).rejects.toThrow(
+    /access denied/,
+  );
+  expect(
+    (await scalar('select count(*)::int as n from public.ai_drafts where id=$1', [did]))!.n,
+  ).toBe(0);
+  await asUser(users[0]);
+  await scalar('select public.discard_ai_draft($1)', [did]);
+  expect((await scalar('select status from public.ai_drafts where id=$1', [did]))!.status).toBe(
+    'expired',
+  );
+});
+
+it('budget closure freezes carryover once, handles descendants/splits and blocks direct carry/history edits', async () => {
+  await asUser(users[0]);
+  const parent = crypto.randomUUID(),
+    child = crypto.randomUUID(),
+    bid = crypto.randomUUID();
+  const bw = crypto.randomUUID();
+  await db.query(
+    "insert into public.wallets(id,household_id,name,type,ownership) values($1,$2,'ZZ budget','cash','shared')",
+    [bw, household],
+  );
+  await db.query(
+    "insert into public.categories(id,household_id,name,kind) values($1,$2,'Budget parent','expense')",
+    [parent, household],
+  );
+  await db.query(
+    "insert into public.categories(id,household_id,name,kind,parent_id) values($1,$2,'Budget child','expense',$3)",
+    [child, household, parent],
+  );
+  await db.query(
+    "insert into public.budgets(id,household_id,name,category_id,amount,start_date,end_date,rollover,cadence,auto_continue) values($1,$2,'Closure test',$3,10000,'2025-01-01','2025-01-31','rollover','monthly',true)",
+    [bid, household, parent],
+  );
+  await scalar('select public.create_transaction($1::jsonb,$2) as id', [
+    JSON.stringify(
+      input({
+        amount: 6000,
+        occurred_at: '2025-01-31T16:59:00Z',
+        category_id: child,
+        wallet_id: bw,
+      }),
+    ),
+    crypto.randomUUID(),
+  ]);
+  const successor = (await scalar('select public.close_budget_period($1) as id', [bid]))!.id;
+  expect((await scalar('select public.close_budget_period($1) as id', [bid]))!.id).toBe(successor);
+  expect(
+    await scalar(
+      'select rollover_amount,start_date::text,end_date::text from public.budgets where id=$1',
+      [successor],
+    ),
+  ).toEqual({ rollover_amount: 4000, start_date: '2025-02-01', end_date: '2025-02-28' });
+  expect(
+    (await scalar('select closed_spent from public.budgets where id=$1', [bid]))!.closed_spent,
+  ).toBe(6000);
+  const overspent = crypto.randomUUID(),
+    reset = crypto.randomUUID();
+  for (const [id, mode, amount] of [
+    [overspent, 'rollover', 1000],
+    [reset, 'reset', 10000],
+  ] as const) {
+    await db.query(
+      "insert into public.budgets(id,household_id,name,category_id,amount,start_date,end_date,rollover,cadence,auto_continue) values($1,$2,'Carry rules',$3,$4,'2025-01-01','2025-01-31',$5,'monthly',true)",
+      [id, household, parent, amount, mode],
+    );
+    const next = (await scalar('select public.close_budget_period($1) as id', [id]))!.id;
+    expect(
+      (await scalar('select rollover_amount from public.budgets where id=$1', [next]))!
+        .rollover_amount,
+    ).toBe(0);
+  }
+  await scalar('select public.create_transaction($1::jsonb,$2)', [
+    JSON.stringify(
+      input({
+        wallet_id: bw,
+        amount: 1000,
+        category_id: child,
+        occurred_at: '2025-01-31T17:00:00Z',
+        splits: [
+          { category_id: child, amount: 500 },
+          { category_id: parent, amount: 500 },
+        ],
+      }),
+    ),
+    crypto.randomUUID(),
+  ]);
+  const third = (await scalar('select public.close_budget_period($1) as id', [successor]))!.id;
+  expect(
+    (await scalar('select closed_spent from public.budgets where id=$1', [successor]))!
+      .closed_spent,
+  ).toBe(1000);
+  expect(
+    (await scalar('select rollover_amount from public.budgets where id=$1', [third]))!
+      .rollover_amount,
+  ).toBe(13000);
+  expect(
+    (await scalar('select closed_spent from public.budgets where id=$1', [bid]))!.closed_spent,
+  ).toBe(6000);
+  await expect(
+    db.query('update public.budgets set amount=10001 where id=$1', [bid]),
+  ).rejects.toThrow(/immutable/);
+  await expect(
+    db.query('update public.budgets set rollover_amount=99999 where id=$1', [third]),
+  ).rejects.toThrow(/server managed/);
+  await asUser(users[2]);
+  await expect(scalar('select public.close_budget_period($1)', [bid])).rejects.toThrow(
+    /membership/,
+  );
+  await asUser(users[0]);
+});
+
+it('wallet lifecycle is Owner-only, versioned, retry-safe and preserves history on archive', async () => {
+  await asUser(users[0]);
+  const wid = crypto.randomUUID();
+  const body = {
+    id: wid,
+    household_id: household,
+    name: 'Signed opening',
+    type: 'cash',
+    ownership: 'shared',
+    wallet_owner: null,
+    initial_balance: -15000,
+    active: true,
+    icon: 'wallet',
+    color: '#d85956',
+    account_identifier: 'Ending 1234',
+  };
+  const save = (input: typeof body, version: number | null) =>
+    scalar('select public.save_wallet($1::jsonb,$2) as version', [JSON.stringify(input), version]);
+  expect((await save(body, null))!.version).toBe(1);
+  expect((await save(body, null))!.version).toBe(1);
+  await asUser(users[1]);
+  await expect(save({ ...body, name: 'Member edit' }, 1)).rejects.toThrow(/Owner required/);
+  await asUser(users[0]);
+  const changed = { ...body, name: 'Renamed wallet', active: false };
+  expect((await save(changed, 1))!.version).toBe(2);
+  expect((await save(changed, 1))!.version).toBe(2);
+  await expect(save({ ...changed, name: 'Stale edit' }, 1)).rejects.toThrow(/wallet conflict/);
+  await expect(
+    db.query("update public.wallets set name='Bypass' where id=$1", [wid]),
+  ).rejects.toThrow(/permission denied/);
+  expect(
+    await scalar('select initial_balance,active from public.wallets where id=$1', [wid]),
+  ).toEqual({ initial_balance: -15000, active: false });
+  expect((await save({ ...changed, active: true }, 2))!.version).toBe(3);
+  await expect(
+    save({ ...body, id: crypto.randomUUID(), color: 'url(test)' }, null),
+  ).rejects.toThrow(/invalid wallet fields/);
+});
+
+it('recurring schedules preserve month anchors, ask before posting and enforce exactly-once creator/Owner confirmation', async () => {
+  await asUser(users[0]);
+  const rid = crypto.randomUUID();
+  const recurringWallet = crypto.randomUUID();
+  await db.query(
+    "insert into public.wallets(id,household_id,name,type,ownership,initial_balance) values($1,$2,'ZZ recurring','cash','shared',100000)",
+    [recurringWallet, household],
+  );
+  const template = {
+    id: rid,
+    household_id: household,
+    name: 'Monthly test',
+    mode: 'auto_create',
+    cadence: 'monthly',
+    anchor_date: '2027-01-31',
+    end_date: '2027-03-31',
+    run_time: '09:15',
+    active: true,
+    transaction_template: input({
+      transaction_actor: users[0],
+      wallet_id: recurringWallet,
+      amount: 2000,
+    }),
+  };
+  await db.query('select public.save_recurring_template($1::jsonb,null)', [
+    JSON.stringify(template),
+  ]);
+  await db.exec('reset role; set role service_role;');
+  expect((await scalar("select public.run_recurring_maintenance('2027-02-28') as n"))!.n).toBe(2);
+  expect((await scalar("select public.run_recurring_maintenance('2027-02-28') as n"))!.n).toBe(0);
+  await asUser(users[0]);
+  expect(
+    (await scalar('select next_run::text as next_run from public.recurring_templates where id=$1', [
+      rid,
+    ]))!.next_run,
+  ).toBe('2027-03-31');
+  expect(
+    (await scalar(
+      'select count(*)::int as n from public.transactions where recurring_template_id=$1 and parent_transaction_id is null',
+      [rid],
+    ))!.n,
+  ).toBe(2);
+  const askId = crypto.randomUUID();
+  await db.query('select public.save_recurring_template($1::jsonb,null)', [
+    JSON.stringify({
+      ...template,
+      id: askId,
+      mode: 'ask',
+      anchor_date: '2027-03-01',
+      end_date: '2027-03-01',
+    }),
+  ]);
+  await db.exec('reset role; set role service_role;');
+  await db.query("select public.run_recurring_maintenance('2027-03-01')");
+  await asUser(users[0]);
+  const occurrence = (await scalar(
+    'select id,input,status from public.recurring_occurrences where template_id=$1',
+    [askId],
+  ))!;
+  expect(occurrence.status).toBe('pending');
+  expect(
+    (await scalar(
+      'select count(*)::int as n from public.transactions where recurring_template_id=$1',
+      [askId],
+    ))!.n,
+  ).toBe(0);
+  await asUser(users[1]);
+  await expect(
+    db.query('select public.confirm_recurring_occurrence($1,$2::jsonb)', [
+      occurrence.id,
+      JSON.stringify(occurrence.input),
+    ]),
+  ).rejects.toThrow(/creator or Owner/);
+  await asUser(users[0]);
+  const corrected = { ...(occurrence.input as object), amount: 3500 };
+  const first = (await scalar('select public.confirm_recurring_occurrence($1,$2::jsonb) as id', [
+    occurrence.id,
+    JSON.stringify(corrected),
+  ]))!.id;
+  expect(
+    (await scalar('select public.confirm_recurring_occurrence($1,$2::jsonb) as id', [
+      occurrence.id,
+      JSON.stringify(corrected),
+    ]))!.id,
+  ).toBe(first);
+  await expect(
+    db.query('select public.confirm_recurring_occurrence($1,$2::jsonb)', [
+      occurrence.id,
+      JSON.stringify({ ...corrected, amount: 4000 }),
+    ]),
+  ).rejects.toThrow(/already confirmed/);
+  await expect(
+    db.query('select public.skip_recurring_occurrence($1)', [occurrence.id]),
+  ).rejects.toThrow(/trash created transaction/);
+  await asUser(users[2]);
+  expect((await db.query('select * from public.recurring_occurrences')).rows).toHaveLength(0);
+  await expect(db.query('select public.process_my_recurring($1)', [household])).rejects.toThrow(
+    /access denied/,
+  );
+  await expect(db.query("select public.run_recurring_maintenance('2027-12-01')")).rejects.toThrow(
+    /permission denied/,
+  );
 });
 
 it('profiles are private to their account; nickname updates preserve financial identity and versions reject stale saves', async () => {

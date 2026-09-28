@@ -1,4 +1,4 @@
-import type { Budget, Role, Split, Transaction, Wallet } from './types';
+import type { Budget, Category, Role, Split, Transaction, Wallet } from './types';
 export const MAX_MONEY = 9_000_000_000_000;
 export function parseMoney(value: string | number): number {
   if (typeof value === 'string' && !/^\d+$/.test(value))
@@ -106,7 +106,18 @@ export function budgetSpent(
   rows: Transaction[],
   splits: (Split & { transaction_id: string })[],
   ownerWallets?: Set<string>,
+  categories: Category[] = [],
 ) {
+  const matching = new Set(b.category_id ? [b.category_id] : []);
+  for (let index = 0; index < categories.length; index++) {
+    let added = false;
+    for (const category of categories)
+      if (category.parent_id && matching.has(category.parent_id) && !matching.has(category.id)) {
+        matching.add(category.id);
+        added = true;
+      }
+    if (!added) break;
+  }
   return rows
     .filter(
       (t) =>
@@ -125,8 +136,8 @@ export function budgetSpent(
         (!b.category_id
           ? t.amount
           : items.length
-            ? items.filter((s) => s.category_id === b.category_id).reduce((x, s) => x + s.amount, 0)
-            : t.category_id === b.category_id
+            ? items.filter((s) => matching.has(s.category_id)).reduce((x, s) => x + s.amount, 0)
+            : t.category_id && matching.has(t.category_id)
               ? t.amount
               : 0)
       );

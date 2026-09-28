@@ -1,5 +1,7 @@
 # Google Drive backup destination
 
+Current workflow also encrypts Storage bytes into `masuk-saku-*.storage.tar.age`. Database dumps and Storage archives are uploaded and checksum checked. Additional private Storage credentials use `scripts/configure-storage-backup.ps1`; [operations](OPERATIONS.md) covers restore. Historical database-only evidence below does not prove the new byte backup has run.
+
 The weekly GitHub Actions job can upload the encrypted database dump to Google Drive, then verify its checksum. GitHub runs the job; the operator's computer need not stay online. The job still needs the database credentials and age public recipient configured by scripts/configure-backup.ps1. Database recovery and Storage object bytes remain subject to [OPERATIONS](OPERATIONS.md).
 
 ## Connect the operator's Drive

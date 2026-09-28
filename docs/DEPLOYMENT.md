@@ -1,5 +1,15 @@
 # Local, Supabase and Cloudflare setup
 
+## V1 deployment checklist — 28 September 2026
+
+Fresh projects apply every migration (1–17), then deploy all six Edge functions, including username-login and the updated maintenance handler. Upgrade existing databases with `db push`; do not reset personal data. Current contracts and UI are in [V1 features](V1-FEATURES.md).
+
+For hosted scheduling, use `scripts/enable-maintenance.ps1 -ProjectRef YOUR_PROJECT_REF -SecretsFile PATH_TO_PRIVATE_EDGE_ENV` after deploying maintenance/secrets. It stores the existing bearer in Vault without logging it or rotating it, then schedules every 15 minutes. Our Production already has its separate production scheduler; do not add a second one there. Database/Storage backup configuration and restore checks are in [operations](OPERATIONS.md).
+
+For your own Pages project, the deploy scripts accept ProjectName/AccountId. Before preflight set `PAGES_EXPECTED_SUPABASE_URL` to your backend and `PAGES_FORBIDDEN_SUPABASE_URL` to the other environment, both HTTPS origins. Defaults deliberately check the repository's official projects. Configure VITE variables for your own build; do not accidentally reuse the original operator's environment files. Supabase Site URL, Google callback/redirects, SMTP sender, Edge ALLOWED_ORIGINS, Pages domain/CSP and backup secrets must belong to your install.
+
+The portable frontend/RPC migrations do not create your Google OAuth client, SMTP account or independently retained recovery keys. A clean operator install/restore rehearsal remains an acceptance gate, separate from successful local fixtures and our managed Development checks.
+
 ## Local demo
 
 Node >=22.12; npm ci; npm run dev:demo. Explicit demo mode always starts a memory-only example household, even with Supabase environment files present. npm run preview serves built assets locally. Vite dev and preview default bind127.0.0.1; choose --host0.0.0.0 only if intentionally exposing LAN.

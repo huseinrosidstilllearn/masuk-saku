@@ -7,6 +7,8 @@ export default defineConfig({
   test: {
     include: ['src/**/*.test.ts', 'tests/*.test.ts'],
     environment: 'node',
+    // Keep the embedded PostgreSQL setup from competing with a worker per test file.
+    maxWorkers: 2,
     testTimeout: 30000,
     hookTimeout: 30000,
   },

@@ -1,5 +1,7 @@
 # PRD Master — Masuk Saku V1.0
 
+Implementasi 28 September 2026 melengkapi seluruh domain V1 di Development; [Fitur V1](V1-FEATURES.md) mencatat UI, kontrak dan batasnya. Kelengkapan implementasi tidak menyatakan seluruh acceptance peluncuran selesai; hosted keluarga/provider/kamera dan pemulihan tetap dinilai terpisah.
+
 **Satu saku, semua catatan keuangan.** Status: keputusan produk disepakati; implementasi fondasi 0.1.0.
 Sumber: keputusan produk pemilik proyek yang disepakati 26–27 September 2026. Percakapan pribadi tidak didistribusikan dalam source publik. Prioritas keputusan terbaru mengatasi jawaban awal yang berbeda (permanent delete langsung/attachment setelah input).
 

@@ -38,6 +38,12 @@ Upload atau foto struk untuk membuat draft transaksi. Periksa nominal, tanggal, 
 
 AI memakai OpenRouter dengan API key milikmu sendiri dan hanya model gratis. Pencatatan manual tetap tersedia tanpa AI.
 
+### Rencana yang mengikuti keseharian
+
+Atur transaksi mingguan/bulanan dengan tinjauan setiap kejadian atau aturan otomatis yang kamu setujui. Anggaran bisa dimulai kembali setiap periode atau membawa sisa positif. Target tabungan membantu merencanakan kontribusi tanpa mengubah saldo dompet.
+
+Susun dashboard, buka pencarian cepat dengan **Ctrl+K**, dan bandingkan laporan antarperiode. Ekspor JSON/CSV tersedia; Owner dapat meninjau dan mengimpor data ke keluarga sendiri. Baca [panduan Fitur V1](docs/V1-FEATURES.md) untuk seluruh alurnya.
+
 ## Mulai menggunakan
 
 Buka [masuksaku.my.id](https://masuksaku.my.id), lalu daftar atau masuk dengan email/username dan password. Provider Google juga sudah diaktifkan di Production dan Development.
@@ -117,16 +123,16 @@ Untuk perubahan fungsi server dan backup, jalankan pula:
 
 ```sh
 deno test --allow-env supabase/functions/_shared/
-node --test tests/backup-drive.test.mjs
+node --test tests/backup-drive.test.mjs tests/backup-storage.test.mjs
 ```
 
 ## Perjalanan menuju V1
 
 Versi saat ini adalah **0.1.0**. Aplikasi sudah online dan fitur utama dapat digunakan, tetapi pengembangan V1 masih berjalan.
 
-Pekerjaan berikutnya mencakup lifecycle dompet, transaksi berulang, rollover otomatis, import/restore, dan penyempurnaan laporan. Pengujian dengan akun nyata, kamera fisik, provider AI, serta beberapa anggota keluarga juga masih diperlukan. Lihat [roadmap](docs/ROADMAP.md) dan [acceptance criteria](docs/ACCEPTANCE.md) untuk status lengkap.
+Lifecycle dompet, transaksi berulang, rollover, impor, PDF capture, draf AI, pengaturan dashboard dan laporan sudah dilengkapi. Update terbaru dipasang di Development sebelum promosi Production. Pemeriksaan hosted dengan akun sintetis melengkapi tes otomatis; pilot keluarga, kamera fisik, provider AI dan pemulihan terisolasi tetap menjadi syarat peluncuran. Lihat [roadmap](docs/ROADMAP.md) dan [acceptance criteria](docs/ACCEPTANCE.md) untuk status lengkap.
 
-Backup database terenkripsi sudah berhasil dijalankan ke Google Drive. Simulasi restore, pemulihan kunci, dan backup isi file Storage tetap menjadi pekerjaan operasional tersendiri. Tes otomatis dan keberhasilan backup belum membuktikan seluruh alur pemulihan selesai.
+Backup mingguan kini menyiapkan database dan isi Storage sebagai dua berkas terenkripsi untuk Google Drive. Keberhasilan backup dan restore dicatat terpisah; pemulihan terisolasi serta salinan kunci yang independen tetap perlu dibuktikan sebelum rilis.
 
 ## Jelajahi dokumentasi
 

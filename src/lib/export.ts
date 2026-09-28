@@ -15,6 +15,14 @@ export function download(snapshot: Snapshot, format: 'json' | 'csv') {
     'occurred_at',
     'merchant',
     'notes',
+    'destination_wallet_id',
+    'scope_member_id',
+    'category_id',
+    'created_by',
+    'parent_transaction_id',
+    'source',
+    'version',
+    'recurring_template_id',
   ] as const;
   const text =
     format === 'json'
@@ -29,9 +37,23 @@ export function download(snapshot: Snapshot, format: 'json' | 'csv') {
           2,
         )
       : '\uFEFF' +
-        fields.join(',') +
+        [...fields, 'splits_json', 'tags_json'].join(',') +
         '\r\n' +
-        rows.map((t) => fields.map((k) => csv(safe(t[k]))).join(',')).join('\r\n');
+        rows
+          .map((t) =>
+            [
+              ...fields.map((k) => csv(safe(t[k]))),
+              csv(JSON.stringify(snapshot.splits.filter((s) => s.transaction_id === t.id))),
+              csv(
+                JSON.stringify(
+                  snapshot.transactionTags
+                    .filter((s) => s.transaction_id === t.id)
+                    .map((s) => snapshot.tags.find((tag) => tag.id === s.tag_id)),
+                ),
+              ),
+            ].join(','),
+          )
+          .join('\r\n');
   const url = URL.createObjectURL(
     new Blob([text], { type: format === 'json' ? 'application/json' : 'text/csv;charset=utf-8' }),
   );

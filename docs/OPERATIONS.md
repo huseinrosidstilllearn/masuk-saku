@@ -1,5 +1,15 @@
 # Operations, backups and self-hosting
 
+## Storage byte backup — 28 September 2026
+
+Weekly Actions now runs `scripts/backup-storage.mjs` after the PostgreSQL dump. It lists every bucket, traverses folders with pagination, downloads objects into a private temporary directory, and archives bytes with a versioned manifest. The archive is age-encrypted; only `*.storage.tar.age` leaves the runner. Paths, keys and financial content are not printed. Failed download/encryption fails the job and temporary plaintext is removed. Database/Storage are sequential snapshots rather than an atomic point-in-time snapshot; reconcile concurrent changes and expired receipts during recovery.
+
+Run `scripts/configure-storage-backup.ps1 -ProjectRef YOUR_PROJECT_REF -Repository OWNER/REPO` after CLI login. It sends the service credential directly to GitHub Secrets through stdin. `BACKUP_SUPABASE_URL` and `BACKUP_SUPABASE_SERVICE_ROLE_KEY` are required with the existing age/database/Drive setup. Never put this credential in frontend/source; restrict repository Actions access. For local bytes, set those two variables and `BACKUP_AGE_RECIPIENT` privately, then run `node scripts/backup-storage.mjs` with tar/age available.
+
+Decrypt the archive into a protected operator directory. `node scripts/restore-storage.mjs decrypted.storage.tar` validates it without remote writes. For an isolated disposable target, configure `RESTORE_SUPABASE_URL`, `RESTORE_SUPABASE_SERVICE_ROLE_KEY`, `RESTORE_ISOLATED_PROJECT_REF` and add `--apply`. The target must differ from the source in the manifest. The script creates missing buckets and upserts bytes there. Review managed Storage metadata during database restore; paths must reconcile with attachment/profile rows. Never use this helper for in-place Production restore.
+
+Dry-run validation is tested with a synthetic archive and unsafe references. It does not prove full database/Storage recovery. Record counts, checksums, balances, object access and measured recovery time in an isolated rehearsal. Retain independent copies of the age identity and `AI_ENCRYPTION_KEY`; one computer's Windows DPAPI recovery is insufficient.
+
 ## Weekly backup
 
 Google Drive is an optional encrypted backup destination: [setup and verification](GOOGLE-DRIVE-BACKUP.md). It does not replace the database dump credentials or independently retained decryption identity.

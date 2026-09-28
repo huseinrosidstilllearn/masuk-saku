@@ -26,6 +26,23 @@ export function validateBudget(budget: Budget) {
   )
     throw new Error('Tanggal akhir anggaran harus sama atau setelah tanggal mulai.');
   parseThresholds(budget.warning_thresholds.join(','));
+  const days =
+    Math.round(
+      (new Date(budget.end_date).getTime() - new Date(budget.start_date).getTime()) / 86400000,
+    ) + 1;
+  if (budget.cadence === 'weekly' && days !== 7)
+    throw new Error('Anggaran mingguan harus mencakup 7 hari.');
+  if (
+    budget.cadence === 'monthly' &&
+    (budget.start_date.slice(8) !== '01' ||
+      budget.end_date !==
+        new Date(
+          Date.UTC(Number(budget.start_date.slice(0, 4)), Number(budget.start_date.slice(5, 7)), 0),
+        )
+          .toISOString()
+          .slice(0, 10))
+  )
+    throw new Error('Anggaran bulanan harus mencakup satu bulan kalender.');
 }
 export function validateGoal(goal: Omit<Goal, 'saved'>) {
   if (!goal.title.trim() || goal.title.trim().length > 100)

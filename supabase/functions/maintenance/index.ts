@@ -34,5 +34,14 @@ serve(async (req) => {
   }
   const purge = await service.rpc('purge_expired_transactions');
   databaseError(purge.error);
-  return { attachments_removed: removed, transactions_purged: purge.data };
+  const recurring = await service.rpc('run_recurring_maintenance');
+  databaseError(recurring.error);
+  const budgets = await service.rpc('run_budget_maintenance');
+  databaseError(budgets.error);
+  return {
+    attachments_removed: removed,
+    transactions_purged: purge.data,
+    recurring_processed: recurring.data,
+    budget_periods_closed: budgets.data,
+  };
 });

@@ -1,5 +1,15 @@
 # Masuk Saku — Technical specification
 
+## Kontrak V1 yang dilengkapi — 28 September 2026
+
+Migrasi 12–17 menambah versi/lifecycle wallet, occurrence unik dengan template approved, closure budget, append import request, discard draft dan publikasi Realtime. Read model snapshot menggunakan pagination stabil; nominal bigint dikonversi dan diperiksa sebagai safe integer. Menu dan alur tersedia di [Fitur V1](V1-FEATURES.md), endpoint di [API flows](API-FLOWS.md).
+
+Recurrence disetujui melalui `save_recurring_template`. Runner memakai creator persetujuan asli untuk auto, sedangkan ask membutuhkan creator/Owner untuk confirm. Actor/scope tetap berasal dari payload yang divalidasi. Tidak ada penulisan AI tanpa konfirmasi. Unique template/date dan request key occurrence menjaga exactly-once retry.
+
+Budget closure memakai row lock, snapshot expense completed/non-trash dengan descendant/split/fee serta tanggal WIB. Satu predecessor menghasilkan satu successor; closed snapshot immutable dan koreksi ledger tidak mengubah carryover lama. Import Owner-only mengalokasikan UUID baru, memetakan anggota aktif dan memakai satu transaksi DB/request receipt. Tidak ada impor kredensial atau membership.
+
+PDF dirender lokal melalui PDF.js maksimal tiga halaman menjadi JPEG, dimuat secara lazy. Private attachment download memakai RLS sesi, draft hanya requester. Realtime refresh debounced/unsubscribe dan preferences hanya akun sendiri. Database/Storage backup terpisah, age-encrypted dan tidak dianggap atomic snapshot; [operasi](OPERATIONS.md) menjelaskan restore.
+
 Status: fondasi implementasi, 26 September 2026. Sumber utama: [PRD](PRD.md). Permintaan terbaru mengesahkan pembangunan lokal langsung.
 
 Auth terbaru27September2026: [username login/signup](USERNAME-AUTH.md). Adapter public Edge menjalankan password Auth tanpa mengekspos resolver email; private username unik, trigger signup, own-user RPC untuk akun lama. Email/Google dan permissions finansial tetap.

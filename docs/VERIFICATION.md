@@ -1,5 +1,15 @@
 # Verification evidence
 
+## V1 feature completion — 28 September 2026
+
+Wallet lifecycle, recurring transactions, budget closure/rollover, JSON import, paginated snapshots, local PDF receipt conversion, requester draft recovery/discard, private attachment viewing, dashboard preferences, command search, activity and realtime refresh are implemented. Read [feature guide](V1-FEATURES.md) for usage, constraints and distinctions between ledger, automation, import and restore.
+
+Development now has migrations12–17 and the updated maintenance Edge function. Existing maintenance bearer was preserved; Vault/cron every15minutes is configured. Authenticated maintenance returned the four result counters successfully. Production remains at frontend64f9f8a6 and migrations1–11; no promotion is implied by source publication.
+
+Local checks recorded before this handoff:95 unit/domain/SQL including44 PostgreSQL tests,50 demo browser,20 configured auth browser,11 shared Deno tests/all6 function checks,5 backup-script tests, typecheck/build/format. Final rerun passed95 unit/domain/SQL,50 browser and20 configured auth,11 Deno tests/all6checks,5backup tests and build/typecheck/format. One overloaded concurrent run hit the PGlite hook timeout and a5-second PDF assertion; limiting Vitest to2workers and matching the PDF operation20-second deadline produced a complete passing rerun. Hosted synthetic Owner/Member/outsider JWT checks covered invitations, transfer/fee and actor authorization, recurring confirm/retry/revoked creator, frozen budget rollover, draft discard, private Storage access and import append/retry. Synthetic accounts, household and objects were cleaned. These checks do not claim a physical-camera/provider/inbox/two-device pilot.
+
+The weekly workflow now includes separately encrypted Storage bytes and PostgreSQL dump. Production Storage backup secrets are configured in GitHub; actual combined workflow execution is pending publication. Isolated full restore, independent age/server-key recovery copies, actual OpenRouter/physical-camera/family pilot and clean self-host install remain release gates. Do not label the project launch-ready while these are outstanding.
+
 The application has unit/domain and embedded PostgreSQL RLS/RPC tests, demo Playwright regressions, configured-mode Auth/AI tests with intercepted network, and Deno Edge validation tests. See package scripts and CI workflow for reproducible commands. Historical local screenshots and private deployment notes are intentionally excluded from public source.
 
 Current membership slice passed82unit/domain/SQL (38SQL),43demo browser and13configured browser tests, plus typecheck/build/format. These fixture checks do not prove real email/provider/physical camera delivery or managed database restore.

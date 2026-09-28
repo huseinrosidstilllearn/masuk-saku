@@ -68,11 +68,24 @@ export async function writePlanning(
 export async function saveBudget(household: string, budget: Budget, original?: Budget) {
   validateBudget(budget);
   if (!supabase) return demo.budgetDemo(budget, original);
+  const fields = ({
+    closed_at: _closed,
+    closed_spent: _spent,
+    predecessor_id: _previous,
+    rollover_amount: _roll,
+    automation_error: _error,
+    ...rest
+  }: Budget) => rest;
   await writePlanning(
     'budgets',
-    { ...budget, household_id: household },
-    original ? { ...original } : undefined,
+    { ...fields(budget), household_id: household },
+    original ? { ...fields(original) } : undefined,
   );
+}
+export async function closeBudget(id: string) {
+  if (!supabase) return demo.closeBudgetDemo(id);
+  const result = await supabase.rpc('close_budget_period', { p_id: id });
+  if (result.error) throw new Error(result.error.message);
 }
 export async function saveGoal(household: string, goal: Goal, original?: Goal) {
   validateGoal(goal);

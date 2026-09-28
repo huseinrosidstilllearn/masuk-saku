@@ -1,5 +1,11 @@
 # Architecture
 
+## V1 completion — 28 September 2026
+
+The frontend remains a static React SPA. Wallet/recurrence/import mutations and budget closure execute in PostgreSQL; the Edge maintenance handler runs cleanup plus approved recurrence/budget work. `private` helpers cannot be executed by application users. Templates, occurrences, closed budgets and import request receipts retain audit/identity boundaries. New tables use tenant RLS; preferences are self-only and activity is Owner-only.
+
+PDF rendering occurs locally and lazily, then follows the existing image upload → draft → human confirm flow. Storage bytes now have an encrypted weekly archive independent of the database dump. Public JSON import is an append operation, not full-system recovery. [V1 features](V1-FEATURES.md), [API flows](API-FLOWS.md) and [operations](OPERATIONS.md) document exact contracts and remaining release checks.
+
 ## Components
 
 Username password login menambah adapter public Edge sebelum sesi: validasi/quota, service-only resolve email terkini, lalu Supabase Auth password verification dan token untuk Auth setSession browser. Private handles unik dan own-user RPC terpisah dari household display_name. Lihat [username auth](USERNAME-AUTH.md); jalur AI Edge di diagram tetap memerlukan verified-user.

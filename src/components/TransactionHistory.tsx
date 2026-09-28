@@ -5,6 +5,7 @@ import { transactionHistory, type Revision } from '../lib/transaction-revisions'
 import { money } from '../domain/finance';
 import type { Snapshot, Transaction } from '../domain/types';
 import { Icon } from './Icon';
+import { TransactionAttachments } from './TransactionAttachments';
 
 export function TransactionHistory({
   tx,
@@ -110,6 +111,7 @@ export function TransactionHistory({
         </button>
       </div>
       <p>{tx.merchant || 'Transaksi'} · Menampilkan maksimal 100 revisi terbaru.</p>
+      <TransactionAttachments transaction={tx.id} hide={hide} />
       {loading && (
         <p role="status">
           <MotionLoadingText text="Memuat riwayat…" />

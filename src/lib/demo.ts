@@ -1,5 +1,7 @@
-import { validateTransaction, parseMoney } from '../domain/finance';
-import type { Snapshot, TransactionInput } from '../domain/types';
+import { validateTransaction, parseMoney, budgetSpent } from '../domain/finance';
+import type { Snapshot, TransactionInput, RecurringTemplate } from '../domain/types';
+import { nextOccurrence } from '../domain/recurring';
+import { toWibInstant, wibDateTime } from '../domain/date-time';
 const month = new Date()
   .toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit' })
   .replace('/', '-');
@@ -230,6 +232,140 @@ let data: Snapshot = {
 export function loadDemo() {
   return structuredClone(data);
 }
+export function recurringSaveDemo(template: RecurringTemplate, original?: RecurringTemplate) {
+  const list = (data.recurring ??= []);
+  const old = list.find((t) => t.id === template.id);
+  if (old && old.version !== original?.version) throw new Error('Jadwal berubah. Muat ulang.');
+  validateTransaction(
+    template.transaction_template,
+    data.wallets,
+    template.transaction_template.splits ?? [],
+  );
+  const changed =
+    !old || old.anchor_date !== template.anchor_date || old.cadence !== template.cadence;
+  const value = structuredClone({
+    ...template,
+    name: template.name.trim(),
+    version: (old?.version ?? 0) + 1,
+    next_run: changed ? template.anchor_date : old.next_run,
+    occurrence_index: changed ? 0 : old.occurrence_index,
+  });
+  if (old) Object.assign(old, value);
+  else list.push(value);
+}
+export function recurringConfirmDemo(id: string, input: TransactionInput) {
+  const occurrence = data.occurrences?.find((o) => o.id === id);
+  if (!occurrence || occurrence.status === 'skipped')
+    throw new Error('Kejadian tidak dapat dicatat.');
+  if (occurrence.status === 'created') {
+    if (JSON.stringify(occurrence.input) !== JSON.stringify(input))
+      throw new Error('Kejadian sudah dicatat.');
+    return;
+  }
+  validateTransaction(input, data.wallets, input.splits ?? []);
+  createDemo(input, id);
+  data.transactions
+    .filter((t) => t.id === id || t.parent_transaction_id === id)
+    .forEach((t) => {
+      t.source = 'recurring';
+      t.recurring_template_id = occurrence.template_id;
+    });
+  Object.assign(occurrence, {
+    input: structuredClone(input),
+    status: 'created',
+    transaction_id: id,
+    error_reason: null,
+  });
+}
+export function recurringSkipDemo(id: string) {
+  const occurrence = data.occurrences?.find((o) => o.id === id);
+  if (!occurrence || occurrence.status === 'created')
+    throw new Error('Transaksi tercatat harus dipindahkan ke sampah.');
+  occurrence.status = 'skipped';
+}
+export function closeBudgetDemo(id: string) {
+  const b = data.budgets.find((b) => b.id === id);
+  if (!b || b.closed_at) return;
+  if (b.end_date >= wibDateTime().slice(0, 10)) throw new Error('Periode belum berakhir.');
+  b.closed_spent = budgetSpent(b, data.transactions, data.splits, undefined, data.categories);
+  b.closed_at = new Date().toISOString();
+  if (b.auto_continue && b.active !== false) {
+    const start = new Date(b.end_date + 'T12:00:00Z');
+    start.setUTCDate(start.getUTCDate() + 1);
+    const end = new Date(start);
+    if (b.cadence === 'monthly') {
+      end.setUTCMonth(end.getUTCMonth() + 1, 0);
+    } else
+      end.setUTCDate(
+        end.getUTCDate() +
+          (new Date(b.end_date).getTime() - new Date(b.start_date).getTime()) / 86400000,
+      );
+    data.budgets.push({
+      ...b,
+      id: crypto.randomUUID(),
+      start_date: start.toISOString().slice(0, 10),
+      end_date: end.toISOString().slice(0, 10),
+      predecessor_id: b.id,
+      closed_at: null,
+      closed_spent: null,
+      rollover_amount:
+        b.rollover === 'rollover' ? Math.max(0, b.amount + b.rollover_amount - b.closed_spent) : 0,
+    });
+  }
+}
+export function recurringProcessDemo() {
+  const now = wibDateTime(),
+    today = now.slice(0, 10);
+  const occurrences = (data.occurrences ??= []);
+  let count = 0;
+  for (const template of data.recurring ?? []) {
+    while (template.active && template.next_run <= today && count < 100) {
+      if (template.end_date && template.next_run > template.end_date) {
+        template.active = false;
+        break;
+      }
+      if (template.next_run === today && template.run_time > now.slice(11)) break;
+      let occurrence = occurrences.find(
+        (o) => o.template_id === template.id && o.scheduled_date === template.next_run,
+      );
+      if (!occurrence) {
+        occurrence = {
+          id: crypto.randomUUID(),
+          template_id: template.id,
+          household_id: template.household_id,
+          scheduled_date: template.next_run,
+          status: 'pending',
+          transaction_id: null,
+          error_reason: null,
+          input: {
+            ...structuredClone(template.transaction_template),
+            occurred_at: toWibInstant(`${template.next_run}T${template.run_time}`),
+          },
+        };
+        occurrences.push(occurrence);
+      }
+      if (template.mode === 'auto_create' && ['pending', 'error'].includes(occurrence.status)) {
+        try {
+          recurringConfirmDemo(occurrence.id, occurrence.input);
+        } catch {
+          occurrence.status = 'error';
+          occurrence.error_reason = 'Periksa dompet, anggota, dan kategori sebelum melanjutkan.';
+          template.active = false;
+          break;
+        }
+      }
+      template.occurrence_index += 1;
+      template.next_run = nextOccurrence(
+        template.anchor_date,
+        template.cadence,
+        template.occurrence_index,
+      );
+      template.version += 1;
+      count += 1;
+    }
+  }
+  return count;
+}
 export function createDemo(input: TransactionInput, key: string) {
   if (data.transactions.some((t) => t.id === key)) return;
   const { fee_amount, splits, tag_ids = [], ...rest } = input;
@@ -272,6 +408,19 @@ export function restoreDemo(id: string) {
 export function walletDemo(wallet: Snapshot['wallets'][number]) {
   data.wallets.push(wallet);
 }
+export function walletSaveDemo(
+  wallet: Snapshot['wallets'][number],
+  original?: Snapshot['wallets'][number],
+) {
+  const old = data.wallets.find((w) => w.id === wallet.id);
+  if (old && original && (old.version ?? 1) !== (original.version ?? 1))
+    throw new Error('Dompet berubah. Muat ulang.');
+  if (old && !original) throw new Error('ID dompet sudah digunakan.');
+  data.wallets = [
+    ...data.wallets.filter((w) => w.id !== wallet.id),
+    { ...structuredClone(wallet), version: (old?.version ?? 0) + 1 },
+  ];
+}
 export function settingsDemo(settings: Partial<Snapshot['household']>) {
   data.household = { ...data.household, ...settings };
 }
@@ -285,6 +434,7 @@ export function budgetDemo(
   original?: Snapshot['budgets'][number],
 ) {
   const current = data.budgets.find((b) => b.id === budget.id);
+  if (current?.closed_at) throw new Error('Periode ditutup tidak dapat diubah.');
   if (current && JSON.stringify(current) === JSON.stringify(budget)) return;
   if (original && JSON.stringify(current) !== JSON.stringify(original))
     throw new Error('Anggaran berubah. Muat ulang halaman.');

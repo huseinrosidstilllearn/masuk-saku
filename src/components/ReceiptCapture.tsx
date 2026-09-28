@@ -3,7 +3,7 @@ import { configured } from '../lib/supabase';
 import {
   previewCapture,
   uploadReceipt,
-  validateReceipt,
+  prepareReceipt,
   type CapturePreview,
 } from '../lib/receipt-capture';
 import { Icon } from './Icon';
@@ -70,10 +70,10 @@ export function ReceiptCapture({
     if (!next) return;
     setStage('validating');
     try {
-      await validateReceipt(next);
+      const prepared = await prepareReceipt(next);
       if (live.current && token === selection.current) {
-        setFile(next);
-        if (autoRead && configured) await read(next, '');
+        setFile(prepared);
+        if (autoRead && configured) await read(prepared, '');
       }
     } catch (e) {
       if (live.current && token === selection.current)
@@ -158,7 +158,7 @@ export function ReceiptCapture({
                 Gambar struk
                 <input
                   type="file"
-                  accept="image/jpeg,image/png,image/webp"
+                  accept="image/jpeg,image/png,image/webp,application/pdf"
                   onChange={(e) => {
                     const next = e.target.files?.[0];
                     e.target.value = '';
@@ -166,7 +166,8 @@ export function ReceiptCapture({
                   }}
                 />
                 <span className="field-help">
-                  JPEG, PNG, WebP · maksimal 10 MiB. PDF belum bisa dibaca AI.
+                  JPEG, PNG, WebP atau PDF · maksimal 10 MiB. PDF maksimal 3 halaman dikonversi
+                  menjadi gambar di browser; hanya gambar hasil konversi yang diunggah.
                 </span>
               </label>
               {initialMode === 'camera' && (

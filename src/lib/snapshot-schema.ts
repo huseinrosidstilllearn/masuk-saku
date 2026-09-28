@@ -1,7 +1,25 @@
 import { z } from 'zod';
+import type { TransactionInput } from '../domain/types';
 const amount = z.coerce.number().int().safe(),
   id = z.string(),
   nullable = id.nullable();
+export const transactionInputSchema = z.object({
+  type: z.enum(['income', 'expense', 'transfer']),
+  amount,
+  wallet_id: id,
+  destination_wallet_id: nullable,
+  transaction_actor: id,
+  transaction_scope: z.enum(['personal', 'family']),
+  scope_member_id: nullable,
+  status: z.enum(['pending', 'completed', 'cancelled']),
+  occurred_at: z.string(),
+  category_id: nullable,
+  merchant: z.string(),
+  notes: z.string(),
+  fee_amount: amount,
+  splits: z.array(z.object({ category_id: id, amount })).optional(),
+  tag_ids: z.array(id).optional(),
+}) satisfies z.ZodType<TransactionInput>;
 export const snapshotSchema = z.object({
   household: z.object({
     id,
@@ -28,6 +46,10 @@ export const snapshotSchema = z.object({
       wallet_owner: nullable,
       initial_balance: amount,
       active: z.boolean(),
+      icon: z.string().default('wallet'),
+      color: z.string().default('#164c3e'),
+      account_identifier: z.string().nullable().default(null),
+      version: z.number().int().positive().default(1),
     }),
   ),
   transactions: z.array(
@@ -50,6 +72,7 @@ export const snapshotSchema = z.object({
       deleted_at: nullable,
       parent_transaction_id: nullable.optional(),
       source: z.string().optional(),
+      recurring_template_id: nullable.optional(),
       version: z.number().int().positive().default(1),
     }),
   ),
@@ -79,6 +102,13 @@ export const snapshotSchema = z.object({
       rollover: z.enum(['reset', 'rollover']),
       rollover_amount: amount,
       warning_thresholds: z.array(z.number()),
+      active: z.boolean().default(true),
+      cadence: z.enum(['weekly', 'monthly', 'custom']).default('custom'),
+      auto_continue: z.boolean().default(false),
+      predecessor_id: nullable.optional(),
+      closed_at: nullable.optional(),
+      closed_spent: amount.nullable().optional(),
+      automation_error: nullable.optional(),
     }),
   ),
   goals: z.array(
@@ -94,5 +124,39 @@ export const snapshotSchema = z.object({
   ),
   contributions: z
     .array(z.object({ id, goal_id: id, amount, created_by: id, contributed_at: z.string() }))
+    .default([]),
+  recurring: z
+    .array(
+      z.object({
+        id,
+        household_id: id,
+        created_by: id,
+        name: z.string(),
+        mode: z.enum(['ask', 'auto_create']),
+        cadence: z.enum(['weekly', 'monthly']),
+        anchor_date: z.string(),
+        next_run: z.string(),
+        end_date: nullable,
+        run_time: z.string(),
+        active: z.boolean(),
+        occurrence_index: z.number().int(),
+        version: z.number().int(),
+        transaction_template: transactionInputSchema,
+      }),
+    )
+    .default([]),
+  occurrences: z
+    .array(
+      z.object({
+        id,
+        household_id: id,
+        template_id: id,
+        scheduled_date: z.string(),
+        status: z.enum(['pending', 'created', 'skipped', 'error']),
+        input: transactionInputSchema,
+        transaction_id: nullable,
+        error_reason: z.string().nullable(),
+      }),
+    )
     .default([]),
 });

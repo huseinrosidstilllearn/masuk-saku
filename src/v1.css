@@ -1,0 +1,90 @@
+.wallet-manager {
+  display: grid;
+  gap: 24px;
+}
+.wallet-manager > .panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.wallet-manager h2,
+.wallet-manager .panel-heading p {
+  margin: 0;
+}
+.wallet-manager .panel-heading p {
+  margin-top: 8px;
+  color: var(--muted);
+}
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.filter-bar button[aria-pressed='true'] {
+  background: #dcf47d;
+  border-color: #c3dd69;
+  color: #20251b;
+}
+.wallet-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.wallet-identifier {
+  display: block;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+}
+.wallet-manager .empty-panel {
+  padding: 32px;
+}
+.recurring-page {
+  display: grid;
+  gap: 24px;
+}
+.recurring-page .panel-heading,
+.row-actions,
+.recurring-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.recurring-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 20px;
+}
+.recurring-grid .panel {
+  display: grid;
+  gap: 12px;
+}
+.recurring-row {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.recurring-row p {
+  margin: 8px 0;
+}
+.dashboard-widgets {
+  display: grid;
+  gap: 28px;
+}
+.widget-controls {
+  display: flex;
+  justify-content: flex-end;
+}
+.command-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.widget-controls button {
+  min-height: 44px;
+}

@@ -14,9 +14,33 @@ export function Reports({ data, owner, hide }: { data: Snapshot; owner: string; 
     prior = previousPeriod(period.from, period.to),
     previous = periodReport(data, prior.from, prior.to, wallets);
   const fmt = (n: number) => money(n, hide);
+  function preset(kind: 'today' | 'week' | 'month' | 'year') {
+    const date = new Date(today + 'T12:00:00Z');
+    const from =
+      kind === 'today'
+        ? today
+        : kind === 'month'
+          ? today.slice(0, 7) + '-01'
+          : kind === 'year'
+            ? today.slice(0, 4) + '-01-01'
+            : (() => {
+                date.setUTCDate(date.getUTCDate() - ((date.getUTCDay() + 6) % 7));
+                return date.toISOString().slice(0, 10);
+              })();
+    const next = { from, to: today };
+    setDraft(next);
+    setPeriod(next);
+    setError('');
+  }
   return (
     <section className="panel reports-panel">
       <h2>Perbandingan periode</h2>
+      <div className="filter-bar" aria-label="Periode cepat">
+        <button onClick={() => preset('today')}>Hari ini</button>
+        <button onClick={() => preset('week')}>Minggu ini</button>
+        <button onClick={() => preset('month')}>Bulan ini</button>
+        <button onClick={() => preset('year')}>Tahun ini</button>
+      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();

@@ -1,16 +1,18 @@
 # Verification evidence
 
-## Development publication and operational evidence — 28 September 2026
+## V1 Development — verified 28 September 2026
 
-Feature source commit fee6db8 is pushed to main. Development frontend258978ba is live at https://masuk-saku-development.pages.dev with migrations1–17/six Edge functions and the15-minute maintenance schedule. Production frontend/backend remain64f9f8a6/migrations1–11.
+Latest application commit: ea852b4. Development deployment: 73c75aeb at https://masuk-saku-development.pages.dev/. Backend: migrations 1–17, six Edge functions, maintenance every 15 minutes. The scheduler is active and has 27 successful dispatch records; an authenticated direct maintenance call returned all four counters. Production remains at frontend 64f9f8a6 and migrations 1–11.
 
-GitHub CI run36388554696 passed on fee6db8. Local final checks:95 unit/domain/SQL,50 demo browser,20 configured auth,11 shared Deno/all6checks,5 backup tests, typecheck/build/format. Staged source guard283files/Gitleaks/diffcheck passed before publication. Hosted public account/demo routes match current assets; demo transaction/idle/reload reset generated zero Supabase writes. Synthetic authenticated primary/recurring/draft/activity navigation passed at320/768/1440 with no overflow or runtime errors; fixture users/households were cleaned.
+All feature domains are implemented. Read [V1 feature guide](V1-FEATURES.md) for workflows, approval boundaries, retention and import limits. This is implementation completion in Development, not a launch acceptance declaration.
 
-Combined Production backup run36388615213 succeeded: encrypted DB dump and Storage archive uploaded to Drive, two ciphertext files checksum checked, artifact retained90days. Storage was empty then. Run36388892689 independently covered one synthetic private image byte: Storage download/archive/encryption and Drive checksum succeeded. The exact fixture object was removed afterward; no financial records changed. This proves the byte-backup path, not decryption or isolated full restore. Private checkpoint files are absent after cleanup.
+Verification: 95 unit/domain/SQL tests (including 44 PostgreSQL tests), 50 demo browser tests, 20 configured auth tests, 11 Deno tests and checks of all six functions, five backup-script tests, typecheck/build/format. GitHub CI 36389715106 passed on ea852b4; earlier CI 36388554696 passed on the feature commit fee6db8. Staged source guard, Gitleaks and diff check passed before each source publication. The follow-up documentation commit does not change that application artifact.
 
-Remaining launch gates: real family/two-device and OpenRouter/physical-camera pilot, independent age/server-key recovery copies, isolated database+Storage restore and clean self-host install. These gates must precede a V1 launch declaration. README and V1-FEATURES describe current functionality and limits; no Production promotion performed in this task.
+Hosted public routes and asset hashes match the final build. Demo transaction, idle and reload reset made zero Supabase writes. Real synthetic login navigated primary, recurring, draft and activity menus at 320/768/1440 pixels without overflow or runtime errors. Local PDF conversion passed under deployed CSP; the mobile sign-out SVG is visible. The 320px recurring screenshot was inspected. Synthetic users, households and objects were cleaned. These checks do not replace a real family/provider/physical-camera pilot.
 
-Hosted local PDF conversion passed under the deployed CSP with a real synthetic login. A mobile visual check found the existing blanket header SVG rule hiding the sign-out icon; profile.css now restores only that icon. Application checks rerun after the CSS fix passed95 unit/domain/SQL,50 demo browser,20 configured auth, typecheck/build/format. Final frontend deployment identifier follows after publication.
+Production backup runs 36388615213 and 36388892689 succeeded. Each encrypted database dump and separate Storage archive was uploaded to Google Drive and checksum checked; artifacts retain ciphertext for 90 days. The first inventory was empty; the second covered one synthetic private image byte, then the exact test object was removed. No financial records changed. This proves the byte-backup path, not decryption or a full isolated restore.
+
+Remaining launch gates: real family/two-device and OpenRouter/physical-camera pilot; independent age/server-key recovery copies; isolated database plus Storage restore; clean self-host install. Production promotion remains separate. Never label V1 launch-ready until these gates are recorded.
 
 ## V1 feature completion — 28 September 2026
 

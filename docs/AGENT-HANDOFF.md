@@ -1,5 +1,9 @@
 # Agent handoff — current release
 
+## Public demo toolbar alignment — 28 September 2026
+
+The public demo's scope label inherited 14px vertical form margins. Flex alignment used the label's margin box, putting the adjacent balance button below the dropdown. The demo toolbar now resets that label margin and gives both dropdown/buttons a 44px minimum height. Desktop controls align; narrow screens wrap with the existing 12px gap. This is a CSS-only demo correction; no financial/auth/backend behavior changed. Final deployment and hosted geometry evidence are recorded in the later publication entry.
+
 ## Production promotion — 28 September 2026
 
 User authorized all Development updates to Production. **Production 3de0d4a3** at https://masuksaku.my.id now runs app **7726159** (deployment checkout 9132d30), all **17 migrations** and **six ACTIVE v3 Edge functions**. Development remains 365f1032/17 migrations; primary CLI still Development. Production SMTP/Auth/encryption/maintenance keys were preserved; no Development data or credentials copied.

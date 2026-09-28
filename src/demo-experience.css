@@ -224,15 +224,18 @@
 .demo-toolbar label {
   display: grid;
   gap: 6px;
+  margin: 0;
   font-size: 12px;
   font-weight: 700;
 }
-.demo-toolbar select {
+.demo-toolbar select:not([multiple]):not([size]) {
   min-width: 180px;
+  min-height: 44px;
 }
 .demo-toolbar > button {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 8px;
 }
 .demo-notice {

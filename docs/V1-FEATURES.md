@@ -1,6 +1,6 @@
 # Fitur V1 dan panduan penggunaan
 
-Status 28 September 2026: seluruh domain V1 tersedia dalam kode dan dipasang terlebih dahulu di Development. Promosi Production dan pemeriksaan peluncuran dicatat terpisah dari kelengkapan fitur.
+Status 28 September 2026: seluruh domain V1 tersedia di Production dan Development dengan 17 migrasi. [Rilis Production](PRODUCTION.md) dan [hasil QA](QA-HOSTED.md) mencatat deployment serta pengujian langsung; kelengkapan fitur tetap dinilai terpisah dari acceptance peluncuran.
 
 ## Dompet
 

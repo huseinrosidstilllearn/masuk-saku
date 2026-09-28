@@ -1,5 +1,13 @@
 # Agent handoff — current release
 
+## Production promotion — 28 September 2026
+
+User authorized all Development updates to Production. **Production 3de0d4a3** at https://masuksaku.my.id now runs app **7726159** (deployment checkout 9132d30), all **17 migrations** and **six ACTIVE v3 Edge functions**. Development remains 365f1032/17 migrations; primary CLI still Development. Production SMTP/Auth/encryption/maintenance keys were preserved; no Development data or credentials copied.
+
+Pre-migration encrypted database+Storage backup **36401935020** passed, including Google Drive upload/checksum. Migration dry-run is now up-to-date. Ledger/wallet metadata/balance fingerprints match before migration and after fixture cleanup. Single Production maintenance cron remains every 15 minutes, 110 successful dispatches; authenticated updated handler returned all four zero counters. Six realtime tables are published.
+
+Production canonical/current assets/public routes/demo reset, actual two-session financial UI, real-JWT permission/import/private Storage tests, PDF and delayed-join realtime replay passed; all fixtures cleaned. Source CI 36393287315 passed. See [Production release](PRODUCTION.md), [hosted QA](QA-HOSTED.md) and [verification](VERIFICATION.md). Valid-key AI/physical camera/devices, isolated restore/key recovery copies, and clean self-host remain acceptance gates. Historical entries saying Production is unchanged are superseded by this promotion.
+
 ## Hosted QA and realtime fix — 28 September 2026
 
 Latest application commit: **7726159**. Development deployment: **365f1032**. Real hosted testing found and fixed stale Member balances when a transaction committed before realtime replication joined. The five-second delayed-join replay now passes without a transaction event or manual reload; the final full two-session financial UI pilot also passed. See [hosted QA report](QA-HOSTED.md) for the exact flows, financial sequence, cleanup, and remaining limits.

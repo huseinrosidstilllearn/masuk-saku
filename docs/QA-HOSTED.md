@@ -1,4 +1,10 @@
-# Hasil pengujian Development
+# Hasil pengujian hosted
+
+## Pengulangan pada Production — 28 September 2026
+
+Setelah promosi yang diminta pengguna, seluruh pilot API dan alur UI keuangan di bawah diulang pada **https://masuksaku.my.id**, deployment **3de0d4a3**, backend **Production** dengan 17 migrasi. Tes dua sesi dan join realtime tertunda lima detik, beranda/halaman akun, reset demo, PDF dan layout juga lulus pada Production. Seluruh akun/household/objek uji dibersihkan. Fingerprint data keuangan sebelum migrasi dan setelah pengujian sama. Email dan Google tetap aktif; tidak menguji ulang pengiriman email atau Google consent. Batas bukti AI/perangkat/pemulihan di akhir dokumen tetap berlaku. Detail operasi ada di [Production](PRODUCTION.md).
+
+## Pengujian awal Development
 
 Pengujian langsung dilakukan pada **28 September 2026** di [Development](https://masuk-saku-development.pages.dev/). Versi akhir yang diuji adalah deployment `365f1032`, dari commit aplikasi `7726159`. Backend tetap menggunakan 17 migrasi dan enam Edge functions. Production tidak diperbarui pada sesi ini.
 

@@ -1,5 +1,13 @@
 # Verification evidence
 
+## Production promotion — 28 September 2026
+
+Production **3de0d4a3** on https://masuksaku.my.id contains app **7726159** (checkout 9132d30). Backup [36401935020](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36401935020) succeeded before six append-only migrations; all 17 now applied, fresh dry-run up-to-date. All six Edge functions are ACTIVE v3. Existing single 15-minute Production cron and secret were preserved; six realtime tables are published. Authenticated maintenance returned four zero counters. Production ledger/wallet/balance fingerprints remained unchanged through migration and synthetic pilot cleanup.
+
+Fresh hosted Production public/account/demo checks matched build hashes and confirmed no demo backend writes. Real-JWT/API and complete two-session financial UI pilots passed login, invitation/permissions, income/expense/transfer fee, trash/restore, recurring/retry, budget rollover, import RPC, requester draft lifecycle, private attachment access, local PDF and missing/invalid BYOK rejection without ledger writes. Five-second delayed realtime join replay also passed; fixtures cleaned. Layout 320/768/1440: no overflow/page errors. Email and Google providers remain enabled; HTTPS/CSP/camera policy and exact CORS checks passed. Inbox/Google consent, valid AI inference, physical hardware and isolated restore were not claimed.
+
+No application code changed for promotion: prior [source CI 36393287315](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36393287315) verifies 97 unit/domain/SQL, 50 demo browser, 20 configured auth, 11 Deno/all six Edge checks, five backup-script tests, typecheck/build/format. See [Production](PRODUCTION.md) and [QA report](QA-HOSTED.md) for scope and remaining acceptance.
+
 ## Hosted QA and realtime fix — 28 September 2026
 
 Application **7726159**, Development deployment **365f1032**: 97 unit/domain/SQL, 50 demo browser, 20 configured auth, typecheck/build/format passed locally. Source guard, staged Gitleaks and diff check passed. Two regression tests were red before the subscription catch-up fix and green afterward.

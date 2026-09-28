@@ -1,5 +1,28 @@
 # Production — masuksaku.my.id
 
+## Current release — 28 September 2026
+
+Seluruh pembaruan Development melalui commit aplikasi **7726159** telah dipromosikan atas permintaan pengguna. Checkout saat deployment: `9132d30` (dokumentasi QA, kode aplikasi sama).
+
+- Frontend **3de0d4a3** tersedia di [masuksaku.my.id](https://masuksaku.my.id) dan [deployment tetap](https://3de0d4a3.masuk-saku-production.pages.dev).
+- Database **17 migrasi**; migrasi 12–17 diterapkan tanpa reset. Pemeriksaan berikutnya menyatakan database up-to-date.
+- Enam Edge functions berstatus **ACTIVE versi 3**, termasuk maintenance untuk jadwal berulang dan penutupan anggaran. Enam tabel memiliki publikasi realtime.
+- Jadwal maintenance Production tetap satu, setiap 15 menit; tidak ditambahkan jadwal Development. Tercatat 110 dispatch sukses. Panggilan terautentikasi setelah deploy mengembalikan keempat counter dengan nilai nol.
+- Backup terenkripsi database dan Storage [36401935020](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36401935020) berhasil sebelum migrasi, termasuk upload/checksum Google Drive.
+- Fingerprint ledger, metadata dompet (tanpa kolom versi baru), dan saldo sama sebelum/sesudah migrasi serta setelah akun uji dibersihkan. SMTP, konfigurasi Auth, dan kunci enkripsi/maintenance tidak diganti. Tidak ada data atau kredensial Development yang disalin.
+
+Pemeriksaan domain utama lulus: aset cocok dengan build Production, backend Production saja, HTTPS/CSP/izin kamera, halaman beranda/masuk/daftar, dan reset demo tanpa penulisan Supabase. Email dan Google tetap aktif pada pengaturan Auth publik; ini tidak mengulangi alur inbox atau Google consent.
+
+Pilot hosted dengan akun sementara lulus pada Production: login email/username, pencatatan dan transfer+fee setelah konfirmasi, trash/restore, dua sesi realtime, transaksi berulang/retry, rollover, isolasi anggota, impor RPC, draf, Storage privat, PDF, dan jalur kegagalan BYOK. Tes join realtime yang sengaja ditunda lima detik juga lulus tanpa reload. Layout 320/768/1440 tidak overflow atau menghasilkan error JavaScript. Seluruh fixture dibersihkan. Lihat [QA hosted](QA-HOSTED.md).
+
+Kode yang dipromosikan memiliki CI [36393287315](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36393287315) sukses: 97 unit/domain/SQL, 50 demo browser, 20 configured auth, 11 Deno, seluruh enam pemeriksaan Edge functions, lima tes backup, typecheck/build/format. Source tidak diubah untuk promosi ini.
+
+Development tetap **365f1032**, 17 migrasi, enam fungsi; primary CLI tetap Development. Referensi frontend Production sebelumnya adalah `64f9f8a6`; jangan mereset database atau menganggap rollback frontend lama otomatis cocok dengan kontrak RPC yang baru. Kelengkapan deployment ini tidak menutup gate AI dengan key valid, kamera/perangkat fisik, restore terisolasi, salinan pemulihan kunci, dan instalasi self-host bersih.
+
+## Historical releases
+
+Catatan di bawah merekam versi terdahulu dan tidak menggantikan status terbaru di atas.
+
 ## Current release — 27 September 2026
 
 Latest authorized promotion includes all Development changes through68dad2b: password recovery, AI credential lifecycle, transaction filters/pagination/reports, active membership controls, private profiles/avatars/username, mobile avatar fix, photo-first layout, AI settings shortcut/endpoint display, centred footer and spacing audit.

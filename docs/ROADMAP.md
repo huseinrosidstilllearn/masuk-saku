@@ -2,7 +2,7 @@
 
 ## Status implementasi — 28 September 2026
 
-Fitur tersisa V1 telah dilengkapi: lifecycle dompet, ask/auto recurrence, closure/carryover anggaran, append import, PDF/draf/lampiran, preset laporan, widget order/hide, Ctrl+K, Realtime, activity dan backup byte Storage. Baca [panduan V1](V1-FEATURES.md). Development memakai migrasi 1–17 dan maintenance yang diperbarui; Production dipromosikan terpisah.
+Fitur tersisa V1 telah dilengkapi: lifecycle dompet, ask/auto recurrence, closure/carryover anggaran, append import, PDF/draf/lampiran, preset laporan, widget order/hide, Ctrl+K, Realtime, activity dan backup byte Storage. Baca [panduan V1](V1-FEATURES.md). Production dan Development memakai migrasi 1–17 dan maintenance yang diperbarui; [promosi Production](PRODUCTION.md) dan [QA](QA-HOSTED.md) telah dicatat. Gate perangkat/provider nyata, pemulihan terisolasi dan instalasi self-host tetap terbuka.
 
 Sprint berikutnya adalah validasi rilis: jalankan combined database/Storage backup, restore terisolasi dengan kunci independen, pilot keluarga/provider/kamera/dua perangkat dan clean self-host install. Kelengkapan kode tidak otomatis menutup syarat peluncuran. Catatan sprint di bawah adalah rencana dan riwayat sebelumnya.
 

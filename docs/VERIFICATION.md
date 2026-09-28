@@ -1,5 +1,13 @@
 # Verification evidence
 
+## Hosted QA and realtime fix — 28 September 2026
+
+Application **7726159**, Development deployment **365f1032**: 97 unit/domain/SQL, 50 demo browser, 20 configured auth, typecheck/build/format passed locally. Source guard, staged Gitleaks and diff check passed. Two regression tests were red before the subscription catch-up fix and green afterward.
+
+GitHub CI [36393287315](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36393287315) passed on application commit 7726159, including the browser suites, 11 Deno tests, all six Edge function checks and five backup-script tests.
+
+Hosted delayed-join replay and full real-JWT two-session UI pilot passed on this artifact. Public/account route and demo reset checks match its asset hashes. Accounts, household data and private objects used for QA were cleaned. Read [hosted QA report](QA-HOSTED.md) for the reproduced bug, cash totals, tested API/UI flows and limitations. Production was not promoted.
+
 ## V1 Development — verified 28 September 2026
 
 Latest application commit: ea852b4. Development deployment: 73c75aeb at https://masuk-saku-development.pages.dev/. Backend: migrations 1–17, six Edge functions, maintenance every 15 minutes. The scheduler is active and has 27 successful dispatch records; an authenticated direct maintenance call returned all four counters. Production remains at frontend 64f9f8a6 and migrations 1–11.

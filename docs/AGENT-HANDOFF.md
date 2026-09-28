@@ -1,5 +1,13 @@
 # Agent handoff — current release
 
+## Hosted QA and realtime fix — 28 September 2026
+
+Latest application commit: **7726159**. Development deployment: **365f1032**. Real hosted testing found and fixed stale Member balances when a transaction committed before realtime replication joined. The five-second delayed-join replay now passes without a transaction event or manual reload; the final full two-session financial UI pilot also passed. See [hosted QA report](QA-HOSTED.md) for the exact flows, financial sequence, cleanup, and remaining limits.
+
+Fresh local checks passed 97 unit/domain/SQL, 50 demo browser, 20 configured auth, typecheck/build/format. Hosted public/account routes and demo reset match the final assets. Fixtures were cleaned. Production remains frontend 64f9f8a6 and migrations 1–11; backend Development remains migrations 1–17/six functions. Valid-key AI, physical camera/devices, isolated restore, recovery key copies, and clean self-host installation remain acceptance gates.
+
+GitHub CI 36393287315 passed on 7726159, including all browser suites, 11 Deno tests, checks of all six Edge functions and five backup-script tests. The older pending-deployment checkpoint below is historical; the hosted results above supersede it.
+
 ## Realtime catch-up fix — 28 September 2026
 
 Hosted two-session testing exposed a race: a transaction committed before the Member's replication subscription joined never produced a change event for that session. Delaying the real WebSocket join by five seconds reproduced the stale balance reliably. The frontend now waits for PostgreSQL subscription readiness and refreshes on successful subscription, replication readiness and reconnection. Cleanup ignores late callbacks from old channels; existing event debouncing and focus refresh remain.

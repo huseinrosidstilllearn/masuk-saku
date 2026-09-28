@@ -1,5 +1,17 @@
 # Agent handoff — current release
 
+## Development publication and operational evidence — 28 September 2026
+
+Feature source commit fee6db8 is pushed to main. Development frontend258978ba is live at https://masuk-saku-development.pages.dev with migrations1–17/six Edge functions and the15-minute maintenance schedule. Production frontend/backend remain64f9f8a6/migrations1–11.
+
+GitHub CI run36388554696 passed on fee6db8. Local final checks:95 unit/domain/SQL,50 demo browser,20 configured auth,11 shared Deno/all6checks,5 backup tests, typecheck/build/format. Staged source guard283files/Gitleaks/diffcheck passed before publication. Hosted public account/demo routes match current assets; demo transaction/idle/reload reset generated zero Supabase writes. Synthetic authenticated primary/recurring/draft/activity navigation passed at320/768/1440 with no overflow or runtime errors; fixture users/households were cleaned.
+
+Combined Production backup run36388615213 succeeded: encrypted DB dump and Storage archive uploaded to Drive, two ciphertext files checksum checked, artifact retained90days. Storage was empty then. Run36388892689 independently covered one synthetic private image byte: Storage download/archive/encryption and Drive checksum succeeded. The exact fixture object was removed afterward; no financial records changed. This proves the byte-backup path, not decryption or isolated full restore. Private checkpoint files are absent after cleanup.
+
+Remaining launch gates: real family/two-device and OpenRouter/physical-camera pilot, independent age/server-key recovery copies, isolated database+Storage restore and clean self-host install. These gates must precede a V1 launch declaration. README and V1-FEATURES describe current functionality and limits; no Production promotion performed in this task.
+
+Hosted local PDF conversion passed under the deployed CSP with a real synthetic login. A mobile visual check found the existing blanket header SVG rule hiding the sign-out icon; profile.css now restores only that icon. Application checks rerun after the CSS fix passed95 unit/domain/SQL,50 demo browser,20 configured auth, typecheck/build/format. Final frontend deployment identifier follows after publication.
+
 ## V1 feature completion — 28 September 2026
 
 Wallet lifecycle, recurring transactions, budget closure/rollover, JSON import, paginated snapshots, local PDF receipt conversion, requester draft recovery/discard, private attachment viewing, dashboard preferences, command search, activity and realtime refresh are implemented. Read [feature guide](V1-FEATURES.md) for usage, constraints and distinctions between ledger, automation, import and restore.
@@ -8,7 +20,7 @@ Development now has migrations12–17 and the updated maintenance Edge function.
 
 Local checks recorded before this handoff:95 unit/domain/SQL including44 PostgreSQL tests,50 demo browser,20 configured auth browser,11 shared Deno tests/all6 function checks,5 backup-script tests, typecheck/build/format. Final rerun passed95 unit/domain/SQL,50 browser and20 configured auth,11 Deno tests/all6checks,5backup tests and build/typecheck/format. One overloaded concurrent run hit the PGlite hook timeout and a5-second PDF assertion; limiting Vitest to2workers and matching the PDF operation20-second deadline produced a complete passing rerun. Hosted synthetic Owner/Member/outsider JWT checks covered invitations, transfer/fee and actor authorization, recurring confirm/retry/revoked creator, frozen budget rollover, draft discard, private Storage access and import append/retry. Synthetic accounts, household and objects were cleaned. These checks do not claim a physical-camera/provider/inbox/two-device pilot.
 
-The weekly workflow now includes separately encrypted Storage bytes and PostgreSQL dump. Production Storage backup secrets are configured in GitHub; actual combined workflow execution is pending publication. Isolated full restore, independent age/server-key recovery copies, actual OpenRouter/physical-camera/family pilot and clean self-host install remain release gates. Do not label the project launch-ready while these are outstanding.
+The weekly workflow now includes separately encrypted Storage bytes and PostgreSQL dump. Production Storage backup secrets are configured in GitHub; combined runs36388615213/36388892689 now passed; see latest publication evidence. Isolated full restore, independent age/server-key recovery copies, actual OpenRouter/physical-camera/family pilot and clean self-host install remain release gates. Do not label the project launch-ready while these are outstanding.
 
 ## Public demo entry clarity — 28 September 2026
 

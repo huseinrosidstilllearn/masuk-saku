@@ -106,6 +106,9 @@
   width: 36px;
   height: 36px;
 }
+.header-actions .mobile-signout svg {
+  display: block;
+}
 .profile-username {
   display: grid;
   gap: 16px;

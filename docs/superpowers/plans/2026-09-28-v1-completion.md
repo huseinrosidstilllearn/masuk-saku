@@ -106,9 +106,9 @@ Files: maintenance scheduler/backup scripts and workflows, restore/storage runbo
 
 - [ ] Cover weekly encrypted Storage-object backup as well as database dump; recovery copy guidance and isolated restore validation.
 - [x] Validate self-host deployment inputs and update README to describe delivered capabilities/limits.
-- [ ] Run `npm run check`, `npm run test:e2e`, `npm run test:auth`, `npm run format:check`, all Deno tests/checks, staged source guard/Gitleaks/diffcheck; deploy Development migrations/functions/frontend.
-- [ ] Record independent hosted checks and remaining operator-only account/provider/physical-camera/recovery gates separately. Do not mark V1 launch-ready while these gates remain.
+- [x] Run `npm run check`, `npm run test:e2e`, `npm run test:auth`, `npm run format:check`, all Deno tests/checks, staged source guard/Gitleaks/diffcheck; deploy Development migrations/functions/frontend.
+- [x] Record independent hosted checks and remaining operator-only account/provider/physical-camera/recovery gates separately. Do not mark V1 launch-ready while these gates remain.
 
 ## Verification ledger
 
-Tasks1–6 have implementations and automated checks. Unchecked exhaustive test lists include cases not independently proven; use ACCEPTANCE rather than interpreting implementation as pilot completion. Development backend12–17 and maintenance scheduler are applied. Final frontend/CI/combined-backup evidence will be recorded in AGENT-HANDOFF. Production promotion remains separate.
+Tasks1–6 have implementations and automated checks. Unchecked exhaustive test lists include cases not independently proven; use ACCEPTANCE rather than interpreting implementation as pilot completion. Development backend12–17 and maintenance scheduler are applied. Frontend258978ba, CI36388554696 and combined backups36388615213/36388892689 are verified in AGENT-HANDOFF. Isolated full restore and independent key copies remain incomplete. Production promotion remains separate.

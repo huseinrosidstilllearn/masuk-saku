@@ -1,5 +1,13 @@
 # Agent handoff — current release
 
+## Demo alignment published — 28 September 2026
+
+Latest app **de37056**: Development **1671b142**, Production **0c3a7e68**. Scope dropdown and balance/reset buttons in the public demo are aligned: label margins removed, all controls at least 44px high, selector specificity matches the shared native-select styling. At 320/390px controls wrap with 12px gaps; at 768/1440px both top and bottom edges align within one pixel. Local and hosted geometry checks passed in both environments; screenshot reviewed. Hosted demo asset hashes, transaction/idle/reload reset, zero Supabase writes, no overflow/page errors passed in both environments. Backend remains 17 migrations/six functions; no data/Auth/secret changes.
+
+Local 97 unit/domain/SQL, 50 demo browser, 20 configured auth, build/typecheck/format passed during this correction. Final selector correction was checked with the four-width geometry pilot and npm check; CI verifies the final published source separately. Next launch work remains isolated database+Storage restore and recovery keys, valid-key AI/physical camera, then family pilot on two physical devices; these are not completed by this layout fix.
+
+Final source CI **36421497985** passed on de37056, including all 97 unit/domain/SQL, 50 demo browser, 20 configured auth tests, 11 Deno tests/all six Edge checks, five backup tests, typecheck/build/format and source guard.
+
 ## Public demo toolbar alignment — 28 September 2026
 
 The public demo's scope label inherited 14px vertical form margins. Flex alignment used the label's margin box, putting the adjacent balance button below the dropdown. The demo toolbar now resets that label margin and gives both dropdown/buttons a 44px minimum height. Desktop controls align; narrow screens wrap with the existing 12px gap. This is a CSS-only demo correction; no financial/auth/backend behavior changed. Final deployment and hosted geometry evidence are recorded in the later publication entry.

@@ -1,5 +1,9 @@
 # Production — masuksaku.my.id
 
+## Demo toolbar layout update — 28 September 2026
+
+Latest frontend is **0c3a7e68**, app commit **de37056**. Public demo scope dropdown and balance/reset controls now align with consistent minimum 44px heights; narrow screens wrap with 12px spacing. Hosted checks at 320/390/768/1440 and current assets/demo reset/no backend writes/no overflow/page errors passed. Development is **1671b142**. This CSS-only update does not change the 17 database migrations, six v3 Edge functions, Auth, secrets, financial records or prior financial QA evidence. Previous frontend is 3de0d4a3; detailed backend promotion remains below.
+
 ## Current release — 28 September 2026
 
 Seluruh pembaruan Development melalui commit aplikasi **7726159** telah dipromosikan atas permintaan pengguna. Checkout saat deployment: `9132d30` (dokumentasi QA, kode aplikasi sama).

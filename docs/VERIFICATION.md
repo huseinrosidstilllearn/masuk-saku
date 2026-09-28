@@ -1,5 +1,13 @@
 # Verification evidence
 
+## Demo toolbar alignment — 28 September 2026
+
+App **de37056** is deployed to Development **1671b142** and Production **0c3a7e68**. Hosted geometry at 320/390/768/1440 verified zero label margin, touch controls at least 44px, matching dropdown/button top and bottom edges when on the same row, wrapping without horizontal overflow at narrow widths, and no browser errors. Final toolbar screenshot was inspected. Both public demo smokes matched current build hashes and passed local-only edits, idle/reload reset and zero Supabase writes. No backend or financial changes.
+
+Local checks during correction passed 97 unit/domain/SQL, 50 demo browser, 20 configured auth, typecheck/build/format. Final shared-select specificity correction passed the four-width pilot and npm check; CI runs the full suite on the final commit.
+
+Final source [CI 36421497985](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36421497985) passed on de37056: 97 unit/domain/SQL, 50 demo browser, 20 configured auth, 11 Deno/all six Edge checks, five backup tests, typecheck/build/format/source guard.
+
 ## Production promotion — 28 September 2026
 
 Production **3de0d4a3** on https://masuksaku.my.id contains app **7726159** (checkout 9132d30). Backup [36401935020](https://github.com/huseinrosidstilllearn/masuk-saku/actions/runs/36401935020) succeeded before six append-only migrations; all 17 now applied, fresh dry-run up-to-date. All six Edge functions are ACTIVE v3. Existing single 15-minute Production cron and secret were preserved; six realtime tables are published. Authenticated maintenance returned four zero counters. Production ledger/wallet/balance fingerprints remained unchanged through migration and synthetic pilot cleanup.
